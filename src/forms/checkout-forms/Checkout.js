@@ -49,7 +49,7 @@ function Checkout() {
     },
   }));
 
-  const steps = ["Shipping address", "Review your order"];
+  const steps = ["Address", "Review your order"];
 
   function getStepContent(step) {
     switch (step) {
