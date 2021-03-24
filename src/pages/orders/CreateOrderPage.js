@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Checkout from "../forms/checkout-forms/Checkout";
+import Checkout from "../../components/orders/checkout-forms/Checkout";
 
 function CreateOrderPage() {
   return (

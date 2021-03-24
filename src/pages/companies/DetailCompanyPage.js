@@ -28,12 +28,7 @@ function DetailCompanyPage() {
     return <Loader />;
   }
 
-  return (
-    <div>
-      <h1>Detail Company Page</h1>
-      {!loading && company && <CompanyCard company={company} />}
-    </div>
-  );
+  return <div>{!loading && company && <CompanyCard company={company} />}</div>;
 }
 
 export default DetailCompanyPage;

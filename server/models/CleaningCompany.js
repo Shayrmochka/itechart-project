@@ -26,18 +26,26 @@ var cleaningCompanySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    typeOfServices: {
-        type: String,
-        required: true
-    },
+    // typeOfServices: [
+    //   {
+    //     type: String,
+    //     required: false,
+    //   },
+    // ],
     priceList: {
         type: String,
         required: true
     },
+    rating: {
+        type: Number,
+        required: false,
+        "default": 0
+    },
     isActive: {
         type: Boolean,
         required: true
-    }
+    },
+    typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningServices" }]
 });
 var cleaningCompany = mongoose.model("CleaningCompany", cleaningCompanySchema);
 module.exports = cleaningCompany;

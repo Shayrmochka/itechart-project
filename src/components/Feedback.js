@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
   textArea: {
     maxWidth: "100%",
     minWidth: "100%",
+    boxSizing: "border-box",
     minHeight: "5em",
     padding: "14px 14px",
     borderRadius: "4px",

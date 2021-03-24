@@ -189,6 +189,7 @@ router.post(
         address,
         typeOfServices,
         priceList,
+        rating: 0,
         isActive: true,
       });
 
@@ -245,7 +246,7 @@ router.post(
       // });
       const token = await signToken(company.id);
 
-      res.json({ token, companyId: company.id });
+      res.json({ token, companyId: company.id, data: company });
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });
     }

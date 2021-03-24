@@ -1,19 +1,23 @@
+import { makeStyles } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Loader from "./components/Loader";
 import NavBar from "./components/NavBar";
 import { AuthContext } from "./context/AuthContext";
-import Checkout from "./forms/checkout-forms/Checkout";
-import Feedback from "./forms/Feedback";
-import SignIn from "./forms/SignIn";
-import SignUp from "./forms/SignUp";
 import { useAuth } from "./hooks/auth.hooh";
 import { useHttp } from "./hooks/http.hook";
 
 import { useRoutes } from "./routes";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: "#fafafa",
+  },
+}));
+
 function App() {
+  const classes = useStyles();
   const { token, login, logout, userId, ready, userData } = useAuth();
   const isAuthenticated = !!token;
   const routes = useRoutes(isAuthenticated);
@@ -23,7 +27,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className={classes.root}>
       <AuthContext.Provider
         value={{
           token,
@@ -40,11 +44,6 @@ function App() {
           {routes}
         </BrowserRouter>
       </AuthContext.Provider>
-
-      {/* <SignIn />
-      <SignUp />
-      <Feedback />
-      <Checkout /> */}
     </div>
   );
 }

@@ -26,13 +26,14 @@ function CompaniesPage() {
     fetchCompanies();
   }, [fetchCompanies]);
 
+  const from = "page";
+
   if (loading) {
     return <Loader />;
   }
   return (
-    <div>
-      <h1>Comapnies Page</h1>
-      {!loading && <CompaniesList companies={companies} />}
+    <div style={{ marginTop: "20px" }}>
+      {!loading && <CompaniesList companies={companies} from={from} />}
     </div>
   );
 }

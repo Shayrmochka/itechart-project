@@ -210,6 +210,7 @@ router.post("/register-company", [
                     address: address,
                     typeOfServices: typeOfServices,
                     priceList: priceList,
+                    rating: 0,
                     isActive: true
                 });
                 return [4 /*yield*/, company.save()];
@@ -263,7 +264,7 @@ router.post("/login-company", [
                 return [4 /*yield*/, signToken(company.id)];
             case 3:
                 token = _b.sent();
-                res.json({ token: token, companyId: company.id });
+                res.json({ token: token, companyId: company.id, data: company });
                 return [3 /*break*/, 5];
             case 4:
                 e_4 = _b.sent();

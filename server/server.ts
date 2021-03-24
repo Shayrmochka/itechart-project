@@ -11,6 +11,7 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/user", require("./routes/user.routes"));
 app.use("/api/company", require("./routes/company.routes"));
+app.use("/api/order", require("./routes/order.routes"));
 
 const PORT: number = config.port || 4000;
 

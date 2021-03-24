@@ -2,19 +2,13 @@ import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
+  Button,
   Grid,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from "@material-ui/core";
-
-const cleaningDetails = {
-  address: "69 rue des lieutemants Thomazo",
-  service: "Green Cleaning",
-  flatDescription: "House, 2 rooms, 3 sofa",
-  date: "01.01.2021 10:30",
-};
 
 const useStyles = makeStyles((theme) => ({
   listItem: {
@@ -26,9 +20,17 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginTop: theme.spacing(2),
   },
+  buttons: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
 }));
 
-function Review() {
+function Review({ finalForm, handlePlaceOrder }) {
   const classes = useStyles();
 
   return (
@@ -38,21 +40,27 @@ function Review() {
       </Typography>
       <List disablePadding>
         <ListItem className={classes.listItem}>
+          <ListItemText primary="Chosen Company" />
+          <Typography variant="subtitle1" className={classes.total}>
+            {finalForm.companyName}
+          </Typography>
+        </ListItem>
+        <ListItem className={classes.listItem}>
           <ListItemText primary="Chosen service" />
           <Typography variant="subtitle1" className={classes.total}>
-            {cleaningDetails.service}
+            {finalForm.services}
           </Typography>
         </ListItem>
         <ListItem className={classes.listItem}>
           <ListItemText primary="Flat/House description" />
           <Typography variant="subtitle1" className={classes.total}>
-            {cleaningDetails.flatDescription}
+            {finalForm.flatDescription}
           </Typography>
         </ListItem>
         <ListItem className={classes.listItem}>
           <ListItemText primary="Date" />
           <Typography variant="subtitle1" className={classes.total}>
-            {cleaningDetails.date}
+            {finalForm.date}
           </Typography>
         </ListItem>
       </List>
@@ -62,9 +70,20 @@ function Review() {
         </Typography>
 
         <Grid item xs={12}>
-          <Typography gutterBottom>{cleaningDetails.address}</Typography>
+          <Typography gutterBottom>{finalForm.address}</Typography>
         </Grid>
       </Grid>
+      <div className={classes.buttons}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handlePlaceOrder}
+          //type="submit"
+          className={classes.button}
+        >
+          Place Order
+        </Button>
+      </div>
     </React.Fragment>
   );
 }

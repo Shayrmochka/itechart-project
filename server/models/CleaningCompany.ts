@@ -7,8 +7,9 @@ interface ICleaningCompany extends mongoose.Document {
   name: string;
   description: string;
   address: string;
-  typeOfServices: string;
+  typeOfServices: any;
   priceList: string;
+  rating: number;
   isActive: boolean;
 }
 
@@ -38,19 +39,27 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  typeOfServices: {
-    type: String,
-    required: true,
-  },
+  // typeOfServices: [
+  //   {
+  //     type: String,
+  //     required: false,
+  //   },
+  // ],
   priceList: {
     type: String,
     required: true,
+  },
+  rating: {
+    type: Number,
+    required: false,
+    default: 0,
   },
   isActive: {
     type: Boolean,
     required: true,
   },
-  //   links: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
+
+  typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningServices" }],
   // 	links: [{ type: mongoose.Schema.Types.ObjectId, ref: "Link" }],
 });
 

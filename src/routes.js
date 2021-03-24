@@ -7,12 +7,22 @@ import SignUpCompany from "./pages/auth-pages/SignUpCompany";
 import DetailCompanyPage from "./pages/companies/DetailCompanyPage";
 import CompaniesPage from "./pages/companies/CompaniesPage";
 import UsersPage from "./pages/users/UsersPage";
-import CreateOrderPage from "./pages/CreateOrderPage";
+import CreateOrderPage from "./pages/orders/CreateOrderPage";
+
+import HomePage from "./pages/main-page/HomePage";
+import Feedback from "./components/Feedback";
+import UserProfile from "./pages/profile/UserProfile";
 
 export const useRoutes = (isAuthenticated) => {
   if (isAuthenticated) {
     return (
       <Switch>
+        <Route path="/home" exact>
+          <HomePage />
+        </Route>
+        <Route path="/profile" exact>
+          <UserProfile />
+        </Route>
         <Route path="/users" exact>
           <UsersPage />
         </Route>
@@ -25,7 +35,11 @@ export const useRoutes = (isAuthenticated) => {
         <Route path="/company-detail/:id">
           <DetailCompanyPage />
         </Route>
-        <Redirect to="/create" />
+        <Route path="/feedback">
+          <Feedback />
+        </Route>
+
+        <Redirect to="/home" />
       </Switch>
     );
   }

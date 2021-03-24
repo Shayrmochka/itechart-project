@@ -18,6 +18,11 @@ var userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    logo: {
+        type: String,
+        required: false,
+        "default": "https://static-cdn.jtvnw.net/jtv_user_pictures/54a8a787-4619-4b1f-a0ca-03ffac31b0a6-profile_image-300x300.png"
+    },
     phone: {
         type: String,
         required: true
