@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import React, { useCallback, useEffect, useState } from "react";
+
 import { useHttp } from "../../hooks/http.hook";
 import Loader from "../../components/Loader";
 import CompaniesList from "../../components/companies/CompaniesList";
@@ -8,19 +8,17 @@ import { useMessage } from "../../hooks/message.hook";
 function CompaniesPage() {
   const [companies, setCompanies] = useState([]);
   const { loading, error, request } = useHttp();
-  const { token } = useContext(AuthContext);
+
   const message = useMessage();
 
   const fetchCompanies = useCallback(async () => {
     try {
-      const fetched = await request("/api/company", "GET", null, {
-        Authorization: `Bearer: ${token}`,
-      });
+      const fetched = await request("/api/company", "GET", null);
       console.log(fetched);
       setCompanies(fetched);
       message(fetched.message);
     } catch (e) {}
-  }, [token, request]);
+  }, [request]);
 
   useEffect(() => {
     fetchCompanies();

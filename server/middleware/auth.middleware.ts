@@ -17,6 +17,8 @@ const auth = (req: any, res: any, next: any) => {
     }
 
     const decoded: object = jwt.verify(token, config.jwtSecret);
+    // console.log("DECODED", decoded);
+    // console.log("REQ USER", req.user);
     req.user = decoded;
     next();
   } catch (e) {
@@ -24,8 +26,19 @@ const auth = (req: any, res: any, next: any) => {
   }
 };
 
-const signToken = (user: string): void => {
-  return jwt.sign({ dataId: user }, config.jwtSecret, {
+const checkToken = (token: string) => {
+  // const userToken: string = token;
+
+  // if (!userToken) {
+  //   return res.status(401).json({ message: "You are not logged in" });
+  // }
+
+  const decoded: object = jwt.verify(token, config.jwtSecret);
+  return decoded;
+};
+
+const signToken = (user: string, accountOwner: string): void => {
+  return jwt.sign({ dataId: user, accountOwner }, config.jwtSecret, {
     expiresIn: 604800,
   });
 };
@@ -85,4 +98,5 @@ module.exports = {
   verifyPassword,
   checkIsInRole,
   getRedirectUrl,
+  checkToken,
 };

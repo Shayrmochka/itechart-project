@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
 import Footer from "../Footer";
@@ -12,6 +12,10 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
+import Feedback from "./Feedback";
+import { useHttp } from "../../hooks/http.hook";
+import CompanyFeedbacks from "./CompanyFeedbacks";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -108,18 +112,39 @@ const services = [
 ];
 
 function CompanyCard({ company }) {
+  const classes = useStyles();
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const history = useHistory();
+  const { request } = useHttp();
+
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleOrder = () => {
     history.push("/create-order");
   };
 
-  const handleFeedback = () => {
-    history.push("/feedback");
-  };
-  console.log(company);
+  const getFeedbacks = useCallback(async () => {
+    try {
+      const data = await request("/api/feedback/", "GET", null, {
+        company: company._id,
+      });
+      //message(data.message);
+      setFeedbacks(data);
+    } catch (e) {}
+  }, [request]);
 
-  const classes = useStyles();
+  useEffect(() => {
+    getFeedbacks();
+  }, [getFeedbacks]);
 
   return (
     <React.Fragment>
@@ -161,13 +186,23 @@ function CompanyCard({ company }) {
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button
-                    onClick={handleFeedback}
-                    variant="outlined"
-                    color="primary"
-                  >
-                    Rate Us
-                  </Button>
+                  {isAuthenticated ? (
+                    <Button
+                      onClick={handleClickOpen}
+                      variant="outlined"
+                      color="primary"
+                    >
+                      Rate Us
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => history.push("/signin")}
+                      variant="outlined"
+                      color="primary"
+                    >
+                      Login to Rate Us
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </div>
@@ -195,9 +230,13 @@ function CompanyCard({ company }) {
             ))}
           </Grid>
         </Container>
+
+        <CompanyFeedbacks feedbacks={feedbacks} />
       </main>
 
       <Footer />
+
+      <Feedback open={open} handleClose={handleClose} companyId={company._id} />
     </React.Fragment>
   );
 }

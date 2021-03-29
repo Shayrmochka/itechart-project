@@ -1,38 +1,53 @@
 import { useState, useCallback, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getCurrentUser,
+  hideLoader,
+  removeCurrentUser,
+  showLoader,
+} from "../redux/actions";
+import { useHttp } from "./http.hook";
 
 const storageName = "userData";
 
 export const useAuth = () => {
-  const [token, setToken] = useState(null);
-  const [ready, setReady] = useState(false);
-  const [userId, setUserId] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const dispatch = useDispatch();
 
-  const login = useCallback((jwtToken, id, data) => {
-    setToken(jwtToken);
-    setUserId(id);
-    setUserData(data);
+  const { request } = useHttp();
 
-    localStorage.setItem(
-      storageName,
-      JSON.stringify({ userId: id, token: jwtToken, userData: data })
-    );
+  const login = useCallback((jwtToken) => {
+    localStorage.setItem(storageName, JSON.stringify({ token: jwtToken }));
   }, []);
+
   const logout = useCallback(() => {
-    setToken(null);
-    setUserId(null);
+    dispatch(removeCurrentUser());
     localStorage.removeItem(storageName);
   }, []);
 
+  const checkRequest = async (data) => {
+    dispatch(showLoader());
+    try {
+      const dataReq = await request("/api/auth/check", "POST", {
+        data,
+      });
+
+      //console.log("TEST", dataReq);
+      dispatch(getCurrentUser({ ...dataReq, token: data }));
+
+      login(data);
+      dispatch(hideLoader());
+    } catch (e) {
+      alert(e);
+    }
+  };
+
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem(storageName));
-    console.log("IMPORTANT", userData);
-    if (data && data.token) {
-      login(data.token, data.userId, data.userData);
-    }
 
-    setReady(true);
+    if (data && data.token) {
+      checkRequest(data.token);
+    }
   }, [login]);
 
-  return { login, logout, token, userId, ready, userData };
+  return { login, logout };
 };

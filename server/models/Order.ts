@@ -7,6 +7,7 @@ interface IOrder extends mongoose.Document {
   ownerLogo: string;
   ownerEmail: string;
   orderTo: string;
+  companyLogo: string;
   address: string;
   services: string;
   flatDescription: string;
@@ -21,6 +22,7 @@ var orderSchema = new mongoose.Schema({
   ownerLogo: { type: String },
   ownerEmail: { type: String },
   orderTo: { type: mongoose.Types.ObjectId, ref: "CleaningCompany" },
+  companyLogo: { type: String },
   address: { type: String },
   services: { type: String },
   flatDescription: { type: String },

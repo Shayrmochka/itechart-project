@@ -10,10 +10,9 @@ import UsersPage from "./pages/users/UsersPage";
 import CreateOrderPage from "./pages/orders/CreateOrderPage";
 
 import HomePage from "./pages/main-page/HomePage";
-import Feedback from "./components/Feedback";
 import UserProfile from "./pages/profile/UserProfile";
 
-export const useRoutes = (isAuthenticated) => {
+export const useRoutes = (isAuthenticated, logout) => {
   if (isAuthenticated) {
     return (
       <Switch>
@@ -21,7 +20,7 @@ export const useRoutes = (isAuthenticated) => {
           <HomePage />
         </Route>
         <Route path="/profile" exact>
-          <UserProfile />
+          <UserProfile logout={logout} />
         </Route>
         <Route path="/users" exact>
           <UsersPage />
@@ -35,9 +34,6 @@ export const useRoutes = (isAuthenticated) => {
         <Route path="/company-detail/:id">
           <DetailCompanyPage />
         </Route>
-        <Route path="/feedback">
-          <Feedback />
-        </Route>
 
         <Redirect to="/home" />
       </Switch>
@@ -46,7 +42,10 @@ export const useRoutes = (isAuthenticated) => {
 
   return (
     <Switch>
-      <Route path="/" exact>
+      <Route path="/home" exact>
+        <HomePage />
+      </Route>
+      <Route path="/signin" exact>
         <SignIn />
       </Route>
       <Route path="/signup" exact>
@@ -58,7 +57,16 @@ export const useRoutes = (isAuthenticated) => {
       <Route path="/signup-company" exact>
         <SignUpCompany />
       </Route>
-      <Redirect to="/" />
+      <Route path="/companies" exact>
+        <CompaniesPage />
+      </Route>
+      <Route path="/create-order" exact>
+        <CreateOrderPage />
+      </Route>
+      <Route path="/company-detail/:id">
+        <DetailCompanyPage />
+      </Route>
+      <Redirect to="/home" />
     </Switch>
   );
 };

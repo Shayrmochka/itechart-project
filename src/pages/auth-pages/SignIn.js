@@ -21,6 +21,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
 
+import { useSelector, useDispatch } from "react-redux";
+import { getCurrentUser } from "../../redux/actions";
+import { useAuth } from "../../hooks/auth.hooh";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -58,10 +62,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AuthPage() {
+  const dispatch = useDispatch();
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
-  const auth = useContext(AuthContext);
 
+  const { login } = useAuth();
   const message = useMessage();
   const { loading, error, request, clearError } = useHttp();
   const [form, setForm] = useState({
@@ -74,9 +79,9 @@ function AuthPage() {
       const dataReq = await request("/api/auth/login", "POST", {
         ...form,
       });
-      message(dataReq.message);
-      console.log("qwqqqqq", dataReq);
-      auth.login(dataReq.token, dataReq.dataId, dataReq.data);
+      //message(dataReq.message);
+      login(dataReq.token);
+      dispatch(getCurrentUser({ ...dataReq.user, token: dataReq.token }));
     } catch (e) {}
   };
 
@@ -127,7 +132,6 @@ function AuthPage() {
             name="email"
             autoComplete="email"
             autoFocus
-            value={form.email}
             onChange={changeHandler}
             inputRef={register({
               required: "You must provide the email address!",
@@ -151,7 +155,6 @@ function AuthPage() {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={form.password}
             onChange={changeHandler}
             inputRef={register({
               required: "You must provide a password.",

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useMessage } from "../../hooks/message.hook";
 import { useHttp } from "../../hooks/http.hook";
-import { AuthContext } from "../../context/AuthContext";
 import {
   Avatar,
   Button,
@@ -58,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
 function SignUp() {
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
-  const auth = useContext(AuthContext);
 
   const message = useMessage();
   const { loading, error, request, clearError } = useHttp();
@@ -68,8 +66,6 @@ function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data));
-    console.log("Form", form);
     try {
       const data = await request("/api/auth/register-company", "POST", {
         ...form,
@@ -89,15 +85,6 @@ function SignUp() {
       [event.target.name]: event.target.value,
     });
   };
-
-  // const registerHandler = async () => {
-  //   try {
-  //     const data = await request("/api/auth/register", "POST", {
-  //       ...form,
-  //     });
-  //     message(data.message);
-  //   } catch (e) {}
-  // };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -187,7 +174,7 @@ function SignUp() {
                 <span className={classes.error}>This field is required</span>
               )}
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
@@ -203,7 +190,7 @@ function SignUp() {
               {errors.typeOfServices && (
                 <span className={classes.error}>This field is required</span>
               )}
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"

@@ -42,7 +42,8 @@ var CleaningCompany = require("../models/CleaningCompany");
 var _a = require("../middleware/auth.middleware"), auth = _a.auth, signToken = _a.signToken, hashPassword = _a.hashPassword, verifyPassword = _a.verifyPassword, checkIsInRole = _a.checkIsInRole, getRedirectUrl = _a.getRedirectUrl;
 var ROLES = require("../roles/roles");
 var router = Router();
-router.get("/", auth, 
+router.get("/", 
+// auth,
 // checkIsInRole(ROLES.Admin),
 function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var companies, e_1;
@@ -63,7 +64,9 @@ function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         }
     });
 }); });
-router.get("/:id", auth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/:id", 
+// auth,
+function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var company, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {

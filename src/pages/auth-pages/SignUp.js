@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useMessage } from "../../hooks/message.hook";
 import { useHttp } from "../../hooks/http.hook";
-import { AuthContext } from "../../context/AuthContext";
 import {
   Avatar,
   Button,
@@ -58,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
 function SignUp() {
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
-  const auth = useContext(AuthContext);
 
   const message = useMessage();
   const { loading, error, request, clearError } = useHttp();

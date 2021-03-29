@@ -13,8 +13,57 @@ const {
   verifyPassword,
   checkIsInRole,
   getRedirectUrl,
+  checkToken,
 } = require("../middleware/auth.middleware");
-console.log(User);
+
+// /api/auth/check
+router.post(
+  "/check",
+
+  async (req: Request, res: Response) => {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          errors: errors.array(),
+          message: "Invalid token",
+        });
+      }
+
+      const decoded = checkToken(req.body.data);
+
+      if (decoded.accountOwner === "user") {
+        const user = await User.findById(decoded.dataId);
+
+        if (!user) {
+          return res.status(400).json({ message: "User not found" });
+        }
+
+        if (!user.isActive) {
+          return res.status(400).json({ message: "The user is banned" });
+        }
+
+        res.json(user);
+      } else if (decoded.accountOwner === "company") {
+        const company = await CleaningCompany.findById(decoded.dataId);
+
+        if (!company) {
+          return res.status(400).json({ message: "Company not found" });
+        }
+
+        if (!company.isActive) {
+          return res.status(400).json({ message: "The company is banned" });
+        }
+
+        res.json(company);
+      }
+    } catch (e) {
+      res.status(500).json({ message: "Something went wrong, try again" });
+    }
+  }
+);
+
 // /api/auth/register
 router.post(
   "/register",
@@ -55,6 +104,7 @@ router.post(
 
       //const hashedPassword = await bcrypt.hash(password, 12);
       const hashedPassword = await hashPassword(password);
+
       const user = new User({
         email,
         password: hashedPassword,
@@ -62,7 +112,7 @@ router.post(
         lastName,
         phone,
         isActive: true,
-        role: ROLES.Customer,
+        role: ROLES.User,
       });
 
       await user.save();
@@ -118,10 +168,10 @@ router.post(
       //   expiresIn: "12h",
       // });
 
-      const token = await signToken(user.id);
+      const token = await signToken(user.id, "user");
 
       // res.json({ token, userId: user.id });
-      res.json({ token, dataId: user.id, data: user });
+      res.json({ token, user });
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });
     }
@@ -151,7 +201,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     // res.set("Access-Control-Allow-Origin", "*");
-    console.log("REQ", req.body);
+    console.log("REQ111", req.body);
     try {
       const errors = validationResult(req);
 
@@ -187,7 +237,7 @@ router.post(
         name,
         description,
         address,
-        typeOfServices,
+        // typeOfServices,
         priceList,
         rating: 0,
         isActive: true,
@@ -244,9 +294,9 @@ router.post(
       // const token = jwt.sign({ companyId: company.id }, config.jwtSecret, {
       //   expiresIn: "12h",
       // });
-      const token = await signToken(company.id);
+      const token = await signToken(company.id, "company");
 
-      res.json({ token, companyId: company.id, data: company });
+      res.json({ token, company });
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });
     }

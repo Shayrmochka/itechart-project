@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -21,6 +21,7 @@ import { useHttp } from "../../../hooks/http.hook";
 import { useMessage } from "../../../hooks/message.hook";
 import { AuthContext } from "../../../context/AuthContext";
 import CompaniesList from "../../companies/CompaniesList";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -49,11 +50,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AddressForm({ updateFinalForm }) {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const from = "modal";
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
   const message = useMessage();
-  const auth = useContext(AuthContext);
+
   const { loading, request } = useHttp();
 
   const [cleaningService, setCleaningService] = useState({
@@ -68,20 +70,22 @@ function AddressForm({ updateFinalForm }) {
   });
 
   const updateChosenCompany = (value) => {
-    setChosenCompany({ companyName: value.name, companyId: value._id });
+    setChosenCompany({
+      companyName: value.name,
+      companyId: value._id,
+      companyLogo: value.logo,
+    });
     handleClose();
   };
 
   const fetchCompanies = useCallback(async () => {
     try {
-      const fetched = await request("/api/company", "GET", null, {
-        Authorization: `Bearer: ${auth.token}`,
-      });
+      const fetched = await request("/api/company", "GET", null);
 
       setCompanies(fetched);
       message(fetched.message);
     } catch (e) {}
-  }, [auth.token, request]);
+  }, [request]);
 
   useEffect(() => {
     fetchCompanies();
@@ -109,14 +113,11 @@ function AddressForm({ updateFinalForm }) {
   };
 
   const handleUpdateFinalForm = () => {
-    const { email, logo } = JSON.parse(
-      localStorage.getItem("userData")
-    ).userData;
     updateFinalForm({
       ...addressForm,
       ...chosenCompany,
-      email,
-      logo,
+      email: currentUser.email,
+      logo: currentUser.logo,
     });
   };
 

@@ -7,8 +7,8 @@ interface IUser extends mongoose.Document {
   lastName: string;
   logo: string;
   phone: string;
-  isAdmin: boolean;
   isActive: boolean;
+  type: string;
   role: string;
   links: any;
 }
@@ -41,13 +41,14 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  isAdmin: {
-    type: Boolean,
-    required: true,
-  },
   isActive: {
     type: Boolean,
     required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+    default: "user",
   },
   role: {
     type: String,

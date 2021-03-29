@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+
 import { blue } from "@material-ui/core/colors";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -13,11 +13,13 @@ import {
   Avatar,
   Badge,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   Grid,
   IconButton,
   List,
@@ -103,17 +105,34 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
-    backgroundColor: blue[100],
+    // backgroundColor: blue[100],
+    backgroundColor: "white",
     color: blue[600],
   },
   openMenuDialogStyle: {
     marginTop: "40px",
   },
+  notifAnswer: {
+    marginRight: "10px",
+  },
+  waiting: {
+    color: "orange",
+  },
+  accepted: {
+    color: "green",
+  },
+  declined: {
+    color: "red",
+  },
 }));
 
 function NavBar(props) {
-  const [currentUser, setCurrentUser] = useState(null);
+  //console.log(props.currentUser);
+
   const classes = useStyles();
+  const history = useHistory();
+  const { request } = useHttp();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationEl, setNotificationEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -122,11 +141,55 @@ function NavBar(props) {
   const [selectedValue, setSelectedValue] = useState(orders[1]);
   const [orderDialogInfo, setOrderDialogInfo] = useState({});
   const [openOrderDialog, setOpenOrderDialog] = useState(false);
+  const [sortedOrders, setSortedOrders] = useState([]);
+  const [openMail, setOpenMail] = useState(false);
+  const [ordersSortedByAccepted, setOrdersSortedByAccepted] = useState([]);
+
+  const fetchOrders = useCallback(
+    async (token) => {
+      try {
+        //const fetched = await request("/api/order", "GET", null, null, token);
+        const response = await fetch("http://localhost:4000/api/order", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer: ${token}`,
+          },
+        });
+        const fetched = await response.json();
+        // console.log(fetched);
+
+        setOrders(fetched);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [request]
+  );
+
+  useEffect(() => {
+    if (props.currentUser.token && props.isAuthenticated) {
+      console.log("RENDER");
+      fetchOrders(props.currentUser.token);
+    }
+  }, [fetchOrders, props, props.currentUser.token, props.isAuthenticated]);
+
+  useEffect(() => {
+    if (props.currentUser.type === "user") {
+      setSortedOrders(orders.filter((order) => order.status !== "waiting"));
+    } else if (props.currentUser.type === "company") {
+      setSortedOrders(orders.filter((order) => !order.checked));
+    }
+  }, [orders]);
+
+  useEffect(() => {
+    setOrdersSortedByAccepted(
+      orders.filter((order) => order.status === "accepted")
+    );
+  }, [orders, sortedOrders]);
 
   const handleClickOpenOrderDialog = (order) => {
-    setOrderDialogInfo(order);
-    console.log("ORDER", order);
     setOpenOrderDialog(true);
+    setOrderDialogInfo(order);
   };
 
   const handleCloseOrderDialog = () => {
@@ -143,30 +206,18 @@ function NavBar(props) {
     setSelectedValue(value);
   };
 
+  const handleOpenMail = () => {
+    setOpenMail(true);
+  };
+
+  const handleCloseMail = (value) => {
+    setOpenMail(false);
+  };
+
   const isNotificationsOpen = Boolean(notificationEl);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const history = useHistory();
-  const auth = useContext(AuthContext);
-
-  const { loading, request } = useHttp();
-  const { token } = useContext(AuthContext);
-  const message = useMessage();
-
-  const fetchLinks = useCallback(async () => {
-    try {
-      const fetched = await request("/api/order", "GET", null, {
-        Authorization: `Bearer: ${token}`,
-      });
-      setOrders(fetched);
-      message(fetched.message);
-      console.log(fetched);
-    } catch (e) {}
-  }, [token, request]);
-  useEffect(() => {
-    fetchLinks();
-  }, [fetchLinks]);
   // if (loading) {
   //   return <Loader />;
   // }
@@ -178,13 +229,15 @@ function NavBar(props) {
 
   const logoutHandler = () => {
     handleMenuClose();
-    auth.logout();
-    history.push("/");
+
+    props.logout();
+
+    history.push("/home");
   };
 
-  useEffect(() => {
-    setCurrentUser(props.currentUser);
-  }, [props]);
+  // useEffect(() => {
+  //   //setCurrentUser(props.currentUser);
+  // }, [props]);
 
   const adminButton = () => {
     if (props.currentUser.role === "Admin") {
@@ -196,31 +249,6 @@ function NavBar(props) {
         </Typography>
       );
     }
-  };
-
-  const renderUserInfoGrid = () => {
-    if (currentUser !== null) {
-      return (
-        <Grid item xs={12} sm={3}>
-          {currentUser.hasOwnProperty("role") ? (
-            <>
-              <Typography>
-                {currentUser.firstName} {currentUser.lastName}
-              </Typography>
-              <Typography>{currentUser.role}</Typography>
-            </>
-          ) : (
-            <Typography>{currentUser.name}</Typography>
-          )}
-        </Grid>
-      );
-    }
-
-    return (
-      <Grid item xs={12} sm={3}>
-        <Typography>Loading...</Typography>
-      </Grid>
-    );
   };
 
   const handleNotificationsMenuOpen = (event) => {
@@ -266,6 +294,9 @@ function NavBar(props) {
     </Menu>
   );
 
+  // console.log("ORDERS", orders);
+  // console.log("SORTED", sortedOrders);
+
   const notificationsId = "primary-search-notifications-menu";
   const renderNotifications = (
     <Menu
@@ -282,7 +313,7 @@ function NavBar(props) {
 
       <MenuItem onClick={logoutHandler}>Logout</MenuItem> */}
       <List>
-        {orders.map((order) => (
+        {sortedOrders.map((order) => (
           <ListItem
             button
             //onClick={() => handleListItemClick(order)}
@@ -291,13 +322,50 @@ function NavBar(props) {
           >
             <ListItemAvatar>
               <Avatar className={classes.avatar}>
-                <img
-                  style={{ width: "100%", objectFit: "cover" }}
-                  src={order.ownerLogo}
-                />
+                {props.currentUser.type === "user" ? (
+                  <img
+                    style={{ width: "100%", objectFit: "cover" }}
+                    src={order.companyLogo}
+                  />
+                ) : (
+                  <img
+                    style={{ width: "100%", objectFit: "cover" }}
+                    src={order.ownerLogo}
+                  />
+                )}
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={order.ownerEmail} />
+            {props.currentUser.type === "user" ? (
+              <>
+                <ListItemText
+                  className={classes.notifAnswer}
+                  primary={order.ownerEmail}
+                />
+                <ListItemText
+                  primary={order.status}
+                  className={
+                    order.status === "waiting"
+                      ? classes.waiting
+                      : order.status === "accepted"
+                      ? classes.accepted
+                      : classes.declined
+                  }
+                />
+              </>
+            ) : (
+              <ListItemText primary={order.ownerEmail} />
+            )}
+
+            {/* <div style={{ display: "flex", flexDirection: "column" }}>
+              <ListItemText
+                style={{ margin: "0" }}
+                primary={order.ownerEmail}
+              />
+              <ListItemText
+                style={{ margin: "0" }}
+                primary={order.ownerEmail}
+              />
+            </div> */}
           </ListItem>
         ))}
       </List>
@@ -329,7 +397,7 @@ function NavBar(props) {
           color="inherit"
           aria-controls="primary-search-notifications-menu"
         >
-          <Badge badgeContent={orders.length} color="secondary">
+          <Badge badgeContent={sortedOrders.length} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -378,44 +446,29 @@ function NavBar(props) {
               Companies
             </NavLink>
           </Typography>
-          {props.currentUser === null ? "Loading" : adminButton()}
-          {renderUserInfoGrid()}
+
+          {Object.keys(props.currentUser).length === 0 ? <></> : adminButton()}
 
           <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              aria-label="show 4 new mails"
-              color="inherit"
-              onClick={() => console.log("qwe")}
-            >
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              //onClick={handleClickOpen}
-              aria-label="notifications"
-              aria-controls={notificationsId}
-              aria-haspopup="true"
-              onClick={handleNotificationsMenuOpen}
-              color="inherit"
-            >
-              <Badge badgeContent={orders.length} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
 
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+          <div className={classes.sectionDesktop}>
+            {props.isAuthenticated ? (
+              SectionDesctop(
+                handleOpenMail,
+                ordersSortedByAccepted,
+                notificationsId,
+                handleNotificationsMenuOpen,
+                sortedOrders,
+                menuId,
+                handleProfileMenuOpen
+              )
+            ) : (
+              <Button onClick={() => history.push("/signin")} color="inherit">
+                Login
+              </Button>
+            )}
           </div>
+
           <div className={classes.sectionMobile}>
             <IconButton
               aria-label="show more"
@@ -436,13 +489,22 @@ function NavBar(props) {
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
-        orders={orders}
+        sortedOrders={sortedOrders}
         handleClickOpenOrderDialog={handleClickOpenOrderDialog}
       />
       <ExtendedOrderDialog
         open={openOrderDialog}
         onClose={handleCloseOrderDialog}
         orderDialogInfo={orderDialogInfo}
+        request={request}
+      />
+      <AcceptedOrders
+        open={openMail}
+        onClose={handleCloseMail}
+        orders={orders}
+        ordersSortedByAccepted={ordersSortedByAccepted}
+        handleClickOpenOrderDialog={handleClickOpenOrderDialog}
+        currentUser={props.currentUser}
       />
     </div>
   );
@@ -450,55 +512,169 @@ function NavBar(props) {
 
 export default NavBar;
 
-function SimpleDialog({
+function SectionDesctop(
+  handleOpenMail,
+  ordersSortedByAccepted,
+  notificationsId,
+  handleNotificationsMenuOpen,
+  sortedOrders,
+  menuId,
+  handleProfileMenuOpen
+) {
+  return (
+    <>
+      <IconButton
+        aria-label="show new mails"
+        color="inherit"
+        onClick={handleOpenMail}
+      >
+        <Badge badgeContent={ordersSortedByAccepted.length} color="secondary">
+          <MailIcon />
+        </Badge>
+      </IconButton>
+      <IconButton
+        //onClick={handleClickOpen}
+        aria-label="notifications"
+        aria-controls={notificationsId}
+        aria-haspopup="true"
+        onClick={handleNotificationsMenuOpen}
+        color="inherit"
+      >
+        <Badge badgeContent={sortedOrders.length} color="secondary">
+          <NotificationsIcon />
+        </Badge>
+      </IconButton>
+
+      <IconButton
+        edge="end"
+        aria-label="account of current user"
+        aria-controls={menuId}
+        aria-haspopup="true"
+        onClick={handleProfileMenuOpen}
+        color="inherit"
+      >
+        <AccountCircle />
+      </IconButton>
+    </>
+  );
+}
+
+function AcceptedOrders({
   onClose,
-  selectedValue,
   open,
-  orders,
+  ordersSortedByAccepted,
   handleClickOpenOrderDialog,
+  orders,
+  currentUser,
 }) {
   const classes = useStyles();
 
-  const handleClose = () => {
-    onClose(selectedValue);
+  const [checkedOrders, setCheckedOrders] = useState(true);
+
+  const handleChange = (event) => {
+    setCheckedOrders(event.target.checked);
   };
 
   const handleListItemClick = (value) => {
     onClose(value);
   };
 
-  return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-    >
-      <DialogTitle id="simple-dialog-title">New Orders</DialogTitle>
+  const returnOrders = (propsOrders) => {
+    return (
       <List>
-        {orders.map((order) => (
+        {propsOrders.map((order) => (
           <ListItem
             button
+            onClick={() => handleClickOpenOrderDialog(order)}
             //onClick={() => handleListItemClick(order)}
-            onClick={() => handleClickOpenOrderDialog()}
+            //onClick={() => handleClickOpenOrderDialog()}
             key={order._id}
+            style={{
+              borderTop: "1px solid #00000020",
+            }}
           >
             <ListItemAvatar>
               <Avatar className={classes.avatar}>
-                <img
-                  style={{ width: "100%", objectFit: "cover" }}
-                  src={order.ownerLogo}
-                />
+                {currentUser.type === "user" ? (
+                  <img
+                    style={{ width: "100%", objectFit: "cover" }}
+                    src={order.companyLogo}
+                  />
+                ) : (
+                  <img
+                    style={{ width: "100%", objectFit: "cover" }}
+                    src={order.ownerLogo}
+                  />
+                )}
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={order.ownerEmail} />
+            {/* <ListItemText primary={order.ownerEmail} /> */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <div>
+                <ListItemText
+                  style={{ margin: "0" }}
+                  primary={order.services}
+                />
+                <ListItemText
+                  style={{ margin: "0" }}
+                  primary={order.ownerEmail}
+                />
+              </div>
+            </div>
           </ListItem>
         ))}
       </List>
+    );
+  };
+
+  return (
+    <Dialog
+      // onClose={handleClose}
+      fullWidth={true}
+      maxWidth="sm"
+      onClose={onClose}
+      aria-labelledby="simple-dialog-title"
+      open={open}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <DialogTitle id="simple-dialog-title">Orders</DialogTitle>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkedOrders}
+              onChange={handleChange}
+              name="checked"
+              color="primary"
+            />
+          }
+          label="Sort by accepted"
+        />
+      </div>
+
+      {!checkedOrders
+        ? returnOrders(orders)
+        : returnOrders(ordersSortedByAccepted)}
     </Dialog>
   );
 }
 
-function ExtendedOrderDialog({ open, onClose, orderDialogInfo }) {
+function ExtendedOrderDialog({ open, onClose, orderDialogInfo, request }) {
+  const setAnswer = async (order, answer) => {
+    try {
+      await request("/api/order/update-set-answer", "POST", {
+        ...order,
+        answer,
+      });
+    } catch (e) {}
+    onClose();
+  };
+
   return (
     <div>
       <Dialog
@@ -522,14 +698,69 @@ function ExtendedOrderDialog({ open, onClose, orderDialogInfo }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary">
+          <Button
+            onClick={() => setAnswer(orderDialogInfo, true)}
+            color="primary"
+          >
             Accept
           </Button>
-          <Button onClick={onClose} color="primary" autoFocus>
+          <Button
+            onClick={() => setAnswer(orderDialogInfo, false)}
+            color="primary"
+            autoFocus
+          >
             Decline
           </Button>
         </DialogActions>
       </Dialog>
     </div>
+  );
+}
+
+function SimpleDialog({
+  onClose,
+  selectedValue,
+  open,
+  sortedOrders,
+  handleClickOpenOrderDialog,
+}) {
+  const classes = useStyles();
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = (value) => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby="simple-dialog-title"
+      open={open}
+    >
+      <DialogTitle id="simple-dialog-title">New Orders</DialogTitle>
+      <List>
+        {sortedOrders.map((order) => (
+          <ListItem
+            button
+            //onClick={() => handleListItemClick(order)}
+            onClick={() => handleClickOpenOrderDialog()}
+            key={order._id}
+          >
+            <ListItemAvatar>
+              <Avatar className={classes.avatar}>
+                <img
+                  style={{ width: "100%", objectFit: "cover" }}
+                  src={order.ownerLogo}
+                />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={order.ownerEmail} />
+          </ListItem>
+        ))}
+      </List>
+    </Dialog>
   );
 }

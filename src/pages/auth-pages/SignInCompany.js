@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useMessage } from "../../hooks/message.hook";
 import { useHttp } from "../../hooks/http.hook";
-import { AuthContext } from "../../context/AuthContext";
 
 import {
   Avatar,
@@ -20,6 +19,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../hooks/auth.hooh";
+import { useDispatch } from "react-redux";
+import { getCurrentUser } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -58,10 +60,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AuthPage() {
+  const dispatch = useDispatch();
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
-  const auth = useContext(AuthContext);
 
+  const { login } = useAuth();
   const message = useMessage();
   const { loading, error, request, clearError } = useHttp();
   const [form, setForm] = useState({
@@ -70,14 +73,14 @@ function AuthPage() {
   });
 
   const onSubmit = async (data) => {
-    console.log(JSON.stringify(data));
-    console.log("Form", form);
     try {
       const dataReq = await request("/api/auth/login-company", "POST", {
         ...form,
       });
-      message(dataReq.message);
-      auth.login(dataReq.token, dataReq.userId, dataReq.data);
+      //message(dataReq.message);
+      console.log(dataReq);
+      login(dataReq.token);
+      dispatch(getCurrentUser({ ...dataReq.company, token: dataReq.token }));
     } catch (e) {}
   };
 
@@ -108,7 +111,7 @@ function AuthPage() {
           noValidate
           // onSubmit={handleSubmit(onSubmit)}
         >
-          <NavLink className={classes.links} to="/">
+          <NavLink className={classes.links} to="/signin">
             <div className={classes.linksBlock}>I'm User</div>
           </NavLink>
           <TextField
@@ -121,7 +124,6 @@ function AuthPage() {
             name="email"
             autoComplete="email"
             autoFocus
-            value={form.email}
             onChange={changeHandler}
             inputRef={register({
               required: "You must provide the email address!",
@@ -145,7 +147,6 @@ function AuthPage() {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={form.password}
             onChange={changeHandler}
             inputRef={register({
               required: "You must provide a password.",

@@ -48,6 +48,7 @@ app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/user", require("./routes/user.routes"));
 app.use("/api/company", require("./routes/company.routes"));
 app.use("/api/order", require("./routes/order.routes"));
+app.use("/api/feedback", require("./routes/feedback.routes"));
 var PORT = config.port || 4000;
 function start() {
     return __awaiter(this, void 0, void 0, function () {

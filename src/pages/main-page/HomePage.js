@@ -43,8 +43,7 @@ const centerPost = {
   title: "Enrich the travelling experience",
   description:
     "A clean, safe airport keeps travellers healthy and happy, while spotless shopping and dining facilities play a crucial role in strengthening an airport’s reputation.",
-  image:
-    "https://www.darbylanefurniture.com/wp-content/uploads/2017/05/modern-large-living-room-designs-1.jpg",
+  image: "../images/center.jpg",
   imageText: "main image description",
   linkText: "Continue reading…",
 };
@@ -54,14 +53,14 @@ const featuredPosts = [
     title: "Fuel productivity",
     company: "ISS",
     description: `A clean and hygienic workplace can help teams reach peak focus and ensure 100% uptime by reducing the risk of malfunctions, errors or accidents – and, crucially, decrease the number of sick days.`,
-    image: "https://mdl.com.ua/wp-content/uploads/2019/11/74905-300x222.jpg",
+    image: "../images/featured_1.jpg",
     imageText: "Image Text",
   },
   {
     title: "Help patients heal",
     company: "ISS",
     description: `Support patients and their families on their road to recovery with clean, safe hospital environments. With healthcare housekeeping and medical equipment cleaning.`,
-    image: "https://pbs.twimg.com/media/EYea0ScXgAMEpIN.jpg",
+    image: "../images/featured_2.jpg",
     imageText: "Image Text",
   },
 ];

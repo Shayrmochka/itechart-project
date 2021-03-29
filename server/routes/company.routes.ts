@@ -20,7 +20,7 @@ interface CompanyRequest extends Request {
 
 router.get(
   "/",
-  auth,
+  // auth,
   // checkIsInRole(ROLES.Admin),
   async (req: CompanyRequest, res: Response) => {
     try {
@@ -32,15 +32,19 @@ router.get(
   }
 );
 
-router.get("/:id", auth, async (req: Request, res: Response) => {
-  try {
-    const company = await CleaningCompany.findById(req.params.id);
+router.get(
+  "/:id",
+  // auth,
+  async (req: Request, res: Response) => {
+    try {
+      const company = await CleaningCompany.findById(req.params.id);
 
-    res.json(company);
-  } catch (e) {
-    res.status(500).json({ message: "Something went wrong, try again" });
+      res.json(company);
+    } catch (e) {
+      res.status(500).json({ message: "Something went wrong, try again" });
+    }
   }
-});
+);
 
 router.post(
   "/update",

@@ -45,6 +45,11 @@ var cleaningCompanySchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    type: {
+        type: String,
+        required: true,
+        "default": "company"
+    },
     typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningServices" }]
 });
 var cleaningCompany = mongoose.model("CleaningCompany", cleaningCompanySchema);

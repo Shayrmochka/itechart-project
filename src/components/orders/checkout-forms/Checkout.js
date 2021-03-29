@@ -56,7 +56,6 @@ const steps = ["Address", "Review your order"];
 function Checkout() {
   const classes = useStyles();
   const message = useMessage();
-  const auth = useContext(AuthContext);
   const { loading, error, request, clearError } = useHttp();
   const [activeStep, setActiveStep] = useState(0);
   const [finalForm, setFinalForm] = useState({});
@@ -71,16 +70,9 @@ function Checkout() {
     console.log("STATE", finalForm);
 
     try {
-      const data = await request(
-        "/api/order/create-new-order",
-        "POST",
-        {
-          ...finalForm,
-        },
-        {
-          Authorization: `Bearer ${auth.token}`,
-        }
-      );
+      const data = await request("/api/order/create-new-order", "POST", {
+        ...finalForm,
+      });
       message(data.message);
     } catch (e) {}
     handleNext();

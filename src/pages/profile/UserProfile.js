@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Container, Grid, Typography } from "@material-ui/core";
+import Footer from "../../components/Footer";
+import { useSelector } from "react-redux";
+import EditProfile from "../../components/profile/EditProfile";
+import DeleteProfile from "../../components/profile/DeleteProfile";
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
-    backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
   },
   heroButtons: {
@@ -22,19 +25,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserProfile() {
-  const [currentUser, setCurrentUser] = useState({});
-
-  useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem("userData")).userData);
-  }, []);
+function UserProfile({ logout }) {
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   const handleEditProfile = () => {
-    console.log("handleEditProfile");
+    setEditProfileOpen(true);
   };
 
-  const handleDeleteProfile = () => {
-    console.log("handleDeleteProfile");
+  const handleEditProfileClose = () => {
+    setEditProfileOpen(false);
+  };
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const handleDeleteOpen = () => {
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
   };
 
   const classes = useStyles();
@@ -86,7 +96,7 @@ function UserProfile() {
               </Grid>
               <Grid item>
                 <Button
-                  onClick={handleDeleteProfile}
+                  onClick={handleDeleteOpen}
                   variant="outlined"
                   color="primary"
                 >
@@ -97,6 +107,16 @@ function UserProfile() {
           </div>
         </Container>
       </div>
+      <Footer />
+      <EditProfile
+        open={editProfileOpen}
+        handleClose={handleEditProfileClose}
+      />
+      <DeleteProfile
+        open={deleteOpen}
+        handleClose={handleDeleteClose}
+        logout={logout}
+      />
     </React.Fragment>
   );
 }

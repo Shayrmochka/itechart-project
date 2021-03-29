@@ -11,6 +11,7 @@ interface ICleaningCompany extends mongoose.Document {
   priceList: string;
   rating: number;
   isActive: boolean;
+  type: string;
 }
 
 const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
@@ -57,6 +58,11 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+    default: "company",
   },
 
   typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningServices" }],

@@ -50,6 +50,8 @@ var auth = function (req, res, next) {
             return res.status(401).json({ message: "You are not logged in" });
         }
         var decoded = jwt.verify(token, config.jwtSecret);
+        // console.log("DECODED", decoded);
+        // console.log("REQ USER", req.user);
         req.user = decoded;
         next();
     }
@@ -57,8 +59,16 @@ var auth = function (req, res, next) {
         res.status(401).json({ message: "You are not logged in" });
     }
 };
-var signToken = function (user) {
-    return jwt.sign({ dataId: user }, config.jwtSecret, {
+var checkToken = function (token) {
+    // const userToken: string = token;
+    // if (!userToken) {
+    //   return res.status(401).json({ message: "You are not logged in" });
+    // }
+    var decoded = jwt.verify(token, config.jwtSecret);
+    return decoded;
+};
+var signToken = function (user, accountOwner) {
+    return jwt.sign({ dataId: user, accountOwner: accountOwner }, config.jwtSecret, {
         expiresIn: 604800
     });
 };
@@ -129,5 +139,6 @@ module.exports = {
     hashPassword: hashPassword,
     verifyPassword: verifyPassword,
     checkIsInRole: checkIsInRole,
-    getRedirectUrl: getRedirectUrl
+    getRedirectUrl: getRedirectUrl,
+    checkToken: checkToken
 };

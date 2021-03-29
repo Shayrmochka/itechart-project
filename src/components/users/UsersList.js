@@ -8,7 +8,6 @@ import {
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { AuthContext } from "../../context/AuthContext";
 import { useHttp } from "../../hooks/http.hook";
 
 const useStyles = makeStyles({
@@ -16,8 +15,8 @@ const useStyles = makeStyles({
     display: "flex",
   },
   card: {
-    minWidth: 180,
-    maxWidth: 200,
+    minWidth: 200,
+    maxWidth: 220,
     minHeight: 240,
     margin: 10,
     cursor: "pointer",
@@ -28,8 +27,8 @@ const useStyles = makeStyles({
     },
   },
   cardBanned: {
-    minWidth: 180,
-    maxWidth: 200,
+    minWidth: 200,
+    maxWidth: 220,
     minHeight: 240,
     margin: 10,
     cursor: "pointer",
@@ -44,7 +43,7 @@ const useStyles = makeStyles({
     fontSize: 14,
   },
   pos: {
-    marginBottom: 12,
+    marginBottom: 4,
   },
   link: {
     textDecoration: "none",
@@ -55,13 +54,10 @@ const useStyles = makeStyles({
 function UsersList({ users }) {
   const classes = useStyles();
 
-  const auth = useContext(AuthContext);
   const { request } = useHttp();
   const blockHandler = async (user) => {
     try {
-      await request("/api/user/update", "POST", user, {
-        Authorization: `Bearer ${auth.token}`,
-      });
+      await request("/api/user/update", "POST", user);
     } catch (e) {}
   };
 
@@ -76,14 +72,19 @@ function UsersList({ users }) {
             className={user.isActive ? classes.card : classes.cardBanned}
             key={user._id}
           >
-            <CardContent>
-              <Typography
-                className={classes.title}
-                color="textSecondary"
-                gutterBottom
-              >
-                {user.role === "Admin" ? "Admin" : "User"}
-              </Typography>
+            <CardContent style={{ textAlign: "center", paddingBottom: "0px" }}>
+              <div style={{ textAlign: "center" }}>
+                <img
+                  style={{
+                    width: "100px",
+                    height: "auto",
+                    borderRadius: "100px",
+                  }}
+                  src={user.logo}
+                  alt="user-logo"
+                />
+              </div>
+
               <Typography variant="h6" component="h2">
                 {user.firstName} {user.lastName}
               </Typography>
@@ -92,8 +93,15 @@ function UsersList({ users }) {
                 color="textSecondary"
                 gutterBottom
               >
-                {user.isActive ? "Active" : "Banned"}
+                {user.role === "Admin" ? "Admin" : "User"}
               </Typography>
+              {/* <Typography
+                className={classes.title}
+                color="textSecondary"
+                gutterBottom
+              >
+                {user.isActive ? "Active" : "Banned"}
+              </Typography> */}
               <Typography className={classes.pos} color="textSecondary">
                 {user.email}
               </Typography>
@@ -101,7 +109,7 @@ function UsersList({ users }) {
                 {user.phone}
               </Typography>
             </CardContent>
-            <CardActions>
+            <CardActions style={{ display: "flex", justifyContent: "center" }}>
               {user.isActive ? (
                 <Button size="small" onClick={() => blockHandler(user)}>
                   Block

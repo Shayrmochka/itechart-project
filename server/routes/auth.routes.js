@@ -43,8 +43,56 @@ var User = require("../models/User");
 var CleaningCompany = require("../models/CleaningCompany");
 var router = Router();
 var ROLES = require("../roles/roles");
-var _b = require("../middleware/auth.middleware"), auth = _b.auth, signToken = _b.signToken, hashPassword = _b.hashPassword, verifyPassword = _b.verifyPassword, checkIsInRole = _b.checkIsInRole, getRedirectUrl = _b.getRedirectUrl;
-console.log(User);
+var _b = require("../middleware/auth.middleware"), auth = _b.auth, signToken = _b.signToken, hashPassword = _b.hashPassword, verifyPassword = _b.verifyPassword, checkIsInRole = _b.checkIsInRole, getRedirectUrl = _b.getRedirectUrl, checkToken = _b.checkToken;
+// /api/auth/check
+router.post("/check", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var errors, decoded, user, company, e_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                    return [2 /*return*/, res.status(400).json({
+                            errors: errors.array(),
+                            message: "Invalid token"
+                        })];
+                }
+                decoded = checkToken(req.body.data);
+                if (!(decoded.accountOwner === "user")) return [3 /*break*/, 2];
+                return [4 /*yield*/, User.findById(decoded.dataId)];
+            case 1:
+                user = _a.sent();
+                if (!user) {
+                    return [2 /*return*/, res.status(400).json({ message: "User not found" })];
+                }
+                if (!user.isActive) {
+                    return [2 /*return*/, res.status(400).json({ message: "The user is banned" })];
+                }
+                res.json(user);
+                return [3 /*break*/, 4];
+            case 2:
+                if (!(decoded.accountOwner === "company")) return [3 /*break*/, 4];
+                return [4 /*yield*/, CleaningCompany.findById(decoded.dataId)];
+            case 3:
+                company = _a.sent();
+                if (!company) {
+                    return [2 /*return*/, res.status(400).json({ message: "Company not found" })];
+                }
+                if (!company.isActive) {
+                    return [2 /*return*/, res.status(400).json({ message: "The company is banned" })];
+                }
+                res.json(company);
+                _a.label = 4;
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                e_1 = _a.sent();
+                res.status(500).json({ message: "Something went wrong, try again" });
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
+        }
+    });
+}); });
 // /api/auth/register
 router.post("/register", [
     check("email", "Email is incorrect").isEmail(),
@@ -61,7 +109,7 @@ router.post("/register", [
         min: 6
     }),
 ], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, _a, email, password, firstName, lastName, phone, candidate, hashedPassword, user, e_1;
+    var errors, _a, email, password, firstName, lastName, phone, candidate, hashedPassword, user, e_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -91,7 +139,7 @@ router.post("/register", [
                     lastName: lastName,
                     phone: phone,
                     isActive: true,
-                    role: ROLES.Customer
+                    role: ROLES.User
                 });
                 return [4 /*yield*/, user.save()];
             case 3:
@@ -99,7 +147,7 @@ router.post("/register", [
                 res.status(201).json({ message: "User created" });
                 return [3 /*break*/, 5];
             case 4:
-                e_1 = _b.sent();
+                e_2 = _b.sent();
                 res.status(500).json({ message: "Something went wrong, try again" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -111,7 +159,7 @@ router.post("/login", [
     check("email", "Email is incorrect").normalizeEmail().isEmail(),
     check("password", "Enter the password").exists(),
 ], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, _a, email, password, user, isMatch, token, e_2;
+    var errors, _a, email, password, user, isMatch, token, e_3;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -143,14 +191,14 @@ router.post("/login", [
                             .status(400)
                             .json({ message: "Invalid password, please try again" })];
                 }
-                return [4 /*yield*/, signToken(user.id)];
+                return [4 /*yield*/, signToken(user.id, "user")];
             case 3:
                 token = _b.sent();
                 // res.json({ token, userId: user.id });
-                res.json({ token: token, dataId: user.id, data: user });
+                res.json({ token: token, user: user });
                 return [3 /*break*/, 5];
             case 4:
-                e_2 = _b.sent();
+                e_3 = _b.sent();
                 res.status(500).json({ message: "Something went wrong, try again" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
@@ -175,12 +223,12 @@ router.post("/register-company", [
     //   return true;
     // }),
 ], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, _a, email, password, logo, name_1, description, address, typeOfServices, priceList, candidate, hashedPassword, company, e_3;
+    var errors, _a, email, password, logo, name_1, description, address, typeOfServices, priceList, candidate, hashedPassword, company, e_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 // res.set("Access-Control-Allow-Origin", "*");
-                console.log("REQ", req.body);
+                console.log("REQ111", req.body);
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 5, , 6]);
@@ -208,7 +256,7 @@ router.post("/register-company", [
                     name: name_1,
                     description: description,
                     address: address,
-                    typeOfServices: typeOfServices,
+                    // typeOfServices,
                     priceList: priceList,
                     rating: 0,
                     isActive: true
@@ -219,7 +267,7 @@ router.post("/register-company", [
                 res.status(201).json({ message: "Company created" });
                 return [3 /*break*/, 6];
             case 5:
-                e_3 = _b.sent();
+                e_4 = _b.sent();
                 res.status(500).json({ message: "Something went wrong, try again" });
                 return [3 /*break*/, 6];
             case 6: return [2 /*return*/];
@@ -231,7 +279,7 @@ router.post("/login-company", [
     check("email", "Email is incorrect").normalizeEmail().isEmail(),
     check("password", "Password min length must be 6 symbols").exists(),
 ], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, _a, email, password, company, isMatch, token, e_4;
+    var errors, _a, email, password, company, isMatch, token, e_5;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -261,13 +309,13 @@ router.post("/login-company", [
                             .status(400)
                             .json({ message: "Invalid password, please try again" })];
                 }
-                return [4 /*yield*/, signToken(company.id)];
+                return [4 /*yield*/, signToken(company.id, "company")];
             case 3:
                 token = _b.sent();
-                res.json({ token: token, companyId: company.id, data: company });
+                res.json({ token: token, company: company });
                 return [3 /*break*/, 5];
             case 4:
-                e_4 = _b.sent();
+                e_5 = _b.sent();
                 res.status(500).json({ message: "Something went wrong, try again" });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];

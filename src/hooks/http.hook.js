@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
+import { useSelector } from "react-redux";
 
 export const useHttp = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+  const token = useSelector((state) => state.user.currentUser.token);
   const request = useCallback(
     async (url, method = "GET", body = null, headers = {}) => {
       setLoading(true);
@@ -12,10 +13,11 @@ export const useHttp = () => {
           body = JSON.stringify(body);
           headers["Content-Type"] = "application/json";
         }
+
         const response = await fetch(`http://localhost:4000${url}`, {
           method,
           body,
-          headers,
+          headers: { ...headers, Authorization: `Bearer: ${token}` },
         });
         const data = await response.json();
         if (!response.ok) {
@@ -25,7 +27,7 @@ export const useHttp = () => {
         }
 
         setLoading(false);
-        console.log("Data FROM hook", data);
+
         return data;
       } catch (e) {
         setLoading(false);

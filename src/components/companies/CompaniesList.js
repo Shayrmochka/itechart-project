@@ -233,7 +233,7 @@ export default function CompaniesList({
 
   const handleChooseCompany = (event, companyName) => {
     event.stopPropagation();
-    console.log(companyName);
+    console.log("Name", companyName);
     updateChosenCompany(companyName);
   };
 
