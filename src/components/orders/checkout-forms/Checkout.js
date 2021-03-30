@@ -69,10 +69,13 @@ function Checkout() {
     console.log("STATE", finalForm);
 
     try {
-      const data = await request("/api/order/create-new-order", "POST", {
-        ...finalForm,
-      });
-      message(data.message);
+      const data = await request(
+        "/api/order/create-new-order",
+        "POST",
+        finalForm
+      );
+      //message(data.message);
+      console.log(finalForm);
     } catch (e) {}
     handleNext();
   };

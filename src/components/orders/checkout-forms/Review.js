@@ -48,7 +48,7 @@ function Review({ finalForm, handlePlaceOrder }) {
         <ListItem className={classes.listItem}>
           <ListItemText primary="Chosen service" />
           <Typography variant="subtitle1" className={classes.total}>
-            {finalForm.services}
+            {finalForm.serviceName}
           </Typography>
         </ListItem>
         <ListItem className={classes.listItem}>

@@ -9,9 +9,11 @@ var orderSchema = new mongoose.Schema({
     orderTo: { type: mongoose.Types.ObjectId, ref: "CleaningCompany" },
     companyLogo: { type: String },
     address: { type: String },
-    services: { type: String },
+    serviceName: { type: String },
+    typeOfService: { type: String },
     flatDescription: { type: String },
     checked: { type: Boolean, "default": false },
+    checkedByUser: { type: Boolean, "default": false },
     status: { type: String, "default": "waiting" }
 });
 var Order = mongoose.model("Order", orderSchema);

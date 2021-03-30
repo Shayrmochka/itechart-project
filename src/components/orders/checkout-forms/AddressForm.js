@@ -57,9 +57,7 @@ function AddressForm({ updateFinalForm }) {
 
   const { loading, request } = useHttp();
 
-  const [cleaningService, setCleaningService] = useState({
-    services: 1,
-  });
+  const [cleaningService, setCleaningService] = useState({});
   const [addressForm, setAddressForm] = useState({});
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
@@ -67,6 +65,7 @@ function AddressForm({ updateFinalForm }) {
     companyName: "Not Selected",
     companyId: "Not Selected",
   });
+  const [services, setServices] = useState([]);
 
   const updateChosenCompany = (value) => {
     setChosenCompany({
@@ -90,6 +89,22 @@ function AddressForm({ updateFinalForm }) {
     fetchCompanies();
   }, [fetchCompanies]);
 
+  const fetchServices = useCallback(async () => {
+    try {
+      const fetched = await request("/api/service", "GET", null);
+
+      // const data = fetched.map((e, i) =>
+      //   i === 0 ? { ...e, checked: true } : { ...e, checked: false }
+      // );
+
+      setServices(fetched);
+      setCleaningService(fetched[0]);
+    } catch (e) {}
+  }, [request]);
+  useEffect(() => {
+    fetchServices();
+  }, [fetchServices]);
+
   const changeHandler = (event) => {
     //event.preventDefault();
     setAddressForm({
@@ -100,7 +115,7 @@ function AddressForm({ updateFinalForm }) {
   };
 
   const handleChange = (event) => {
-    setCleaningService({ [event.target.name]: event.target.value });
+    setCleaningService(event.target.value);
   };
 
   const handleClickOpen = () => {
@@ -159,16 +174,21 @@ function AddressForm({ updateFinalForm }) {
                 name="services"
                 labelId="select-cleaning-service-label"
                 id="select-cleaning-service"
-                value={cleaningService.services}
+                value={cleaningService}
                 onChange={handleChange}
               >
-                <MenuItem value={1}>Basic House Cleaning</MenuItem>
+                {/* <MenuItem value={1}>Basic House Cleaning</MenuItem>
                 <MenuItem value={2}>Deep Cleaning/Spring Cleaning</MenuItem>
                 <MenuItem value={3}>Laundry Services</MenuItem>
                 <MenuItem value={4}>Green Cleaning</MenuItem>
                 <MenuItem value={5}>Sanitization Services</MenuItem>
                 <MenuItem value={6}>Ceiling and Wall Cleaning</MenuItem>
-                <MenuItem value={7}>Blind Cleaning</MenuItem>
+                <MenuItem value={7}>Blind Cleaning</MenuItem> */}
+                {services.map((e) => (
+                  <MenuItem value={e} key={e._id}>
+                    {e.serviceName}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>

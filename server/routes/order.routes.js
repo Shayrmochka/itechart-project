@@ -11,9 +11,10 @@ router.post("/create-new-order", auth, async (req, res) => {
     // console.log("BODY", req.body);
 
     const {
-      services,
       address,
       flatDescription,
+      typeOfService,
+      serviceName,
       date,
       companyId,
       companyLogo,
@@ -27,7 +28,8 @@ router.post("/create-new-order", auth, async (req, res) => {
       orderTo: companyId,
       companyLogo,
       address,
-      services,
+      typeOfService,
+      serviceName,
       flatDescription,
       ownerLogo: logo,
       ownerEmail: email,

@@ -675,6 +675,7 @@ function ExtendedOrderDialog({ open, onClose, orderDialogInfo, request }) {
     onClose();
   };
 
+  console.log(orderDialogInfo);
   return (
     <div>
       <Dialog
@@ -684,7 +685,7 @@ function ExtendedOrderDialog({ open, onClose, orderDialogInfo, request }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {orderDialogInfo.services}
+          {orderDialogInfo.serviceName}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
