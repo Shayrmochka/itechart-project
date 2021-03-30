@@ -95,7 +95,7 @@ router.post("/update", auth, checkIsInRole(ROLES.Admin), function (req, res) { r
                 return [4 /*yield*/, user.save()];
             case 2:
                 _a.sent();
-                res.status(201).json({ user: user });
+                res.status(201).json(user);
                 return [3 /*break*/, 4];
             case 3:
                 e_3 = _a.sent();

@@ -50,7 +50,7 @@ var cleaningCompanySchema = new mongoose.Schema({
         required: true,
         "default": "company"
     },
-    typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningServices" }]
+    typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningService" }]
 });
 var cleaningCompany = mongoose.model("CleaningCompany", cleaningCompanySchema);
 module.exports = cleaningCompany;

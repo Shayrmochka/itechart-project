@@ -65,7 +65,7 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
     default: "company",
   },
 
-  typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningServices" }],
+  typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningService" }],
   // 	links: [{ type: mongoose.Schema.Types.ObjectId, ref: "Link" }],
 });
 

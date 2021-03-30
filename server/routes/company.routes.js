@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var Router = require("express").Router;
 var CleaningCompany = require("../models/CleaningCompany");
+var CleaningService = require("../models/CleaningService");
 // const auth = require("../middleware/auth.middleware");
 var _a = require("../middleware/auth.middleware"), auth = _a.auth, signToken = _a.signToken, hashPassword = _a.hashPassword, verifyPassword = _a.verifyPassword, checkIsInRole = _a.checkIsInRole, getRedirectUrl = _a.getRedirectUrl;
 var ROLES = require("../roles/roles");
@@ -67,21 +68,37 @@ function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
 router.get("/:id", 
 // auth,
 function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var company, e_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var company, services, i, _a, _b, e_2;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _c.trys.push([0, 6, , 7]);
                 return [4 /*yield*/, CleaningCompany.findById(req.params.id)];
             case 1:
-                company = _a.sent();
-                res.json(company);
-                return [3 /*break*/, 3];
+                company = _c.sent();
+                services = [];
+                i = 0;
+                _c.label = 2;
             case 2:
-                e_2 = _a.sent();
+                if (!(i < company.typeOfServices.length)) return [3 /*break*/, 5];
+                _b = (_a = services).push;
+                return [4 /*yield*/, CleaningService.findById(company.typeOfServices[i])];
+            case 3:
+                _b.apply(_a, [_c.sent()]);
+                _c.label = 4;
+            case 4:
+                i++;
+                return [3 /*break*/, 2];
+            case 5:
+                company.typeOfServices = services;
+                //console.log(services);
+                res.json(company);
+                return [3 /*break*/, 7];
+            case 6:
+                e_2 = _c.sent();
                 res.status(500).json({ message: "Something went wrong, try again" });
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
         }
     });
 }); });

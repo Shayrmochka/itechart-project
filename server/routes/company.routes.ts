@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 const { Router } = require("express");
 const CleaningCompany = require("../models/CleaningCompany");
+const CleaningService = require("../models/CleaningService");
 // const auth = require("../middleware/auth.middleware");
 const {
   auth,
@@ -38,6 +39,20 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const company = await CleaningCompany.findById(req.params.id);
+      // const services = await company.typeOfServices.map((e: String) => {
+      //   return CleaningService.findById(e);
+      // });
+
+      const services: any = [];
+
+      for (let i = 0; i < company.typeOfServices.length; i++) {
+        services.push(
+          await CleaningService.findById(company.typeOfServices[i])
+        );
+      }
+
+      company.typeOfServices = services;
+      //console.log(services);
 
       res.json(company);
     } catch (e) {

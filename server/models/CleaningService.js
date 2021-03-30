@@ -1,6 +1,10 @@
 "use strict";
 var mongoose = require("mongoose");
 var cleaningServiceSchema = new mongoose.Schema({
+    serviceName: {
+        type: String,
+        required: true
+    },
     typeOfService: {
         type: String,
         required: true
@@ -10,6 +14,10 @@ var cleaningServiceSchema = new mongoose.Schema({
         required: true
     },
     serviceImage: {
+        type: String,
+        required: true
+    },
+    serviceDescription: {
         type: String,
         required: true
     }

@@ -14,11 +14,14 @@ function DetailCompanyPage() {
       const fetched = await request(`/api/company/${companyId}`, "GET", null);
       setCompany(fetched);
     } catch (e) {}
-  }, [companyId, request]);
+    // }, [companyId, request]);
+  }, [request]);
 
   useEffect(() => {
     getCompany();
-  }, [getCompany]);
+  }, []);
+
+  console.log(company);
 
   if (loading) {
     return <Loader />;

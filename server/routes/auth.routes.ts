@@ -201,7 +201,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     // res.set("Access-Control-Allow-Origin", "*");
-    console.log("REQ111", req.body);
+    //console.log("REQ111", req.body);
     try {
       const errors = validationResult(req);
 
@@ -219,7 +219,7 @@ router.post(
         name,
         description,
         address,
-        typeOfServices,
+        services,
         priceList,
       } = req.body;
 
@@ -229,6 +229,13 @@ router.post(
         return res.status(400).json({ message: "This Company already exist" });
       }
 
+      const sortedServices = services
+        .filter((e: any) => e.checked)
+        .map((e: any) => e._id);
+
+      console.log(sortedServices);
+      console.log(sortedServices.length);
+
       const hashedPassword = await bcrypt.hash(password, 12);
       const company = new CleaningCompany({
         email,
@@ -237,7 +244,7 @@ router.post(
         name,
         description,
         address,
-        // typeOfServices,
+        typeOfServices: sortedServices,
         priceList,
         rating: 0,
         isActive: true,
@@ -247,6 +254,7 @@ router.post(
 
       res.status(201).json({ message: "Company created" });
     } catch (e) {
+      console.log(e);
       res.status(500).json({ message: "Something went wrong, try again" });
     }
   }

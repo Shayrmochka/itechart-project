@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useMessage } from "../../hooks/message.hook";
 import { useHttp } from "../../hooks/http.hook";
-import { AuthContext } from "../../context/AuthContext";
 
 import {
   Avatar,

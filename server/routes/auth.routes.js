@@ -223,15 +223,11 @@ router.post("/register-company", [
     //   return true;
     // }),
 ], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var errors, _a, email, password, logo, name_1, description, address, typeOfServices, priceList, candidate, hashedPassword, company, e_4;
+    var errors, _a, email, password, logo, name_1, description, address, services, priceList, candidate, sortedServices, hashedPassword, company, e_4;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                // res.set("Access-Control-Allow-Origin", "*");
-                console.log("REQ111", req.body);
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 5, , 6]);
+                _b.trys.push([0, 4, , 5]);
                 errors = validationResult(req);
                 if (!errors.isEmpty() || req.body.password !== req.body.confirmPassword) {
                     return [2 /*return*/, res.status(400).json({
@@ -239,15 +235,20 @@ router.post("/register-company", [
                             message: "The registration data is incorrect"
                         })];
                 }
-                _a = req.body, email = _a.email, password = _a.password, logo = _a.logo, name_1 = _a.name, description = _a.description, address = _a.address, typeOfServices = _a.typeOfServices, priceList = _a.priceList;
+                _a = req.body, email = _a.email, password = _a.password, logo = _a.logo, name_1 = _a.name, description = _a.description, address = _a.address, services = _a.services, priceList = _a.priceList;
                 return [4 /*yield*/, CleaningCompany.findOne({ email: email })];
-            case 2:
+            case 1:
                 candidate = _b.sent();
                 if (candidate) {
                     return [2 /*return*/, res.status(400).json({ message: "This Company already exist" })];
                 }
+                sortedServices = services
+                    .filter(function (e) { return e.checked; })
+                    .map(function (e) { return e._id; });
+                console.log(sortedServices);
+                console.log(sortedServices.length);
                 return [4 /*yield*/, bcrypt.hash(password, 12)];
-            case 3:
+            case 2:
                 hashedPassword = _b.sent();
                 company = new CleaningCompany({
                     email: email,
@@ -256,21 +257,22 @@ router.post("/register-company", [
                     name: name_1,
                     description: description,
                     address: address,
-                    // typeOfServices,
+                    typeOfServices: sortedServices,
                     priceList: priceList,
                     rating: 0,
                     isActive: true
                 });
                 return [4 /*yield*/, company.save()];
-            case 4:
+            case 3:
                 _b.sent();
                 res.status(201).json({ message: "Company created" });
-                return [3 /*break*/, 6];
-            case 5:
+                return [3 /*break*/, 5];
+            case 4:
                 e_4 = _b.sent();
+                console.log(e_4);
                 res.status(500).json({ message: "Something went wrong, try again" });
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

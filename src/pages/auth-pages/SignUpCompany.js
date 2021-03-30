@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMessage } from "../../hooks/message.hook";
 import { useHttp } from "../../hooks/http.hook";
 import {
@@ -16,6 +16,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
+
+import ServicesBlock from "../../components/auth-pages/ServicesBlock";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -65,11 +67,31 @@ function SignUp() {
     password: "",
   });
 
+  const [services, setServices] = useState([]);
+
+  const fetchServices = useCallback(async () => {
+    try {
+      const fetched = await request("/api/service", "GET", null);
+
+      const data = fetched.map((e, i) =>
+        i === 0 ? { ...e, checked: true } : { ...e, checked: false }
+      );
+
+      setServices(data);
+      //message(fetched.message);
+    } catch (e) {}
+  }, [request]);
+  useEffect(() => {
+    fetchServices();
+  }, [fetchServices]);
+
   const onSubmit = async (data) => {
     try {
       const data = await request("/api/auth/register-company", "POST", {
         ...form,
+        services,
       });
+      console.log({ ...form, sevices: services });
       message(data.message);
     } catch (e) {}
   };
@@ -84,6 +106,13 @@ function SignUp() {
       ...form,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const handleChangeServices = (targetService) => {
+    targetService.checked = !targetService.checked;
+    setServices(
+      services.map((e) => (e._id === targetService._id ? targetService : e))
+    );
   };
 
   return (
@@ -191,6 +220,13 @@ function SignUp() {
                 <span className={classes.error}>This field is required</span>
               )}
             </Grid> */}
+            <Grid item xs={12}>
+              <ServicesBlock
+                handleChangeServices={handleChangeServices}
+                services={services}
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 variant="outlined"

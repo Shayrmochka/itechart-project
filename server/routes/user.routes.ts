@@ -59,7 +59,7 @@ router.post(
 
       await user.save();
 
-      res.status(201).json({ user });
+      res.status(201).json(user);
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });
     }

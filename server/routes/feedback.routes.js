@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const Feedback = require("../models/Feedback");
 const User = require("../models/User");
-const CleaningCompany = require("../models/CleaningCompany");
 const { auth, checkToken } = require("../middleware/auth.middleware");
 const router = Router();
 

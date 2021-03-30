@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Paper,
@@ -14,7 +14,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import AddressForm from "./AddressForm";
 import Review from "./Review";
 import { useMessage } from "../../../hooks/message.hook";
-import { AuthContext } from "../../../context/AuthContext";
 import { useHttp } from "../../../hooks/http.hook";
 
 const useStyles = makeStyles((theme) => ({

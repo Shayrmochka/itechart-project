@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -9,6 +9,7 @@ import {
 
 import { makeStyles } from "@material-ui/core/styles";
 import { useHttp } from "../../hooks/http.hook";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles({
   root: {
@@ -52,21 +53,37 @@ const useStyles = makeStyles({
 });
 
 function UsersList({ users }) {
+  const currentUser = useSelector((state) => state.user.currentUser);
   const classes = useStyles();
+
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    setAllUsers(users);
+  }, [users]);
 
   const { request } = useHttp();
   const blockHandler = async (user) => {
-    try {
-      await request("/api/user/update", "POST", user);
-    } catch (e) {}
+    if (currentUser._id !== user._id) {
+      try {
+        const response = await request("/api/user/update", "POST", user);
+        setAllUsers(
+          allUsers.map((e) => (e._id !== response._id ? e : response))
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      alert("R u idiot? it's you! ");
+    }
   };
 
-  if (!users.length) {
+  if (!allUsers.length) {
     return <div>No Users!</div>;
   }
   return (
     <div className={classes.root}>
-      {users.map((user) => {
+      {allUsers.map((user) => {
         return (
           <Card
             className={user.isActive ? classes.card : classes.cardBanned}
