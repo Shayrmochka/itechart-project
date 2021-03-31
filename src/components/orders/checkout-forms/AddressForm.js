@@ -66,6 +66,17 @@ function AddressForm({ updateFinalForm }) {
     companyId: "Not Selected",
   });
   const [services, setServices] = useState([]);
+  const [searchCompanies, setSearchCompanies] = useState(null);
+
+  const getSearchData = (value) => {
+    setSearchCompanies(
+      companies.filter((company) =>
+        `${company.name} ${company.address}`
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      )
+    );
+  };
 
   const updateChosenCompany = (value) => {
     setChosenCompany({
@@ -277,9 +288,12 @@ function AddressForm({ updateFinalForm }) {
             </DialogContentText>
             {!loading && (
               <CompaniesList
-                companies={companies}
+                companies={
+                  searchCompanies === null ? companies : searchCompanies
+                }
                 from={from}
                 updateChosenCompany={updateChosenCompany}
+                getSearchData={getSearchData}
               />
             )}
           </DialogContent>

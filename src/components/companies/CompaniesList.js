@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-
 import { lighten, makeStyles } from "@material-ui/core/styles";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import MenuIcon from "@material-ui/icons/Menu";
+import SearchIcon from "@material-ui/icons/Search";
 import {
   Button,
   IconButton,
+  InputBase,
   Paper,
   Table,
   TableBody,
@@ -17,7 +17,6 @@ import {
   TableRow,
   TableSortLabel,
   Toolbar,
-  Tooltip,
   Typography,
 } from "@material-ui/core";
 
@@ -108,60 +107,62 @@ const useToolbarStyles = makeStyles((theme) => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
   },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+
   title: {
     flex: "1 1 100%",
   },
+  searchBlock: {
+    margin: "10px 10px 0 0",
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    width: 400,
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
 }));
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ getSearchData }) => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+
+  const handleSearch = (event) => {
+    getSearchData(event.target.value);
+  };
 
   return (
     <Toolbar style={{ paddingLeft: "10px", paddingRight: "0px" }}>
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Cleaning Companies
-        </Typography>
-      )}
+      <Typography
+        className={classes.title}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        Cleaning Companies
+      </Typography>
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Paper component="form" className={classes.searchBlock}>
+        <IconButton className={classes.iconButton} aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        <InputBase
+          className={classes.input}
+          placeholder="Search companies"
+          inputProps={{ "aria-label": "search companies" }}
+          onChange={handleSearch}
+        />
+        <IconButton className={classes.iconButton} aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
     </Toolbar>
   );
 };
@@ -202,6 +203,7 @@ export default function CompaniesList({
   companies,
   from,
   updateChosenCompany,
+  getSearchData,
 }) {
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
@@ -254,7 +256,7 @@ export default function CompaniesList({
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar getSearchData={getSearchData} />
         <TableContainer>
           <Table
             className={classes.table}
