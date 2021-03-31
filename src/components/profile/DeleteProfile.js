@@ -17,13 +17,23 @@ export default function AlertDialog({ open, handleClose, logout }) {
   const dispatch = useDispatch();
   const handleAgree = async () => {
     try {
-      dispatch(showLoader());
-      await request("/api/user/delete-profile", "POST", {
-        _id: currentUser._id,
-      });
-      handleClose();
-      logout();
-      dispatch(hideLoader());
+      if (currentUser.type === "user") {
+        dispatch(showLoader());
+        await request("/api/user/delete-profile", "POST", {
+          _id: currentUser._id,
+        });
+        handleClose();
+        logout();
+        dispatch(hideLoader());
+      } else if (currentUser.type === "company") {
+        dispatch(showLoader());
+        await request("/api/company/delete-profile", "POST", {
+          _id: currentUser._id,
+        });
+        handleClose();
+        logout();
+        dispatch(hideLoader());
+      }
     } catch (e) {
       console.log(e);
     }

@@ -12,7 +12,8 @@ var cleaningCompanySchema = new mongoose.Schema({
     },
     logo: {
         type: String,
-        required: true
+        required: true,
+        "default": "../images/default-company.png"
     },
     name: {
         type: String,

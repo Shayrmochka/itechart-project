@@ -39,8 +39,11 @@ exports.__esModule = true;
 var Router = require("express").Router;
 var CleaningCompany = require("../models/CleaningCompany");
 var CleaningService = require("../models/CleaningService");
+var Order = require("../models/Order");
+var Feedback = require("../models/Feedback");
 // const auth = require("../middleware/auth.middleware");
 var _a = require("../middleware/auth.middleware"), auth = _a.auth, signToken = _a.signToken, hashPassword = _a.hashPassword, verifyPassword = _a.verifyPassword, checkIsInRole = _a.checkIsInRole, getRedirectUrl = _a.getRedirectUrl;
+var _b = require("express-validator"), check = _b.check, validationResult = _b.validationResult;
 var ROLES = require("../roles/roles");
 var router = Router();
 router.get("/", 
@@ -122,6 +125,124 @@ router.post("/update", auth, checkIsInRole(ROLES.Admin), function (req, res) { r
                 res.status(500).json({ message: "Something went wrong, try again" });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
+        }
+    });
+}); });
+router.post("/edit-profile", auth, [
+    check("password", "Password min length must be 6 symbols").isLength({
+        min: 6
+    }),
+], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var company, operationType, _a, name_1, priceList, email, address, description, _id, _b, oldPassword, password, confirmPassword, errors, verifiedPass, newPassword, e_4;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _c.trys.push([0, 7, , 8]);
+                return [4 /*yield*/, CleaningCompany.findById(req.body._id)];
+            case 1:
+                company = _c.sent();
+                operationType = req.body.operationType;
+                if (!(operationType === "profile")) return [3 /*break*/, 2];
+                _a = req.body, name_1 = _a.name, priceList = _a.priceList, email = _a.email, address = _a.address, description = _a.description, _id = _a._id;
+                if (company.isActive) {
+                    company.name = name_1;
+                    company.priceList = priceList;
+                    company.email = email;
+                    company.address = address;
+                    company.description = description;
+                }
+                return [3 /*break*/, 5];
+            case 2:
+                if (!(operationType === "password")) return [3 /*break*/, 5];
+                _b = req.body, oldPassword = _b.oldPassword, password = _b.password, confirmPassword = _b.confirmPassword;
+                if (!company.isActive) return [3 /*break*/, 5];
+                errors = validationResult(req);
+                console.log(errors);
+                if (!errors.isEmpty() ||
+                    req.body.password !== req.body.confirmPassword) {
+                    return [2 /*return*/, res.status(400).json({
+                            errors: errors.array(),
+                            message: "The registration data is incorrect"
+                        })];
+                }
+                return [4 /*yield*/, verifyPassword(oldPassword, company.password)];
+            case 3:
+                verifiedPass = _c.sent();
+                console.log(verifiedPass);
+                if (!verifiedPass) {
+                    return [2 /*return*/, res
+                            .status(400)
+                            .json({ message: "Invalid password, please try again" })];
+                }
+                return [4 /*yield*/, hashPassword(password)];
+            case 4:
+                newPassword = _c.sent();
+                company.password = newPassword;
+                _c.label = 5;
+            case 5: return [4 /*yield*/, company.save()];
+            case 6:
+                _c.sent();
+                res.status(201).json(company);
+                return [3 /*break*/, 8];
+            case 7:
+                e_4 = _c.sent();
+                res.status(500).json({ message: "Something went wrong, try again" });
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
+        }
+    });
+}); });
+router.post("/delete-profile", auth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, company, orders, feedbacks, e_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                id = req.body._id;
+                return [4 /*yield*/, CleaningCompany.findById(id)];
+            case 1:
+                company = _a.sent();
+                return [4 /*yield*/, Order.find({ orderTo: id })];
+            case 2:
+                orders = _a.sent();
+                return [4 /*yield*/, Feedback.find({ company: id })];
+            case 3:
+                feedbacks = _a.sent();
+                if (feedbacks.length) {
+                    feedbacks.forEach(function (feedback) { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, Feedback.deleteOne({ _id: feedback._id })];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                }
+                if (orders.length) {
+                    orders.forEach(function (order) { return __awaiter(void 0, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, Order.deleteOne({ _id: order._id })];
+                                case 1:
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                }
+                return [4 /*yield*/, CleaningCompany.deleteOne({ _id: id })];
+            case 4:
+                _a.sent();
+                res.status(201).json({ message: "Company deleted" });
+                return [3 /*break*/, 6];
+            case 5:
+                e_5 = _a.sent();
+                console.log(e_5);
+                res.status(500).json({ message: "Something went wrong, try again" });
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); });

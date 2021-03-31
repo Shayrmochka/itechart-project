@@ -6,6 +6,7 @@ import Footer from "../../components/Footer";
 import { useSelector } from "react-redux";
 import EditProfile from "../../components/profile/EditProfile";
 import DeleteProfile from "../../components/profile/DeleteProfile";
+import EditCompanyProfile from "../../components/profile/EditCompanyProfile";
 
 const useStyles = makeStyles((theme) => ({
   heroContent: {
@@ -35,6 +36,16 @@ function UserProfile({ logout }) {
 
   const handleEditProfileClose = () => {
     setEditProfileOpen(false);
+  };
+
+  const [editCompany, setEditCompany] = useState(false);
+
+  const handleEditCompany = () => {
+    setEditCompany(true);
+  };
+
+  const handleEditCompanyClose = () => {
+    setEditCompany(false);
   };
 
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -78,7 +89,8 @@ function UserProfile({ logout }) {
             Email: {currentUser.email}
           </Typography>
           <Typography align="center" color="textSecondary" paragraph>
-            Phone: +{currentUser.phone}
+            Phone:
+            {currentUser.type === "user" ? currentUser.phone : " * * * * * * *"}
           </Typography>
           <Typography align="center" color="textSecondary" paragraph>
             id: @{currentUser._id}
@@ -86,13 +98,23 @@ function UserProfile({ logout }) {
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify="center">
               <Grid item>
-                <Button
-                  onClick={handleEditProfile}
-                  variant="contained"
-                  color="primary"
-                >
-                  Edit Profile
-                </Button>
+                {currentUser.type === "user" ? (
+                  <Button
+                    onClick={handleEditProfile}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Edit Profile
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleEditCompany}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Edit Profile
+                  </Button>
+                )}
               </Grid>
               <Grid item>
                 <Button
@@ -111,6 +133,10 @@ function UserProfile({ logout }) {
       <EditProfile
         open={editProfileOpen}
         handleClose={handleEditProfileClose}
+      />
+      <EditCompanyProfile
+        open={editCompany}
+        handleClose={handleEditCompanyClose}
       />
       <DeleteProfile
         open={deleteOpen}
