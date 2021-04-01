@@ -20,6 +20,11 @@ var cleaningServiceSchema = new mongoose.Schema({
     serviceDescription: {
         type: String,
         required: true
+    },
+    servicePrice: {
+        type: Number,
+        required: true,
+        "default": 1
     }
 });
 var CleaningService = mongoose.model("CleaningService", cleaningServiceSchema);

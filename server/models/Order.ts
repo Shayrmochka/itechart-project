@@ -15,6 +15,11 @@ interface IOrder extends mongoose.Document {
   checked: boolean;
   checkedByUser: boolean;
   status: string;
+  smallRooms: number;
+  bigRooms: number;
+  bathrooms: number;
+  price: number;
+  time: number;
 }
 
 var orderSchema = new mongoose.Schema({
@@ -32,6 +37,11 @@ var orderSchema = new mongoose.Schema({
   checked: { type: Boolean, default: false },
   checkedByUser: { type: Boolean, default: false },
   status: { type: String, default: "waiting" },
+  smallRooms: { type: Number, default: 1 },
+  bigRooms: { type: Number, default: 1 },
+  bathrooms: { type: Number, default: 1 },
+  price: { type: Number, required: true, default: 1 },
+  time: { type: Number, required: true, default: 1 },
 });
 
 var Order = mongoose.model<IOrder>("Order", orderSchema);

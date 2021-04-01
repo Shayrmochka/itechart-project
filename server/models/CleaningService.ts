@@ -6,6 +6,7 @@ interface ICleaningService extends mongoose.Document {
   numberOfService: number;
   serviceImage: string;
   serviceDescription: string;
+  servicePrice: number;
 }
 
 var cleaningServiceSchema = new mongoose.Schema({
@@ -28,6 +29,11 @@ var cleaningServiceSchema = new mongoose.Schema({
   serviceDescription: {
     type: String,
     required: true,
+  },
+  servicePrice: {
+    type: Number,
+    required: true,
+    default: 1,
   },
 });
 

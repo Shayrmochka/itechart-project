@@ -691,12 +691,26 @@ function ExtendedOrderDialog({ open, onClose, orderDialogInfo, request }) {
           <DialogContentText>
             Order from: {orderDialogInfo.ownerEmail}
           </DialogContentText>
+
           <DialogContentText>
-            Date Cleaning: {orderDialogInfo.dateCleaning}
+            Date Cleaning:{" "}
+            {new Date(orderDialogInfo.dateCleaning).toLocaleDateString()}
           </DialogContentText>
           <DialogContentText>
             Flat Description: {orderDialogInfo.flatDescription}
           </DialogContentText>
+          <DialogContentText>
+            Bathrooms/Small Rooms/Big Rooms: {orderDialogInfo.bathrooms}/
+            {orderDialogInfo.smallRooms}/{orderDialogInfo.bigRooms}
+          </DialogContentText>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <DialogContentText>
+              Time: {orderDialogInfo.time}min
+            </DialogContentText>
+            <DialogContentText>
+              Price: {orderDialogInfo.price}$
+            </DialogContentText>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button
@@ -717,6 +731,8 @@ function ExtendedOrderDialog({ open, onClose, orderDialogInfo, request }) {
     </div>
   );
 }
+
+////// MOBILE
 
 function SimpleDialog({
   onClose,

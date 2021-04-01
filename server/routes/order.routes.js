@@ -8,7 +8,7 @@ const router = Router();
 router.post("/create-new-order", auth, async (req, res) => {
   try {
     // console.log("USER", req.user);
-    // console.log("BODY", req.body);
+    console.log("BODY", req.body);
 
     const {
       address,
@@ -20,6 +20,11 @@ router.post("/create-new-order", auth, async (req, res) => {
       companyLogo,
       email,
       logo,
+      resultPrice,
+      resultTime,
+      bathRoomCounter,
+      smallRoomCounter,
+      bigRoomCounter,
     } = req.body;
 
     const order = new Order({
@@ -33,6 +38,11 @@ router.post("/create-new-order", auth, async (req, res) => {
       flatDescription,
       ownerLogo: logo,
       ownerEmail: email,
+      smallRooms: smallRoomCounter,
+      bigRooms: bigRoomCounter,
+      bathrooms: bathRoomCounter,
+      price: resultPrice,
+      time: resultTime,
     });
 
     await order.save();

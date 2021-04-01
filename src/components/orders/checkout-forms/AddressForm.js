@@ -22,6 +22,35 @@ import { useMessage } from "../../../hooks/message.hook";
 import CompaniesList from "../../companies/CompaniesList";
 import { useSelector } from "react-redux";
 
+const orderTest = {
+  address: "qeqwewqe",
+  bathrooms: "2",
+  companyId: "6053d61534a7664eb3126452",
+  companyLogo:
+    "https://cdn.iconscout.com/icon/free/png-256/apple-853-675472.png",
+  companyName: "Apple",
+  date: "2021-01-20T10:30",
+  email: "qwe@mail.ru",
+  flatDescription: "qweqweqwe",
+  logo:
+    "https://static-cdn.jtvnw.net/jtv_user_pictures/54a8a787-4619-4b1f-a0ca-03ffac31b0a6-profile_image-300x300.png",
+  numberOfService: 4,
+  room0: "20",
+  room1: "50",
+  room2: "120",
+  room3: "10",
+  serviceDescription:
+    "Green cleaning involves following eco-friendly cleaning practices such as using products that are non-toxic, biodegradable, and safe for you and the environment.",
+  serviceImage:
+    "https://cdn1.pokupon.ua/uploaded/new_campaign_pictures/633632/data/preview475x230/Fotoram.io-_1_.jpg?1570094375",
+  serviceName: "Green Cleaning",
+  typeOfService: "green",
+  __v: 0,
+  _id: "6062eda05d2a85222572eb9c",
+  servicePrice: "7",
+  priceList: "9",
+};
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     minWidth: 200,
@@ -67,6 +96,8 @@ function AddressForm({ updateFinalForm }) {
   });
   const [services, setServices] = useState([]);
   const [searchCompanies, setSearchCompanies] = useState(null);
+  const [flatCounter, setFlatCounter] = useState([1]);
+  const [flat, setFlat] = useState(null);
 
   const getSearchData = (value) => {
     setSearchCompanies(
@@ -83,6 +114,7 @@ function AddressForm({ updateFinalForm }) {
       companyName: value.name,
       companyId: value._id,
       companyLogo: value.logo,
+      priceList: value.priceList,
     });
     handleClose();
   };
@@ -188,13 +220,6 @@ function AddressForm({ updateFinalForm }) {
                 value={cleaningService}
                 onChange={handleChange}
               >
-                {/* <MenuItem value={1}>Basic House Cleaning</MenuItem>
-                <MenuItem value={2}>Deep Cleaning/Spring Cleaning</MenuItem>
-                <MenuItem value={3}>Laundry Services</MenuItem>
-                <MenuItem value={4}>Green Cleaning</MenuItem>
-                <MenuItem value={5}>Sanitization Services</MenuItem>
-                <MenuItem value={6}>Ceiling and Wall Cleaning</MenuItem>
-                <MenuItem value={7}>Blind Cleaning</MenuItem> */}
                 {services.map((e) => (
                   <MenuItem value={e} key={e._id}>
                     {e.serviceName}
@@ -203,7 +228,7 @@ function AddressForm({ updateFinalForm }) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={8}>
             <TextField
               required
               id="flatDescription"
@@ -217,6 +242,70 @@ function AddressForm({ updateFinalForm }) {
             {errors.flatDescription && (
               <span className={classes.error}>This field is required</span>
             )}
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              required
+              fullWidth
+              id="bathrooms"
+              label="Bathrooms"
+              name="bathrooms"
+              onChange={changeHandler}
+              inputRef={register({
+                required: "You must enter number of bathrooms!",
+                pattern: {
+                  value: /^[0-9\b]+$/,
+                  message: "You must enter a number!",
+                },
+              })}
+              error={!!errors.bathrooms}
+            />
+            {errors.bathrooms && (
+              <span className={classes.error}>{errors.bathrooms.message}</span>
+            )}
+          </Grid>
+
+          {flatCounter.map((e, i) => {
+            const roomId = `room${i}`;
+
+            return (
+              <Grid item xs={12} sm={4} key={i}>
+                <TextField
+                  required
+                  fullWidth
+                  id={roomId}
+                  label={`Room ${i + 1}`}
+                  name={roomId}
+                  onChange={changeHandler}
+                  inputRef={register({
+                    required: "You must enter the area of the room!",
+                    pattern: {
+                      value: /^[0-9\b]+$/,
+                      message: "All your rooms must be an area!",
+                    },
+                  })}
+                  error={!!errors.roomId}
+                />
+                {errors.roomId && (
+                  <span className={classes.error}>{errors.roomId.message}</span>
+                )}
+              </Grid>
+            );
+          })}
+          <Grid item xs={12}>
+            <Button
+              onClick={() =>
+                setFlatCounter([...flatCounter, flatCounter.push(1)])
+              }
+              variant="contained"
+              style={{
+                height: "30px",
+                borderRadius: "100px",
+              }}
+            >
+              Add room
+            </Button>
           </Grid>
 
           <Grid item xs={12}>

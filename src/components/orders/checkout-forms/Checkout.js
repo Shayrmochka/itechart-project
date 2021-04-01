@@ -15,6 +15,7 @@ import AddressForm from "./AddressForm";
 import Review from "./Review";
 import { useMessage } from "../../../hooks/message.hook";
 import { useHttp } from "../../../hooks/http.hook";
+import { getPrice } from "../../../utils/getPrice";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -60,7 +61,9 @@ function Checkout() {
   const [finalForm, setFinalForm] = useState({});
 
   const updateFinalForm = (value) => {
-    setFinalForm({ ...value });
+    const moneyDetail = getPrice(value);
+
+    setFinalForm({ ...value, ...moneyDetail });
 
     handleNext();
   };
@@ -75,7 +78,6 @@ function Checkout() {
         finalForm
       );
       //message(data.message);
-      console.log(finalForm);
     } catch (e) {}
     handleNext();
   };

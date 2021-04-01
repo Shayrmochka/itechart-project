@@ -58,6 +58,25 @@ function Review({ finalForm, handlePlaceOrder }) {
           </Typography>
         </ListItem>
         <ListItem className={classes.listItem}>
+          <ListItemText primary="Bathrooms/Small rooms/Big rooms" />
+          <Typography variant="subtitle1" className={classes.total}>
+            {finalForm.bathRoomCounter}/ {finalForm.smallRoomCounter}/{" "}
+            {finalForm.bigRoomCounter}
+          </Typography>
+        </ListItem>
+        <ListItem className={classes.listItem}>
+          <ListItemText primary="Price" />
+          <Typography variant="subtitle1" className={classes.total}>
+            {finalForm.resultPrice}$
+          </Typography>
+        </ListItem>
+        <ListItem className={classes.listItem}>
+          <ListItemText primary="Time to work" />
+          <Typography variant="subtitle1" className={classes.total}>
+            {finalForm.resultTime}min
+          </Typography>
+        </ListItem>
+        <ListItem className={classes.listItem}>
           <ListItemText primary="Date" />
           <Typography variant="subtitle1" className={classes.total}>
             {finalForm.date}
