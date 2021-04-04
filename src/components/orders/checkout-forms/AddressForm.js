@@ -78,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AddressForm({ updateFinalForm }) {
-  const currentUser = useSelector((state) => state.user.currentUser);
   const from = "modal";
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
@@ -173,8 +172,6 @@ function AddressForm({ updateFinalForm }) {
     updateFinalForm({
       ...addressForm,
       ...chosenCompany,
-      email: currentUser.email,
-      logo: currentUser.logo,
     });
   };
 

@@ -155,7 +155,7 @@ router.post(
       const id = req.body._id;
       const company = await CleaningCompany.findById(id);
 
-      const orders = await Order.find({ orderTo: id });
+      const orders = await Order.find({ company: id });
       const feedbacks = await Feedback.find({ company: id });
 
       if (feedbacks.length) {

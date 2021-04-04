@@ -25,7 +25,6 @@ function UsersPage() {
   return (
     <div>
       <h1>Users Page</h1>
-      {console.log(users)}
       {!loading && <UsersList users={users} />}
     </div>
   );

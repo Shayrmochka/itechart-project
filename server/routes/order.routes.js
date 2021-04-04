@@ -17,9 +17,6 @@ router.post("/create-new-order", auth, async (req, res) => {
       serviceName,
       date,
       companyId,
-      companyLogo,
-      email,
-      logo,
       resultPrice,
       resultTime,
       bathRoomCounter,
@@ -30,14 +27,11 @@ router.post("/create-new-order", auth, async (req, res) => {
     const order = new Order({
       dateCleaning: date,
       owner: req.user.dataId,
-      orderTo: companyId,
-      companyLogo,
+      company: companyId,
       address,
       typeOfService,
       serviceName,
       flatDescription,
-      ownerLogo: logo,
-      ownerEmail: email,
       smallRooms: smallRoomCounter,
       bigRooms: bigRoomCounter,
       bathrooms: bathRoomCounter,
@@ -59,14 +53,22 @@ router.get("/", auth, async (req, res) => {
 
     if (decoded.accountOwner === "user") {
       const orders = await Order.find({ owner: decoded.dataId });
-      // const result = orders.map(async (order) => {
-      //   order.company = await CleaningCompany.find({ _id: order.orderTo });
-      // });
-      //const companyInfo = await CleaningCompany.find({ _id: orders.orderTo });
-      //console.log(result);
+
+      for (let i = 0; i < orders.length; i++) {
+        orders[i].owner = await User.findById(orders[i].owner);
+
+        orders[i].company = await CleaningCompany.findById(orders[i].company);
+      }
+
       res.json(orders);
     } else if (decoded.accountOwner === "company") {
-      const orders = await Order.find({ orderTo: decoded.dataId });
+      const orders = await Order.find({ company: decoded.dataId });
+
+      for (let i = 0; i < orders.length; i++) {
+        orders[i].owner = await User.findById(orders[i].owner);
+
+        orders[i].company = await CleaningCompany.findById(orders[i].company);
+      }
 
       res.json(orders);
     }
@@ -90,6 +92,24 @@ router.post("/update-set-answer", auth, async (req, res) => {
     await order.save();
     res.status(201).json({ order });
   } catch (e) {
+    res.status(500).json({ message: "Something went wrong, try again" });
+  }
+});
+
+router.post("/delete-order", auth, async (req, res) => {
+  try {
+    const order = await Order.findById(req.body._id);
+
+    if (!order) {
+      return res.status(400).json({ message: "Order not found" });
+    }
+
+    console.log(req.body);
+    await Order.deleteOne({ _id: req.body._id });
+
+    res.status(201).json({ status: "deleted" });
+  } catch (e) {
+    console.log(e);
     res.status(500).json({ message: "Something went wrong, try again" });
   }
 });

@@ -4,10 +4,7 @@ interface IOrder extends mongoose.Document {
   date: string;
   dateCleaning: string;
   owner: string;
-  ownerLogo: string;
-  ownerEmail: string;
-  orderTo: string;
-  companyLogo: string;
+  company: string;
   address: string;
   serviceName: string;
   typeOfService: string;
@@ -26,10 +23,7 @@ var orderSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
   dateCleaning: { type: Date },
   owner: { type: mongoose.Types.ObjectId, ref: "User" },
-  ownerLogo: { type: String },
-  ownerEmail: { type: String },
-  orderTo: { type: mongoose.Types.ObjectId, ref: "CleaningCompany" },
-  companyLogo: { type: String },
+  company: { type: mongoose.Types.ObjectId, ref: "CleaningCompany" },
   address: { type: String },
   serviceName: { type: String },
   typeOfService: { type: String },

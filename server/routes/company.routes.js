@@ -202,7 +202,7 @@ router.post("/delete-profile", auth, function (req, res) { return __awaiter(void
                 return [4 /*yield*/, CleaningCompany.findById(id)];
             case 1:
                 company = _a.sent();
-                return [4 /*yield*/, Order.find({ orderTo: id })];
+                return [4 /*yield*/, Order.find({ company: id })];
             case 2:
                 orders = _a.sent();
                 return [4 /*yield*/, Feedback.find({ company: id })];

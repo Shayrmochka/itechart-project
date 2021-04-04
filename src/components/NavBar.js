@@ -33,6 +33,9 @@ import {
 } from "@material-ui/core";
 import { useHttp } from "../hooks/http.hook";
 import { useMessage } from "../hooks/message.hook";
+import MailBox from "./nav-bar/MailBox";
+import OrderInfo from "./nav-bar/OrderInfo";
+import Loader from "./Loader";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -131,7 +134,7 @@ function NavBar(props) {
 
   const classes = useStyles();
   const history = useHistory();
-  const { request } = useHttp();
+  const { loading, request } = useHttp();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationEl, setNotificationEl] = useState(null);
@@ -145,30 +148,21 @@ function NavBar(props) {
   const [openMail, setOpenMail] = useState(false);
   const [ordersSortedByAccepted, setOrdersSortedByAccepted] = useState([]);
 
-  const fetchOrders = useCallback(
-    async (token) => {
-      try {
-        //const fetched = await request("/api/order", "GET", null, null, token);
-        const response = await fetch("http://localhost:4000/api/order", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer: ${token}`,
-          },
-        });
-        const fetched = await response.json();
-        // console.log(fetched);
-
-        setOrders(fetched);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    [request]
-  );
+  const fetchOrders = useCallback(async (token) => {
+    try {
+      const fetched = await request("/api/order", "GET", null, {
+        Authorization: `Bearer: ${token}`,
+      });
+      setOrders(fetched);
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
 
   useEffect(() => {
     if (props.currentUser.token && props.isAuthenticated) {
       console.log("RENDER");
+
       fetchOrders(props.currentUser.token);
     }
   }, [fetchOrders, props, props.currentUser.token, props.isAuthenticated]);
@@ -218,10 +212,6 @@ function NavBar(props) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  // if (loading) {
-  //   return <Loader />;
-  // }
-
   const openProfile = () => {
     history.push("/profile");
     handleMenuClose();
@@ -234,10 +224,6 @@ function NavBar(props) {
 
     history.push("/home");
   };
-
-  // useEffect(() => {
-  //   //setCurrentUser(props.currentUser);
-  // }, [props]);
 
   const adminButton = () => {
     if (props.currentUser.role === "Admin") {
@@ -313,50 +299,63 @@ function NavBar(props) {
 
       <MenuItem onClick={logoutHandler}>Logout</MenuItem> */}
       <List>
-        {sortedOrders.map((order) => (
-          <ListItem
-            button
-            //onClick={() => handleListItemClick(order)}
-            onClick={() => handleClickOpenOrderDialog(order)}
-            key={order._id}
-          >
-            <ListItemAvatar>
-              <Avatar className={classes.avatar}>
-                {props.currentUser.type === "user" ? (
-                  <img
-                    style={{ width: "100%", objectFit: "cover" }}
-                    src={order.companyLogo}
+        {sortedOrders.length ? (
+          sortedOrders.map((order) => (
+            <ListItem
+              button
+              //onClick={() => handleListItemClick(order)}
+              onClick={() => handleClickOpenOrderDialog(order)}
+              key={order._id}
+            >
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  {props.currentUser.type === "user" ? (
+                    <img
+                      style={{ width: "100%", objectFit: "cover" }}
+                      src={order.company.logo}
+                    />
+                  ) : (
+                    <img
+                      style={{ width: "100%", objectFit: "cover" }}
+                      src={order.owner.logo}
+                    />
+                  )}
+                </Avatar>
+              </ListItemAvatar>
+              {props.currentUser.type === "user" ? (
+                <>
+                  <ListItemText
+                    className={classes.notifAnswer}
+                    primary={order.company.name}
                   />
-                ) : (
-                  <img
-                    style={{ width: "100%", objectFit: "cover" }}
-                    src={order.ownerLogo}
+                  <ListItemText
+                    primary={order.status}
+                    className={
+                      order.status === "waiting"
+                        ? classes.waiting
+                        : order.status === "accepted"
+                        ? classes.accepted
+                        : classes.declined
+                    }
                   />
-                )}
-              </Avatar>
-            </ListItemAvatar>
-            {props.currentUser.type === "user" ? (
-              <>
-                <ListItemText
-                  className={classes.notifAnswer}
-                  primary={order.ownerEmail}
-                />
-                <ListItemText
-                  primary={order.status}
-                  className={
-                    order.status === "waiting"
-                      ? classes.waiting
-                      : order.status === "accepted"
-                      ? classes.accepted
-                      : classes.declined
-                  }
-                />
-              </>
-            ) : (
-              <ListItemText primary={order.ownerEmail} />
-            )}
+                </>
+              ) : (
+                // <ListItemText
+                //   primary={`${order.owner.firstName} ${order.owner.lastName}`}
+                // />
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <ListItemText
+                    style={{ margin: "0" }}
+                    primary={`${order.owner.firstName} ${order.owner.lastName}`}
+                  />
+                  <ListItemText
+                    style={{ margin: "0", color: "#a9a9a9" }}
+                    primary={order.serviceName}
+                  />
+                </div>
+              )}
 
-            {/* <div style={{ display: "flex", flexDirection: "column" }}>
+              {/* <div style={{ display: "flex", flexDirection: "column" }}>
               <ListItemText
                 style={{ margin: "0" }}
                 primary={order.ownerEmail}
@@ -366,8 +365,16 @@ function NavBar(props) {
                 primary={order.ownerEmail}
               />
             </div> */}
+            </ListItem>
+          ))
+        ) : (
+          <ListItem>
+            <ListItemText
+              style={{ margin: "0", color: "#a9a9a9" }}
+              primary={"There are no notifications!)"}
+            />
           </ListItem>
-        ))}
+        )}
       </List>
     </Menu>
   );
@@ -453,7 +460,7 @@ function NavBar(props) {
 
           <div className={classes.sectionDesktop}>
             {props.isAuthenticated ? (
-              SectionDesctop(
+              sectionDesctop(
                 handleOpenMail,
                 ordersSortedByAccepted,
                 notificationsId,
@@ -492,13 +499,15 @@ function NavBar(props) {
         sortedOrders={sortedOrders}
         handleClickOpenOrderDialog={handleClickOpenOrderDialog}
       />
-      <ExtendedOrderDialog
+      <OrderInfo
         open={openOrderDialog}
         onClose={handleCloseOrderDialog}
         orderDialogInfo={orderDialogInfo}
         request={request}
+        currentUser={props.currentUser}
+        fetchOrders={fetchOrders}
       />
-      <AcceptedOrders
+      <MailBox
         open={openMail}
         onClose={handleCloseMail}
         orders={orders}
@@ -512,7 +521,7 @@ function NavBar(props) {
 
 export default NavBar;
 
-function SectionDesctop(
+function sectionDesctop(
   handleOpenMail,
   ordersSortedByAccepted,
   notificationsId,
@@ -559,179 +568,6 @@ function SectionDesctop(
   );
 }
 
-function AcceptedOrders({
-  onClose,
-  open,
-  ordersSortedByAccepted,
-  handleClickOpenOrderDialog,
-  orders,
-  currentUser,
-}) {
-  const classes = useStyles();
-
-  const [checkedOrders, setCheckedOrders] = useState(true);
-
-  const handleChange = (event) => {
-    setCheckedOrders(event.target.checked);
-  };
-
-  const handleListItemClick = (value) => {
-    onClose(value);
-  };
-
-  const returnOrders = (propsOrders) => {
-    return (
-      <List>
-        {propsOrders.map((order) => (
-          <ListItem
-            button
-            onClick={() => handleClickOpenOrderDialog(order)}
-            //onClick={() => handleListItemClick(order)}
-            //onClick={() => handleClickOpenOrderDialog()}
-            key={order._id}
-            style={{
-              borderTop: "1px solid #00000020",
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar className={classes.avatar}>
-                {currentUser.type === "user" ? (
-                  <img
-                    style={{ width: "100%", objectFit: "cover" }}
-                    src={order.companyLogo}
-                  />
-                ) : (
-                  <img
-                    style={{ width: "100%", objectFit: "cover" }}
-                    src={order.ownerLogo}
-                  />
-                )}
-              </Avatar>
-            </ListItemAvatar>
-            {/* <ListItemText primary={order.ownerEmail} /> */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-              }}
-            >
-              <div>
-                <ListItemText
-                  style={{ margin: "0" }}
-                  primary={order.services}
-                />
-                <ListItemText
-                  style={{ margin: "0" }}
-                  primary={order.ownerEmail}
-                />
-              </div>
-            </div>
-          </ListItem>
-        ))}
-      </List>
-    );
-  };
-
-  return (
-    <Dialog
-      // onClose={handleClose}
-      fullWidth={true}
-      maxWidth="sm"
-      onClose={onClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <DialogTitle id="simple-dialog-title">Orders</DialogTitle>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={checkedOrders}
-              onChange={handleChange}
-              name="checked"
-              color="primary"
-            />
-          }
-          label="Sort by accepted"
-        />
-      </div>
-
-      {!checkedOrders
-        ? returnOrders(orders)
-        : returnOrders(ordersSortedByAccepted)}
-    </Dialog>
-  );
-}
-
-function ExtendedOrderDialog({ open, onClose, orderDialogInfo, request }) {
-  const setAnswer = async (order, answer) => {
-    try {
-      await request("/api/order/update-set-answer", "POST", {
-        ...order,
-        answer,
-      });
-    } catch (e) {}
-    onClose();
-  };
-
-  console.log(orderDialogInfo);
-  return (
-    <div>
-      <Dialog
-        open={open}
-        onClose={onClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {orderDialogInfo.serviceName}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Order from: {orderDialogInfo.ownerEmail}
-          </DialogContentText>
-
-          <DialogContentText>
-            Date Cleaning:{" "}
-            {new Date(orderDialogInfo.dateCleaning).toLocaleDateString()}
-          </DialogContentText>
-          <DialogContentText>
-            Flat Description: {orderDialogInfo.flatDescription}
-          </DialogContentText>
-          <DialogContentText>
-            Bathrooms/Small Rooms/Big Rooms: {orderDialogInfo.bathrooms}/
-            {orderDialogInfo.smallRooms}/{orderDialogInfo.bigRooms}
-          </DialogContentText>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <DialogContentText>
-              Time: {orderDialogInfo.time}min
-            </DialogContentText>
-            <DialogContentText>
-              Price: {orderDialogInfo.price}$
-            </DialogContentText>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setAnswer(orderDialogInfo, true)}
-            color="primary"
-          >
-            Accept
-          </Button>
-          <Button
-            onClick={() => setAnswer(orderDialogInfo, false)}
-            color="primary"
-            autoFocus
-          >
-            Decline
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-}
-
 ////// MOBILE
 
 function SimpleDialog({
@@ -770,11 +606,11 @@ function SimpleDialog({
               <Avatar className={classes.avatar}>
                 <img
                   style={{ width: "100%", objectFit: "cover" }}
-                  src={order.ownerLogo}
+                  src={order.owner.logo}
                 />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={order.ownerEmail} />
+            <ListItemText primary={order.owner.email} />
           </ListItem>
         ))}
       </List>
