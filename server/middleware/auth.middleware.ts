@@ -91,7 +91,7 @@ const getRedirectUrl = (role: string): string => {
   }
 };
 
-module.exports = {
+export {
   auth,
   signToken,
   hashPassword,

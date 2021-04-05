@@ -1,12 +1,13 @@
+import { Request, Response } from "express";
 const { Router } = require("express");
 
 const CleaningService = require("../models/CleaningService");
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
-    const services = await CleaningService.find();
+    const services: Array<object> = await CleaningService.find();
 
     res.json(services);
   } catch (e) {
