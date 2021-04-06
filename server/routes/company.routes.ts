@@ -68,7 +68,7 @@ router.post(
   "/update",
   auth,
   checkIsInRole(ROLES.Admin),
-  async (req: CompanyRequest, res: Response) => {
+  async (req: CompanyRequest, res: Response): Promise<void> => {
     try {
       const company = await CleaningCompany.findById(req.body._id);
 
@@ -76,7 +76,7 @@ router.post(
 
       await company.save();
 
-      res.status(201).json({ company });
+      res.status(201).json(company);
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });
     }

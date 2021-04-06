@@ -230,7 +230,7 @@ function NavBar(props) {
       return (
         <Typography className={`${classes.title} ${classes.linkTyp}`} noWrap>
           <NavLink className={classes.links} to="/users">
-            Users
+            Admin panel
           </NavLink>
         </Typography>
       );
