@@ -11,6 +11,7 @@ import CreateOrderPage from "./pages/orders/CreateOrderPage";
 
 import HomePage from "./pages/main-page/HomePage";
 import UserProfile from "./pages/profile/UserProfile";
+import CalendarPage from "./pages/calendar/CalendarPage";
 
 export const useRoutes = (isAuthenticated, logout) => {
   if (isAuthenticated) {
@@ -33,6 +34,9 @@ export const useRoutes = (isAuthenticated, logout) => {
         </Route>
         <Route path="/company-detail/:id">
           <DetailCompanyPage />
+        </Route>
+        <Route path="/calendar">
+          <CalendarPage />
         </Route>
 
         <Redirect to="/home" />

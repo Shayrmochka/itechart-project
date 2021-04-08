@@ -4,6 +4,8 @@ import {
   GET_USER_AUTHENTICATION,
   HIDE_LOADER,
   SHOW_LOADER,
+  GET_ACCEPTED_ORDERS,
+  REMOVE_ACCEPTED_ORDERS,
 } from "./types";
 
 export function getCurrentUser(currentUser) {
@@ -35,5 +37,18 @@ export function showLoader() {
 export function hideLoader() {
   return {
     type: HIDE_LOADER,
+  };
+}
+
+export function getAcceptedOrders(acceptedOrders) {
+  return {
+    type: GET_ACCEPTED_ORDERS,
+    payload: acceptedOrders,
+  };
+}
+
+export function removeAcceptedOrders() {
+  return {
+    type: REMOVE_ACCEPTED_ORDERS,
   };
 }

@@ -225,12 +225,36 @@ function NavBar(props) {
     history.push("/home");
   };
 
+  const createOrder = () => {
+    if (props.currentUser.type === "user") {
+      return (
+        <Typography className={`${classes.title} ${classes.linkTyp}`} noWrap>
+          <NavLink className={classes.links} to="/create-order">
+            Create Order
+          </NavLink>
+        </Typography>
+      );
+    }
+  };
+
   const adminButton = () => {
     if (props.currentUser.role === "Admin") {
       return (
         <Typography className={`${classes.title} ${classes.linkTyp}`} noWrap>
           <NavLink className={classes.links} to="/users">
             Admin panel
+          </NavLink>
+        </Typography>
+      );
+    }
+  };
+
+  const companyCalendar = () => {
+    if (props.currentUser.type === "company") {
+      return (
+        <Typography className={`${classes.title} ${classes.linkTyp}`} noWrap>
+          <NavLink className={classes.links} to="/calendar">
+            Company Calendar
           </NavLink>
         </Typography>
       );
@@ -443,18 +467,15 @@ function NavBar(props) {
             </NavLink>
           </Typography>
 
-          <Typography className={`${classes.title} ${classes.linkTyp}`} noWrap>
-            <NavLink className={classes.links} to="/create-order">
-              Create Order
-            </NavLink>
-          </Typography>
+          {Object.keys(props.currentUser).length ? createOrder() : <></>}
           <Typography className={`${classes.title} ${classes.linkTyp}`} noWrap>
             <NavLink className={classes.links} to="/companies">
               Companies
             </NavLink>
           </Typography>
 
-          {Object.keys(props.currentUser).length === 0 ? <></> : adminButton()}
+          {Object.keys(props.currentUser).length ? adminButton() : <></>}
+          {Object.keys(props.currentUser).length ? companyCalendar() : <></>}
 
           <div className={classes.grow} />
 
