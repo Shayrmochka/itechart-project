@@ -83,6 +83,18 @@ router.get("/", auth, async (req: any, res: any) => {
   }
 });
 
+router.get("/orders-chart", async (req: any, res: any) => {
+  try {
+    console.log(req.headers.id);
+    const orders = await Order.find({ company: req.headers.id });
+
+    console.log(orders);
+    res.json(orders);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong, try again" });
+  }
+});
+
 router.post("/update-set-answer", auth, async (req: Request, res: Response) => {
   try {
     const order = await Order.findById(req.body._id);

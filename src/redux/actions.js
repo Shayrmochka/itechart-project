@@ -6,6 +6,8 @@ import {
   SHOW_LOADER,
   GET_ACCEPTED_ORDERS,
   REMOVE_ACCEPTED_ORDERS,
+  GET_ORDERS,
+  REMOVE_ORDERS,
 } from "./types";
 
 export function getCurrentUser(currentUser) {
@@ -37,6 +39,19 @@ export function showLoader() {
 export function hideLoader() {
   return {
     type: HIDE_LOADER,
+  };
+}
+
+export function getOrders(orders) {
+  return {
+    type: GET_ORDERS,
+    payload: orders,
+  };
+}
+
+export function removeOrders() {
+  return {
+    type: REMOVE_ORDERS,
   };
 }
 

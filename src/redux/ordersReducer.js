@@ -1,18 +1,31 @@
-import { GET_ACCEPTED_ORDERS, REMOVE_ACCEPTED_ORDERS } from "./types";
+import {
+  GET_ACCEPTED_ORDERS,
+  GET_ORDERS,
+  REMOVE_ACCEPTED_ORDERS,
+  REMOVE_ORDERS,
+} from "./types";
 
 const initialState = {
+  allOrders: [],
   acceptedOrders: [],
 };
 
 export const ordersReducer = (state = initialState, action) => {
   switch (action.type) {
+    case GET_ORDERS:
+      return {
+        ...state,
+        allOrders: [...action.payload],
+      };
+    case REMOVE_ORDERS:
+      return { allOrders: [] };
     case GET_ACCEPTED_ORDERS:
       return {
         ...state,
-        acceptedOrders: [...state.acceptedOrders, ...action.payload],
+        acceptedOrders: [...action.payload],
       };
     case REMOVE_ACCEPTED_ORDERS:
-      return { ...state, acceptedOrders: {} };
+      return { acceptedOrders: [] };
 
     default:
       return state;

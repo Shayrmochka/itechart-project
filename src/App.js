@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getAcceptedOrders,
   getCurrentUser,
+  getOrders,
   getUserAuthentication,
 } from "./redux/actions";
 import { useHttp } from "./hooks/http.hook";
@@ -78,6 +79,7 @@ function App() {
       orders.filter((order) => order.status === "accepted")
     );
 
+    dispatch(getOrders(orders));
     dispatch(getAcceptedOrders(ordersSortedByAccepted));
   }, [orders, sortedOrders]);
 

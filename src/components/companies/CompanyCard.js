@@ -16,6 +16,7 @@ import Feedback from "./Feedback";
 import { useHttp } from "../../hooks/http.hook";
 import CompanyFeedbacks from "./CompanyFeedbacks";
 import { useSelector } from "react-redux";
+import BarChart from "../graphs/BarChart";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardGrid: {
     paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
+    paddingBottom: theme.spacing(0),
   },
   card: {
     height: "100%",
@@ -230,6 +231,8 @@ function CompanyCard({ company }) {
             ))}
           </Grid>
         </Container>
+
+        <BarChart companyId={company._id} feedbacks={feedbacks} />
 
         <CompanyFeedbacks feedbacks={feedbacks} />
       </main>
