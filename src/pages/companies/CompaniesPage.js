@@ -15,7 +15,6 @@ function CompaniesPage() {
   const fetchCompanies = useCallback(async () => {
     try {
       const fetched = await request("/api/company", "GET", null);
-      console.log(fetched);
       setCompanies(fetched);
       message(fetched.message);
     } catch (e) {}

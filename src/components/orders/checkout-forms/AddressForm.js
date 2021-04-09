@@ -51,6 +51,8 @@ const useStyles = makeStyles((theme) => ({
 
 function AddressForm({ updateFinalForm }) {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const dispatchedCompany = useSelector((state) => state.company.chosenCompany);
+
   const from = "modal";
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
@@ -70,7 +72,6 @@ function AddressForm({ updateFinalForm }) {
   const [services, setServices] = useState([]);
   const [searchCompanies, setSearchCompanies] = useState(null);
   const [flatCounter, setFlatCounter] = useState([1]);
-  const [flat, setFlat] = useState(null);
 
   const getSearchData = (value) => {
     setSearchCompanies(
@@ -82,12 +83,12 @@ function AddressForm({ updateFinalForm }) {
     );
   };
 
-  const updateChosenCompany = (value) => {
+  const updateChosenCompany = () => {
     setChosenCompany({
-      companyName: value.name,
-      companyId: value._id,
-      companyLogo: value.logo,
-      priceList: value.priceList,
+      companyName: dispatchedCompany.name,
+      companyId: dispatchedCompany._id,
+      companyLogo: dispatchedCompany.logo,
+      priceList: dispatchedCompany.priceList,
     });
     handleClose();
   };
@@ -104,6 +105,10 @@ function AddressForm({ updateFinalForm }) {
   useEffect(() => {
     fetchCompanies();
   }, [fetchCompanies]);
+
+  useEffect(() => {
+    updateChosenCompany();
+  }, [dispatchedCompany]);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -285,7 +290,7 @@ function AddressForm({ updateFinalForm }) {
               name="date"
               label="Choose Date"
               type="datetime-local"
-              defaultValue="2021-01-01T10:30"
+              defaultValue={new Date().toISOString().slice(0, 16)}
               onChange={changeHandler}
               InputLabelProps={{
                 shrink: true,
@@ -361,8 +366,6 @@ function AddressForm({ updateFinalForm }) {
                 companies={
                   searchCompanies === null ? companies : searchCompanies
                 }
-                from={from}
-                updateChosenCompany={updateChosenCompany}
                 getSearchData={getSearchData}
               />
             )}

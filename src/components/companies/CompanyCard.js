@@ -15,8 +15,9 @@ import {
 import Feedback from "./Feedback";
 import { useHttp } from "../../hooks/http.hook";
 import CompanyFeedbacks from "./CompanyFeedbacks";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BarChart from "../graphs/BarChart";
+import { getChosenCompany } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -114,6 +115,7 @@ const services = [
 
 function CompanyCard({ company }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const history = useHistory();
   const { request } = useHttp();
@@ -130,6 +132,7 @@ function CompanyCard({ company }) {
   };
 
   const handleOrder = () => {
+    dispatch(getChosenCompany(company));
     history.push("/create-order");
   };
 

@@ -19,6 +19,8 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { getChosenCompany } from "../../redux/actions";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -199,13 +201,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CompaniesList({
-  companies,
-  from,
-  updateChosenCompany,
-  getSearchData,
-}) {
+export default function CompaniesList({ companies, getSearchData }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
   const [selected, setSelected] = useState([]);
@@ -233,10 +231,10 @@ export default function CompaniesList({
     history.push(`/company-detail/${_id}`);
   };
 
-  const handleChooseCompany = (event, companyName) => {
+  const handleCompany = (event, companyName) => {
     event.stopPropagation();
-    console.log("Name", companyName);
-    updateChosenCompany(companyName);
+    dispatch(getChosenCompany(companyName));
+    history.push("/create-order");
   };
 
   const handleChangePage = (event, newPage) => {
@@ -300,25 +298,15 @@ export default function CompaniesList({
                       <TableCell align="left">{row.name}</TableCell>
                       <TableCell align="right">{row.address}</TableCell>
                       <TableCell align="right">{row.rating}</TableCell>
-                      <TableCell align="right">{row.priceList}</TableCell>
+                      <TableCell align="right">{row.priceList}%</TableCell>
                       <TableCell align="right">
-                        {from === "modal" ? (
-                          <Button
-                            onClick={(event) => handleChooseCompany(event, row)}
-                            variant="outlined"
-                            color="primary"
-                          >
-                            Choose
-                          </Button>
-                        ) : (
-                          <Button
-                            //onClick={(event) => handleChooseCompany(event)}
-                            variant="outlined"
-                            color="primary"
-                          >
-                            Choose Test
-                          </Button>
-                        )}
+                        <Button
+                          onClick={(event) => handleCompany(event, row)}
+                          variant="outlined"
+                          color="primary"
+                        >
+                          Choose
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );

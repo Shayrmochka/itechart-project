@@ -8,8 +8,11 @@ import {
   REMOVE_ACCEPTED_ORDERS,
   GET_ORDERS,
   REMOVE_ORDERS,
+  GET_CHOSEN_COMPANY,
+  REMOVE_CHOSEN_COMPANY,
 } from "./types";
 
+// USER
 export function getCurrentUser(currentUser) {
   return {
     type: GET_CURRENT_USER,
@@ -30,6 +33,7 @@ export function getUserAuthentication(isAuthenticated) {
   };
 }
 
+// APP
 export function showLoader() {
   return {
     type: SHOW_LOADER,
@@ -42,6 +46,7 @@ export function hideLoader() {
   };
 }
 
+// ORDERS
 export function getOrders(orders) {
   return {
     type: GET_ORDERS,
@@ -65,5 +70,19 @@ export function getAcceptedOrders(acceptedOrders) {
 export function removeAcceptedOrders() {
   return {
     type: REMOVE_ACCEPTED_ORDERS,
+  };
+}
+
+// COMPANY
+export function getChosenCompany(company) {
+  return {
+    type: GET_CHOSEN_COMPANY,
+    payload: company,
+  };
+}
+
+export function removeChosenCompany() {
+  return {
+    type: REMOVE_CHOSEN_COMPANY,
   };
 }
