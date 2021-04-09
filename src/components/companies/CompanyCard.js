@@ -117,6 +117,7 @@ function CompanyCard({ company }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const currentUserType = useSelector((state) => state.user.currentUser.type);
   const history = useHistory();
   const { request } = useHttp();
 
@@ -190,13 +191,22 @@ function CompanyCard({ company }) {
                   </Button>
                 </Grid>
                 <Grid item>
-                  {isAuthenticated ? (
+                  {isAuthenticated && currentUserType === "user" ? (
                     <Button
                       onClick={handleClickOpen}
                       variant="outlined"
                       color="primary"
                     >
                       Rate Us
+                    </Button>
+                  ) : isAuthenticated && currentUserType !== "user" ? (
+                    <Button
+                      //onClick={() => history.push("/signin")}
+                      disabled
+                      variant="outlined"
+                      color="primary"
+                    >
+                      Login as User to Rate Us
                     </Button>
                   ) : (
                     <Button
