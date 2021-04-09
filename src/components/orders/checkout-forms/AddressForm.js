@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AddressForm({ updateFinalForm }) {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const currentUserType = useSelector((state) => state.user.currentUser.type);
   const dispatchedCompany = useSelector((state) => state.company.chosenCompany);
 
   const from = "modal";
@@ -322,7 +323,7 @@ function AddressForm({ updateFinalForm }) {
           </Grid>
 
           <div className={classes.buttons}>
-            {isAuthenticated ? (
+            {isAuthenticated && currentUserType === "user" ? (
               <Button
                 variant="contained"
                 color="primary"
@@ -330,6 +331,16 @@ function AddressForm({ updateFinalForm }) {
                 className={classes.button}
               >
                 Next
+              </Button>
+            ) : isAuthenticated && currentUserType !== "user" ? (
+              <Button
+                variant="contained"
+                color="primary"
+                //onClick={() => history.push("/signin")}
+                disabled
+                className={classes.button}
+              >
+                Please login as User
               </Button>
             ) : (
               <Button
