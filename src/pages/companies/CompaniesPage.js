@@ -34,10 +34,6 @@ function CompaniesPage() {
     );
   };
 
-  console.log(searchCompanies);
-
-  const from = "page";
-
   if (loading) {
     return <Loader />;
   }
@@ -46,7 +42,6 @@ function CompaniesPage() {
       {!loading && (
         <CompaniesList
           companies={searchCompanies === null ? companies : searchCompanies}
-          from={from}
           getSearchData={getSearchData}
         />
       )}

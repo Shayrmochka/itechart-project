@@ -10,6 +10,8 @@ import {
   REMOVE_ORDERS,
   GET_CHOSEN_COMPANY,
   REMOVE_CHOSEN_COMPANY,
+  GET_SORTED_ORDERS,
+  REMOVE_SORTED_ORDERS,
 } from "./types";
 
 // USER
@@ -57,6 +59,19 @@ export function getOrders(orders) {
 export function removeOrders() {
   return {
     type: REMOVE_ORDERS,
+  };
+}
+
+export function getSortedOrders(orders) {
+  return {
+    type: GET_SORTED_ORDERS,
+    payload: orders,
+  };
+}
+
+export function removeSortedOrders() {
+  return {
+    type: REMOVE_SORTED_ORDERS,
   };
 }
 

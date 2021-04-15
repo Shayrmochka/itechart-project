@@ -8,6 +8,7 @@ interface IUser extends mongoose.Document {
   logo: string;
   phone: string;
   isActive: boolean;
+  banReason: string;
   type: string;
   role: string;
   links: any;
@@ -49,6 +50,10 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: "user",
+  },
+  banReason: {
+    type: String,
+    default: "Without reason",
   },
   role: {
     type: String,

@@ -182,13 +182,27 @@ function CompanyCard({ company }) {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button
-                    onClick={handleOrder}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Contact Us
-                  </Button>
+                  {isAuthenticated && currentUserType === "user" ? (
+                    <Button
+                      onClick={handleOrder}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Contact Us
+                    </Button>
+                  ) : isAuthenticated && currentUserType !== "user" ? (
+                    <Button variant="contained" color="primary" disabled>
+                      Login as user to Contact us
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => history.push("/signin")}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Login to contact us
+                    </Button>
+                  )}
                 </Grid>
                 <Grid item>
                   {isAuthenticated && currentUserType === "user" ? (
@@ -200,12 +214,7 @@ function CompanyCard({ company }) {
                       Rate Us
                     </Button>
                   ) : isAuthenticated && currentUserType !== "user" ? (
-                    <Button
-                      //onClick={() => history.push("/signin")}
-                      disabled
-                      variant="outlined"
-                      color="primary"
-                    >
+                    <Button disabled variant="outlined" color="primary">
                       Login as User to Rate Us
                     </Button>
                   ) : (

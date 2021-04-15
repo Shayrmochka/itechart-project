@@ -17,6 +17,7 @@ import {
 } from "@material-ui/core";
 
 import { useHistory } from "react-router";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   mainGrid: {
@@ -93,9 +94,12 @@ const tiers = [
 export default function HomePage() {
   const classes = useStyles();
   const history = useHistory();
+  const user = useSelector((state) => state.user);
 
   const handleOpen = () => {
-    history.push("/create-order");
+    if (user.isAuthenticated && user.currentUser.type === "user") {
+      history.push("/create-order");
+    } else history.push("/signin");
   };
 
   return (
@@ -193,14 +197,26 @@ export default function HomePage() {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button
-                    fullWidth
-                    variant={tier.buttonVariant}
-                    color="primary"
-                    onClick={handleOpen}
-                  >
-                    {tier.buttonText}
-                  </Button>
+                  {user.isAuthenticated &&
+                  user.currentUser.type === "company" ? (
+                    <Button
+                      fullWidth
+                      variant={tier.buttonVariant}
+                      color="primary"
+                      disabled
+                    >
+                      Login as user
+                    </Button>
+                  ) : (
+                    <Button
+                      fullWidth
+                      variant={tier.buttonVariant}
+                      color="primary"
+                      onClick={handleOpen}
+                    >
+                      {tier.buttonText}
+                    </Button>
+                  )}
                 </CardActions>
               </Card>
             </Grid>

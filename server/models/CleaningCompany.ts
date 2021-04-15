@@ -11,6 +11,7 @@ interface ICleaningCompany extends mongoose.Document {
   priceList: string;
   rating: number;
   isActive: boolean;
+  banReason: string;
   type: string;
 }
 
@@ -59,6 +60,10 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     required: true,
+  },
+  banReason: {
+    type: String,
+    default: "Without reason",
   },
   type: {
     type: String,

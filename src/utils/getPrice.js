@@ -1,9 +1,9 @@
 export const getPrice = (order) => {
   let resultPrice = 0;
   let resultTime = 0;
-  const bigRoom = 2;
-  const smallRoom = 1;
-  const bathRoom = 3;
+  const bigRoom = 5;
+  const smallRoom = 3;
+  const bathRoom = 10;
 
   let bigRoomCounter = 0;
   let smallRoomCounter = 0;
@@ -29,7 +29,7 @@ export const getPrice = (order) => {
   }
 
   resultPrice *= +order.servicePrice;
-  resultTime = (resultPrice / 60) * 30;
+  resultTime = resultPrice * +order.servicePrice * 5;
   resultTime = +resultTime.toFixed();
 
   resultPrice += resultPrice / order.priceList;

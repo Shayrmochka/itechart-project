@@ -10,6 +10,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { useHttp } from "../../hooks/http.hook";
 import { useSelector } from "react-redux";
+import BanModal from "../BanModal";
 
 const useStyles = makeStyles({
   root: {
@@ -52,21 +53,25 @@ const useStyles = makeStyles({
   },
 });
 
-function UsersList({ users }) {
+function UsersList({ users, open, handleClickOpen, handleClose }) {
   const currentUser = useSelector((state) => state.user.currentUser);
   const classes = useStyles();
 
   const [allUsers, setAllUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState({});
 
   useEffect(() => {
     setAllUsers(users);
   }, [users]);
 
   const { request } = useHttp();
-  const blockHandler = async (user) => {
+  const blockHandler = async (user, reason) => {
     if (currentUser._id !== user._id) {
       try {
-        const response = await request("/api/user/update", "POST", user);
+        const response = await request("/api/user/update", "POST", {
+          ...user,
+          banReason: reason,
+        });
         setAllUsers(
           allUsers.map((e) => (e._id !== response._id ? e : response))
         );
@@ -112,23 +117,23 @@ function UsersList({ users }) {
               >
                 {user.role === "Admin" ? "Admin" : "User"}
               </Typography>
-              {/* <Typography
-                className={classes.title}
-                color="textSecondary"
-                gutterBottom
-              >
-                {user.isActive ? "Active" : "Banned"}
-              </Typography> */}
+
               <Typography className={classes.pos} color="textSecondary">
                 {user.email}
               </Typography>
               <Typography className={classes.pos} color="textSecondary">
-                {user.phone}
+                {user.isActive ? user.phone : `Blocked: ${user.banReason}`}
               </Typography>
             </CardContent>
             <CardActions style={{ display: "flex", justifyContent: "center" }}>
               {user.isActive ? (
-                <Button size="small" onClick={() => blockHandler(user)}>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    handleClickOpen();
+                  }}
+                >
                   Block
                 </Button>
               ) : (
@@ -140,6 +145,12 @@ function UsersList({ users }) {
           </Card>
         );
       })}
+      <BanModal
+        open={open}
+        handleClose={handleClose}
+        blockHandler={blockHandler}
+        selectedCard={selectedUser}
+      />
     </div>
   );
 }

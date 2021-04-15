@@ -55,6 +55,9 @@ router.post(
     try {
       const user = await User.findById(req.body._id);
 
+      if (req.body.banReason) {
+        user.banReason = req.body.banReason;
+      }
       user.isActive = !user.isActive;
 
       await user.save();

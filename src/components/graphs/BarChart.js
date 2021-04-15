@@ -52,14 +52,19 @@ function BarChart({ companyId, feedbacks }) {
       switch (e.rating) {
         case "1":
           setMarks(marks.one++);
+          break;
         case "2":
           setMarks(marks.two++);
+          break;
         case "3":
           setMarks(marks.three++);
+          break;
         case "4":
           setMarks(marks.four++);
+          break;
         case "5":
           setMarks(marks.five++);
+          break;
       }
     });
     setMarks(marks);
@@ -157,22 +162,17 @@ function BarChart({ companyId, feedbacks }) {
             <Card className={classes.card}>
               <Doughnut
                 data={{
-                  labels: ["Declined orders", "Orders", "Accepted orders"],
+                  labels: ["Declined orders", "Accepted orders"],
                   datasets: [
                     {
                       label: "Orders",
                       data: [
                         orders.length - ordersSortedByAccepted.length,
-                        orders.length,
+
                         ordersSortedByAccepted.length,
                       ],
-                      backgroundColor: [
-                        "rgba(255, 99, 132,1)",
-                        "#7ed6df",
-
-                        "#78e08f",
-                      ],
-                      borderColor: ["white", "white", "white"],
+                      backgroundColor: ["rgba(255, 99, 132,1)", "#78e08f"],
+                      borderColor: ["white", "white"],
                       hoverOffset: 4,
                     },
                   ],

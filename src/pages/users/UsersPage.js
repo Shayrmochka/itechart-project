@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 function UsersPage() {
   const classes = useStyles();
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -63,8 +63,18 @@ function UsersPage() {
   const [users, setUsers] = useState([]);
   const [companies, setCompanies] = useState([]);
   const { loading, request } = useHttp();
-
   const message = useMessage();
+
+  const [userBan, setUserBan] = useState(false);
+
+  const handleUserBan = () => {
+    setUserBan(true);
+  };
+
+  const handleUserBanClose = () => {
+    setUserBan(false);
+  };
+
   const fetchUsers = useCallback(async () => {
     try {
       const fetchedUsers = await request("/api/user", "GET", null);
@@ -104,10 +114,24 @@ function UsersPage() {
           onChangeIndex={handleChangeIndex}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            {!loading && <UsersList users={users} />}
+            {!loading && (
+              <UsersList
+                users={users}
+                open={userBan}
+                handleClickOpen={handleUserBan}
+                handleClose={handleUserBanClose}
+              />
+            )}
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            {!loading && <AdminCompaniesList companies={companies} />}
+            {!loading && (
+              <AdminCompaniesList
+                companies={companies}
+                open={userBan}
+                handleClickOpen={handleUserBan}
+                handleClose={handleUserBanClose}
+              />
+            )}
           </TabPanel>
         </SwipeableViews>
       </div>

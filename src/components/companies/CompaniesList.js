@@ -19,7 +19,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getChosenCompany } from "../../redux/actions";
 
 function descendingComparator(a, b, orderBy) {
@@ -204,6 +204,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CompaniesList({ companies, getSearchData }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
   const [selected, setSelected] = useState([]);
@@ -300,13 +301,32 @@ export default function CompaniesList({ companies, getSearchData }) {
                       <TableCell align="right">{row.rating}</TableCell>
                       <TableCell align="right">{row.priceList}%</TableCell>
                       <TableCell align="right">
-                        <Button
-                          onClick={(event) => handleCompany(event, row)}
-                          variant="outlined"
-                          color="primary"
-                        >
-                          Choose
-                        </Button>
+                        {user.isAuthenticated &&
+                        user.currentUser.type === "user" ? (
+                          <Button
+                            onClick={(event) => handleCompany(event, row)}
+                            variant="outlined"
+                            color="primary"
+                          >
+                            Choose
+                          </Button>
+                        ) : user.isAuthenticated &&
+                          user.currentUser.type !== "user" ? (
+                          <Button variant="outlined" color="primary" disabled>
+                            Login as user
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              history.push("/signin");
+                            }}
+                            variant="outlined"
+                            color="primary"
+                          >
+                            Login
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   );

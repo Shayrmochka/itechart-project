@@ -14,6 +14,7 @@ import {
   getAcceptedOrders,
   getCurrentUser,
   getOrders,
+  getSortedOrders,
   getUserAuthentication,
 } from "./redux/actions";
 import { useHttp } from "./hooks/http.hook";
@@ -38,8 +39,6 @@ function App() {
   const routes = useRoutes(isAuthenticated, logout);
 
   const [currentUser, setCurrentUser] = useState({});
-
-  // NEW LOGIC ================================================
 
   const [orders, setOrders] = useState([]);
 
@@ -80,10 +79,9 @@ function App() {
     );
 
     dispatch(getOrders(orders));
+    dispatch(getSortedOrders(sortedOrders));
     dispatch(getAcceptedOrders(ordersSortedByAccepted));
   }, [orders, sortedOrders]);
-
-  // END NEW LOGIC ============================================
 
   useEffect(() => {
     setCurrentUser(user);
@@ -101,6 +99,10 @@ function App() {
             currentUser={currentUser}
             isAuthenticated={isAuthenticated}
             logout={logout}
+            fetchOrders={fetchOrders}
+            orders={orders}
+            sortedOrders={sortedOrders}
+            ordersSortedByAccepted={ordersSortedByAccepted}
           />
         }
 

@@ -72,6 +72,9 @@ router.post(
     try {
       const company = await CleaningCompany.findById(req.body._id);
 
+      if (req.body.banReason) {
+        company.banReason = req.body.banReason;
+      }
       company.isActive = !company.isActive;
 
       await company.save();

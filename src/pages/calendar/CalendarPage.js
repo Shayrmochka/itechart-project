@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Inject,
   ScheduleComponent,
@@ -7,10 +7,8 @@ import {
   WorkWeek,
   Month,
   Agenda,
-  EventSettingsModel,
 } from "@syncfusion/ej2-react-schedule";
 
-import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import { useSelector } from "react-redux";
 
 function CalendarPage() {
@@ -26,13 +24,15 @@ function CalendarPage() {
       Subject: e.serviceName,
       Priority: "High",
       Location: e.address,
-      Description: `${e.flatDescription} (${e.price}$)`,
+      Description: `${e.owner.firstName} ${e.owner.lastName}: ${e.flatDescription} (${e.price}$)`,
     }));
     return formated;
   };
 
   return (
     <ScheduleComponent
+      width="100%"
+      height="550px"
       currentView="Month"
       eventSettings={{ dataSource: formatOrders(acceptedOrders) }}
     >

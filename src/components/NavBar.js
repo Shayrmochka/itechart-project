@@ -13,14 +13,6 @@ import {
   Avatar,
   Badge,
   Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControlLabel,
-  Grid,
   IconButton,
   List,
   ListItem,
@@ -32,10 +24,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useHttp } from "../hooks/http.hook";
-import { useMessage } from "../hooks/message.hook";
+
 import MailBox from "./nav-bar/MailBox";
 import OrderInfo from "./nav-bar/OrderInfo";
-import Loader from "./Loader";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -130,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NavBar(props) {
-  //console.log(props.currentUser);
+  const { orders, sortedOrders, ordersSortedByAccepted, fetchOrders } = props;
 
   const classes = useStyles();
   const history = useHistory();
@@ -139,47 +130,9 @@ function NavBar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationEl, setNotificationEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const [orders, setOrders] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(orders[1]);
   const [orderDialogInfo, setOrderDialogInfo] = useState({});
   const [openOrderDialog, setOpenOrderDialog] = useState(false);
-  const [sortedOrders, setSortedOrders] = useState([]);
   const [openMail, setOpenMail] = useState(false);
-  const [ordersSortedByAccepted, setOrdersSortedByAccepted] = useState([]);
-
-  const fetchOrders = useCallback(async (token) => {
-    try {
-      const fetched = await request("/api/order", "GET", null, {
-        Authorization: `Bearer: ${token}`,
-      });
-      setOrders(fetched);
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (props.currentUser.token && props.isAuthenticated) {
-      console.log("RENDER");
-
-      fetchOrders(props.currentUser.token);
-    }
-  }, [fetchOrders, props, props.currentUser.token, props.isAuthenticated]);
-
-  useEffect(() => {
-    if (props.currentUser.type === "user") {
-      setSortedOrders(orders.filter((order) => order.status !== "waiting"));
-    } else if (props.currentUser.type === "company") {
-      setSortedOrders(orders.filter((order) => !order.checked));
-    }
-  }, [orders]);
-
-  useEffect(() => {
-    setOrdersSortedByAccepted(
-      orders.filter((order) => order.status === "accepted")
-    );
-  }, [orders, sortedOrders]);
 
   const handleClickOpenOrderDialog = (order) => {
     setOpenOrderDialog(true);
@@ -189,15 +142,6 @@ function NavBar(props) {
   const handleCloseOrderDialog = () => {
     setOpenOrderDialog(false);
     setOrderDialogInfo({});
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (value) => {
-    setOpen(false);
-    setSelectedValue(value);
   };
 
   const handleOpenMail = () => {
@@ -304,9 +248,6 @@ function NavBar(props) {
     </Menu>
   );
 
-  // console.log("ORDERS", orders);
-  // console.log("SORTED", sortedOrders);
-
   const notificationsId = "primary-search-notifications-menu";
   const renderNotifications = (
     <Menu
@@ -319,15 +260,11 @@ function NavBar(props) {
       open={isNotificationsOpen}
       onClose={handleNotificationsMenuClose}
     >
-      {/* <MenuItem onClick={openProfile}>Kek</MenuItem>
-
-      <MenuItem onClick={logoutHandler}>Logout</MenuItem> */}
       <List>
         {sortedOrders.length ? (
           sortedOrders.map((order) => (
             <ListItem
               button
-              //onClick={() => handleListItemClick(order)}
               onClick={() => handleClickOpenOrderDialog(order)}
               key={order._id}
             >
@@ -364,9 +301,6 @@ function NavBar(props) {
                   />
                 </>
               ) : (
-                // <ListItemText
-                //   primary={`${order.owner.firstName} ${order.owner.lastName}`}
-                // />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <ListItemText
                     style={{ margin: "0" }}
@@ -378,17 +312,6 @@ function NavBar(props) {
                   />
                 </div>
               )}
-
-              {/* <div style={{ display: "flex", flexDirection: "column" }}>
-              <ListItemText
-                style={{ margin: "0" }}
-                primary={order.ownerEmail}
-              />
-              <ListItemText
-                style={{ margin: "0" }}
-                primary={order.ownerEmail}
-              />
-            </div> */}
             </ListItem>
           ))
         ) : (
@@ -414,15 +337,15 @@ function NavBar(props) {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={handleOpenMail}>
         <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={ordersSortedByAccepted.length} color="secondary">
             <MailIcon />
           </Badge>
         </IconButton>
         <p>Messages</p>
       </MenuItem>
-      <MenuItem onClick={handleClickOpen}>
+      <MenuItem onClick={handleNotificationsMenuOpen}>
         <IconButton
           aria-label="show 11 new notifications"
           color="inherit"
@@ -513,13 +436,7 @@ function NavBar(props) {
       {renderMobileMenu}
       {renderMenu}
       {renderNotifications}
-      <SimpleDialog
-        selectedValue={selectedValue}
-        open={open}
-        onClose={handleClose}
-        sortedOrders={sortedOrders}
-        handleClickOpenOrderDialog={handleClickOpenOrderDialog}
-      />
+
       <OrderInfo
         open={openOrderDialog}
         onClose={handleCloseOrderDialog}
@@ -586,55 +503,5 @@ function sectionDesctop(
         <AccountCircle />
       </IconButton>
     </>
-  );
-}
-
-////// MOBILE
-
-function SimpleDialog({
-  onClose,
-  selectedValue,
-  open,
-  sortedOrders,
-  handleClickOpenOrderDialog,
-}) {
-  const classes = useStyles();
-
-  const handleClose = () => {
-    onClose(selectedValue);
-  };
-
-  const handleListItemClick = (value) => {
-    onClose(value);
-  };
-
-  return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-    >
-      <DialogTitle id="simple-dialog-title">New Orders</DialogTitle>
-      <List>
-        {sortedOrders.map((order) => (
-          <ListItem
-            button
-            //onClick={() => handleListItemClick(order)}
-            onClick={() => handleClickOpenOrderDialog()}
-            key={order._id}
-          >
-            <ListItemAvatar>
-              <Avatar className={classes.avatar}>
-                <img
-                  style={{ width: "100%", objectFit: "cover" }}
-                  src={order.owner.logo}
-                />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={order.owner.email} />
-          </ListItem>
-        ))}
-      </List>
-    </Dialog>
   );
 }

@@ -10,6 +10,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { useHttp } from "../../hooks/http.hook";
 import { useSelector } from "react-redux";
+import BanModal from "../BanModal";
 
 const useStyles = makeStyles({
   root: {
@@ -52,19 +53,23 @@ const useStyles = makeStyles({
   },
 });
 
-function AdminCompaniesList({ companies }) {
+function AdminCompaniesList({ companies, open, handleClickOpen, handleClose }) {
   const classes = useStyles();
 
   const [allCompanies, setAllCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState({});
   console.log(companies);
   useEffect(() => {
     setAllCompanies(companies);
   }, [companies]);
 
   const { request } = useHttp();
-  const blockHandler = async (company) => {
+  const blockHandler = async (company, reason) => {
     try {
-      const response = await request("/api/company/update", "POST", company);
+      const response = await request("/api/company/update", "POST", {
+        ...company,
+        banReason: reason,
+      });
       setAllCompanies(
         allCompanies.map((e) => (e._id !== response._id ? e : response))
       );
@@ -108,12 +113,20 @@ function AdminCompaniesList({ companies }) {
                 Price: {company.priceList}$
               </Typography>
               <Typography className={classes.pos} color="textSecondary">
-                Rating: {company.rating}
+                {company.isActive
+                  ? `Rating: ${company.rating}`
+                  : `Blocked: ${company.banReason}`}
               </Typography>
             </CardContent>
             <CardActions style={{ display: "flex", justifyContent: "center" }}>
               {company.isActive ? (
-                <Button size="small" onClick={() => blockHandler(company)}>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    setSelectedCompany(company);
+                    handleClickOpen();
+                  }}
+                >
                   Block
                 </Button>
               ) : (
@@ -125,6 +138,12 @@ function AdminCompaniesList({ companies }) {
           </Card>
         );
       })}
+      <BanModal
+        open={open}
+        handleClose={handleClose}
+        blockHandler={blockHandler}
+        selectedCard={selectedCompany}
+      />
     </div>
   );
 }

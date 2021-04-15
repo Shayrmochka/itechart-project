@@ -54,16 +54,16 @@ function AddressForm({ updateFinalForm }) {
   const currentUserType = useSelector((state) => state.user.currentUser.type);
   const dispatchedCompany = useSelector((state) => state.company.chosenCompany);
 
-  const from = "modal";
   const { register, handleSubmit, errors } = useForm();
   const classes = useStyles();
   const message = useMessage();
   const history = useHistory();
-
   const { loading, request } = useHttp();
 
   const [cleaningService, setCleaningService] = useState({});
-  const [addressForm, setAddressForm] = useState({});
+  const [addressForm, setAddressForm] = useState({
+    date: new Date().toISOString().slice(0, 16),
+  });
   const [open, setOpen] = useState(false);
   const [companies, setCompanies] = useState([]);
   const [chosenCompany, setChosenCompany] = useState({
@@ -138,6 +138,11 @@ function AddressForm({ updateFinalForm }) {
 
   const handleChange = (event) => {
     setCleaningService(event.target.value);
+    setSearchCompanies(
+      companies.filter((el) =>
+        el.typeOfServices.includes(event.target.value._id)
+      )
+    );
   };
 
   const handleClickOpen = () => {
@@ -291,7 +296,7 @@ function AddressForm({ updateFinalForm }) {
               name="date"
               label="Choose Date"
               type="datetime-local"
-              defaultValue={new Date().toISOString().slice(0, 16)}
+              defaultValue={addressForm.date}
               onChange={changeHandler}
               InputLabelProps={{
                 shrink: true,
