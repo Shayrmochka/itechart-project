@@ -23,6 +23,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getCurrentUser } from "../../redux/actions";
 import { useAuth } from "../../hooks/auth.hooh";
+import SocialButton from "../../components/SocialButton";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -82,6 +83,25 @@ function AuthPage() {
       login(dataReq.token);
       dispatch(getCurrentUser({ ...dataReq.user, token: dataReq.token }));
     } catch (e) {}
+  };
+
+  const handleSocialLogin = async (user) => {
+    //console.log(user.profile);
+    try {
+      const response = await request(
+        "/api/social-auth/google",
+        "POST",
+        user.profile
+      );
+      //message(dataReq.message);
+      console.log(response);
+      login(response.token);
+      dispatch(getCurrentUser({ ...response.user, token: response.token }));
+    } catch (e) {}
+  };
+
+  const handleSocialLoginFailure = (err) => {
+    console.error(err);
   };
 
   useEffect(() => {
@@ -181,6 +201,39 @@ function AuthPage() {
           </Button>
         </form>
         <Grid container>
+          <SocialButton
+            provider="google"
+            appId="525057698721-clrqeoja3b3jtfr2qt5sh0jctdbmbu8v.apps.googleusercontent.com"
+            onLoginSuccess={handleSocialLogin}
+            onLoginFailure={handleSocialLoginFailure}
+          >
+            Login with Google
+          </SocialButton>
+          {/* <Grid item xs={12} sm={6}>
+            <SocialButton
+              provider="google"
+              appId="525057698721-clrqeoja3b3jtfr2qt5sh0jctdbmbu8v.apps.googleusercontent.com"
+              onLoginSuccess={handleSocialLogin}
+              onLoginFailure={handleSocialLoginFailure}
+            >
+              Login with Google
+            </SocialButton>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <SocialButton
+              provider="github"
+              appId="e7619529ec8d2c14eedb"
+              gatekeeper="https://github.com/login/oauth/authorize"
+              redirect="http://localhost:3000/home"
+              onLoginSuccess={handleSocialLogin}
+              onLoginFailure={handleSocialLoginFailure}
+            >
+              Login with GitHub
+            </SocialButton>
+          </Grid> */}
+        </Grid>
+        <Grid container style={{ marginTop: "10px" }}>
           <NavLink to="/signup">Don't have any account? Sign Up!</NavLink>
         </Grid>
       </div>

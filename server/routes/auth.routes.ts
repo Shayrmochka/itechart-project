@@ -15,6 +15,7 @@ const {
   getRedirectUrl,
   checkToken,
 } = require("../middleware/auth.middleware");
+import { useBot } from "../telegramBot/telegramBot";
 
 // /api/auth/check
 router.post(
@@ -83,7 +84,6 @@ router.post(
     }),
   ],
   async (req: Request, res: Response) => {
-    // res.set("Access-Control-Allow-Origin", "*");
     try {
       const errors = validationResult(req);
       console.log(errors);
@@ -155,7 +155,6 @@ router.post(
         return res.status(400).json({ message: "The user is banned" });
       }
 
-      //const isMatch = await bcrypt.compare(password, user.password);
       const isMatch = await verifyPassword(password, user.password);
       console.log(isMatch);
       if (!isMatch) {
@@ -164,15 +163,11 @@ router.post(
           .json({ message: "Invalid password, please try again" });
       }
 
-      // const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
-      //   expiresIn: "12h",
-      // });
-
       const token = await signToken(user.id, "user");
-
-      // res.json({ token, userId: user.id });
+      useBot(`${user.firstName} ${user.lastName}`, "Authenticated");
       res.json({ token, user });
     } catch (e) {
+      console.log(e);
       res.status(500).json({ message: "Something went wrong, try again" });
     }
   }
@@ -252,6 +247,7 @@ router.post(
 
       await company.save();
 
+      useBot(`${name}`, "Company created");
       res.status(201).json({ message: "Company created" });
     } catch (e) {
       console.log(e);

@@ -1,3 +1,4 @@
+import { useBot } from "./../telegramBot/telegramBot";
 import { Request, Response } from "express";
 const { Router } = require("express");
 const User = require("../models/User");
@@ -61,6 +62,12 @@ router.post(
       user.isActive = !user.isActive;
 
       await user.save();
+
+      if (user.isActive) {
+        useBot(`${user.firstName} ${user.lastName}`, "Unblocked");
+      } else {
+        useBot(`${user.firstName} ${user.lastName}`, "Blocked");
+      }
 
       res.status(201).json(user);
     } catch (e) {
@@ -135,13 +142,9 @@ router.post(
   async (req: UserRequest, res: Response): Promise<void> => {
     try {
       const id = req.body._id;
-      const user = await User.findById(id);
       const feedbacks = await Feedback.find({ owner: id });
       const orders = await Order.find({ owner: id });
 
-      console.log("USER", user);
-      console.log("FEEDBACKS", feedbacks);
-      console.log("ORDERS", orders);
       if (feedbacks.length) {
         feedbacks.forEach(async (feedback: any) => {
           await Feedback.deleteOne({ _id: feedback._id });

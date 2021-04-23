@@ -17,8 +17,7 @@ const auth = (req: any, res: any, next: any) => {
     }
 
     const decoded: object = jwt.verify(token, config.jwtSecret);
-    // console.log("DECODED", decoded);
-    // console.log("REQ USER", req.user);
+
     req.user = decoded;
     next();
   } catch (e) {
@@ -27,12 +26,6 @@ const auth = (req: any, res: any, next: any) => {
 };
 
 const checkToken = (token: string) => {
-  // const userToken: string = token;
-
-  // if (!userToken) {
-  //   return res.status(401).json({ message: "You are not logged in" });
-  // }
-
   const decoded: object = jwt.verify(token, config.jwtSecret);
   return decoded;
 };
@@ -73,7 +66,6 @@ const checkIsInRole = (...roles: any) => async (
 
   const hasRole = roles.find((role: string) => user.role === role);
   if (!hasRole) {
-    //return res.redirect("http://localhost:4000");
     return res.json({ message: "No right to access" });
   }
 
