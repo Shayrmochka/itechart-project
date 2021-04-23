@@ -31,6 +31,7 @@ import OrderInfo from "./nav-bar/OrderInfo";
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
+    marginBottom: "64px",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -374,8 +375,14 @@ function NavBar(props) {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Toolbar style={{ maxWidth: "1280px", width: "100%" }}>
           <IconButton
             edge="start"
             className={classes.menuButton}

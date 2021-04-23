@@ -171,7 +171,8 @@ const EnhancedTableToolbar = ({ getSearchData }) => {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "80%",
+    maxWidth: "1280px",
+    width: "100%",
     margin: "0 auto",
   },
   paper: {

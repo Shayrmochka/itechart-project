@@ -210,7 +210,6 @@ router.post(
       const {
         email,
         password,
-        logo,
         name,
         description,
         address,
@@ -235,7 +234,6 @@ router.post(
       const company = new CleaningCompany({
         email,
         password: hashedPassword,
-        logo,
         name,
         description,
         address,

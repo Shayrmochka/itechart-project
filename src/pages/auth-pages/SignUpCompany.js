@@ -134,7 +134,7 @@ function SignUp() {
             <div className={classes.linksBlock}>I'm User</div>
           </NavLink>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <TextField
                 autoComplete="logo"
                 name="logo"
@@ -151,7 +151,7 @@ function SignUp() {
               {errors.logo && (
                 <span className={classes.error}>This field is required</span>
               )}
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"

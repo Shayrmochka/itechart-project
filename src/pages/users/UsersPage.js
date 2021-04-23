@@ -41,9 +41,29 @@ function a11yProps(index) {
 }
 
 const useStyles = makeStyles((theme) => ({
+  rootWrapper: {
+    display: "flex",
+    maxWidth: "1280px",
+    width: "100%",
+    margin: "0 auto",
+  },
   root: {
     backgroundColor: theme.palette.background.paper,
     //width: 500,
+    maxWidth: "1280px",
+    width: "100%",
+    margin: "0 auto",
+  },
+  appBar: {
+    marginTop: "64px",
+    margin: "0 auto",
+  },
+  views: {
+    marginTop: "40px",
+  },
+  tabs: {
+    maxWidth: "1280px",
+    width: "100%",
   },
 }));
 
@@ -92,17 +112,16 @@ function UsersPage() {
     return <Loader />;
   }
   return (
-    <div>
+    <div className={classes.rootWrapper}>
       <div className={classes.root}>
-        <AppBar position="static" color="default">
+        <AppBar color="default" className={classes.appBar}>
           <Tabs
             value={value}
             onChange={handleChange}
             indicatorColor="primary"
             textColor="primary"
-            //variant="fullWidth"
-            //maxWidth="lg"
-            aria-label="full width tabs example"
+            className={classes.tabs}
+            style={{ maxWidth: "1280px", margin: "0 auto" }}
           >
             <Tab label="Users" {...a11yProps(0)} />
             <Tab label="Companies" {...a11yProps(1)} />
@@ -112,6 +131,7 @@ function UsersPage() {
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
           index={value}
           onChangeIndex={handleChangeIndex}
+          className={classes.views}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             {!loading && (
