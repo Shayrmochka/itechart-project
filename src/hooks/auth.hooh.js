@@ -31,7 +31,6 @@ export const useAuth = () => {
         data,
       });
 
-      //console.log("TEST", dataReq);
       dispatch(getCurrentUser({ ...dataReq, token: data }));
 
       login(data);

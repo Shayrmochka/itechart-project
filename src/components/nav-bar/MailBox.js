@@ -17,7 +17,6 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
-    // backgroundColor: blue[100],
     backgroundColor: "white",
     color: blue[600],
   },
@@ -50,8 +49,6 @@ function MailBox({
           <ListItem
             button
             onClick={() => handleClickOpenOrderDialog(order)}
-            //onClick={() => handleListItemClick(order)}
-            //onClick={() => handleClickOpenOrderDialog()}
             key={order._id}
             style={{
               borderTop: "1px solid #00000020",
@@ -72,7 +69,7 @@ function MailBox({
                 )}
               </Avatar>
             </ListItemAvatar>
-            {/* <ListItemText primary={order.ownerEmail} /> */}
+
             <div
               style={{
                 display: "flex",
@@ -106,7 +103,6 @@ function MailBox({
 
   return (
     <Dialog
-      // onClose={handleClose}
       fullWidth={true}
       maxWidth="sm"
       onClose={onClose}

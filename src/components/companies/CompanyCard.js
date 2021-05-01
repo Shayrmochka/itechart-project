@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
   logoImg: {
     width: "140px",
+    borderRadius: "100px",
   },
   cardContent: {
     flexGrow: 1,
@@ -142,7 +143,7 @@ function CompanyCard({ company }) {
       const data = await request("/api/feedback/", "GET", null, {
         company: company._id,
       });
-      //message(data.message);
+
       setFeedbacks(data);
     } catch (e) {}
   }, [request]);

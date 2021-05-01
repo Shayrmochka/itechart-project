@@ -42,12 +42,7 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // typeOfServices: [
-  //   {
-  //     type: String,
-  //     required: false,
-  //   },
-  // ],
+
   priceList: {
     type: String,
     required: true,
@@ -72,7 +67,6 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
   },
 
   typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningService" }],
-  // 	links: [{ type: mongoose.Schema.Types.ObjectId, ref: "Link" }],
 });
 
 var cleaningCompany = mongoose.model<ICleaningCompany>(

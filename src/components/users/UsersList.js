@@ -79,7 +79,7 @@ function UsersList({ users, open, handleClickOpen, handleClose }) {
         console.log(e);
       }
     } else {
-      alert("R u idiot? it's you! ");
+      alert("You can not block your account");
     }
   };
 

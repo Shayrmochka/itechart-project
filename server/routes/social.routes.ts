@@ -2,15 +2,8 @@ import { Request, Response } from "express";
 import { Router } from "express";
 import User from "../models/User";
 
-import {
-  auth,
-  signToken,
-  hashPassword,
-  verifyPassword,
-  checkIsInRole,
-  getRedirectUrl,
-} from "../middleware/auth.middleware";
-import { check, validationResult } from "express-validator";
+import { signToken, hashPassword } from "../middleware/auth.middleware";
+import { validationResult } from "express-validator";
 
 const router = Router();
 
@@ -20,7 +13,7 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const errors = validationResult(req);
-      console.log(errors);
+
       if (!errors.isEmpty() || req.body.password !== req.body.confirmPassword) {
         return res.status(400).json({
           errors: errors.array(),
@@ -33,7 +26,6 @@ router.post(
       const candidate = await User.findOne({ email });
 
       if (candidate) {
-        console.log(candidate);
         if (!candidate.isActive) {
           return res.status(400).json({ message: "The user is banned" });
         }

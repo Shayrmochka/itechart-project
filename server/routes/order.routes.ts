@@ -85,10 +85,8 @@ router.get("/", auth, async (req: any, res: any) => {
 
 router.get("/orders-chart", async (req: any, res: any) => {
   try {
-    console.log(req.headers.id);
     const orders = await Order.find({ company: req.headers.id });
 
-    console.log(orders);
     res.json(orders);
   } catch (e) {
     res.status(500).json({ message: "Something went wrong, try again" });
@@ -122,12 +120,10 @@ router.post("/delete-order", auth, async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Order not found" });
     }
 
-    console.log(req.body);
     await Order.deleteOne({ _id: req.body._id });
 
     res.status(201).json({ status: "deleted" });
   } catch (e) {
-    console.log(e);
     res.status(500).json({ message: "Something went wrong, try again" });
   }
 });

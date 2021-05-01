@@ -1,18 +1,16 @@
 import { Request, Response } from "express";
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
-const { check, body, validationResult } = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const User = require("../models/User");
 const CleaningCompany = require("../models/CleaningCompany");
 const router = Router();
 const ROLES = require("../roles/roles");
 const {
-  auth,
   signToken,
   hashPassword,
   verifyPassword,
-  checkIsInRole,
-  getRedirectUrl,
+
   checkToken,
 } = require("../middleware/auth.middleware");
 import { useBot } from "../telegramBot/telegramBot";
@@ -86,7 +84,7 @@ router.post(
   async (req: Request, res: Response) => {
     try {
       const errors = validationResult(req);
-      console.log(errors);
+
       if (!errors.isEmpty() || req.body.password !== req.body.confirmPassword) {
         return res.status(400).json({
           errors: errors.array(),
@@ -102,7 +100,6 @@ router.post(
         return res.status(400).json({ message: "This user already exists" });
       }
 
-      //const hashedPassword = await bcrypt.hash(password, 12);
       const hashedPassword = await hashPassword(password);
 
       const user = new User({
@@ -145,7 +142,6 @@ router.post(
       const { email, password } = req.body;
 
       const user = await User.findOne({ email });
-      //console.log("Login:", user);
 
       if (!user) {
         return res.status(400).json({ message: "User not found" });
@@ -156,7 +152,7 @@ router.post(
       }
 
       const isMatch = await verifyPassword(password, user.password);
-      console.log(isMatch);
+
       if (!isMatch) {
         return res
           .status(400)
@@ -167,7 +163,6 @@ router.post(
       useBot(`${user.firstName} ${user.lastName}`, "Authenticated");
       res.json({ token, user });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ message: "Something went wrong, try again" });
     }
   }
@@ -186,17 +181,8 @@ router.post(
     check("address", "Address is too short").isLength({
       min: 1,
     }),
-
-    // check('confirmPassword').custom(  (value: any, req: any) => {
-    //   if (value !== req.body.password) {
-    //     throw new Error('Password confirmation does not match password');
-    //   }
-    //   return true;
-    // }),
   ],
   async (req: Request, res: Response) => {
-    // res.set("Access-Control-Allow-Origin", "*");
-    //console.log("REQ111", req.body);
     try {
       const errors = validationResult(req);
 
@@ -227,9 +213,6 @@ router.post(
         .filter((e: any) => e.checked)
         .map((e: any) => e._id);
 
-      console.log(sortedServices);
-      console.log(sortedServices.length);
-
       const hashedPassword = await bcrypt.hash(password, 12);
       const company = new CleaningCompany({
         email,
@@ -248,7 +231,6 @@ router.post(
       useBot(`${name}`, "Company created");
       res.status(201).json({ message: "Company created" });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ message: "Something went wrong, try again" });
     }
   }
@@ -284,7 +266,6 @@ router.post(
         return res.status(400).json({ message: "The Company is banned" });
       }
 
-      // const isMatch = await bcrypt.compare(password, company.password);
       const isMatch = await verifyPassword(password, company.password);
 
       if (!isMatch) {
@@ -293,9 +274,6 @@ router.post(
           .json({ message: "Invalid password, please try again" });
       }
 
-      // const token = jwt.sign({ companyId: company.id }, config.jwtSecret, {
-      //   expiresIn: "12h",
-      // });
       const token = await signToken(company.id, "company");
 
       res.json({ token, company });

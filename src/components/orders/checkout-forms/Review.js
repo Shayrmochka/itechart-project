@@ -97,7 +97,6 @@ function Review({ finalForm, handlePlaceOrder }) {
           variant="contained"
           color="primary"
           onClick={handlePlaceOrder}
-          //type="submit"
           className={classes.button}
         >
           Place Order

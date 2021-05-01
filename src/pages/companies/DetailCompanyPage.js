@@ -14,7 +14,6 @@ function DetailCompanyPage() {
       const fetched = await request(`/api/company/${companyId}`, "GET", null);
       setCompany(fetched);
     } catch (e) {}
-    // }, [companyId, request]);
   }, [request]);
 
   useEffect(() => {

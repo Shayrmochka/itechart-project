@@ -6,13 +6,12 @@ const Order = require("../models/Order");
 const Feedback = require("../models/Feedback");
 const {
   auth,
-  signToken,
+
   hashPassword,
   verifyPassword,
   checkIsInRole,
-  getRedirectUrl,
 } = require("../middleware/auth.middleware");
-const { check, body, validationResult } = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const ROLES = require("../roles/roles");
 const router = Router();
 
@@ -102,7 +101,7 @@ router.post(
 
         if (user.isActive) {
           const errors = validationResult(req);
-          console.log(errors);
+
           if (
             !errors.isEmpty() ||
             req.body.password !== req.body.confirmPassword
@@ -114,7 +113,6 @@ router.post(
           }
           const verifiedPass = await verifyPassword(oldPassword, user.password);
 
-          console.log(verifiedPass);
           if (!verifiedPass) {
             return res
               .status(400)
@@ -160,7 +158,6 @@ router.post(
 
       res.status(201).json({ message: "User deleted" });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ message: "Something went wrong, try again" });
     }
   }

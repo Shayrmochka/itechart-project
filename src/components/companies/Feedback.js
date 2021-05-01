@@ -96,7 +96,6 @@ function Feedback({ open, handleClose, companyId }) {
       const data = await request("/api/feedback/create-new-feedback", "POST", {
         ...finalForm,
       });
-      //message(data.message);
     } catch (e) {}
   };
 
@@ -133,7 +132,6 @@ function Feedback({ open, handleClose, companyId }) {
                 rowsMax={4}
                 aria-label="maximum height"
                 placeholder="Write your feedback here."
-                // defaultValue="Write your feedback here."
                 name="feedbackText"
                 value={feedback.feedbackText}
                 onChange={changeHandler}

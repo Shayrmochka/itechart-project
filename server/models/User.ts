@@ -60,7 +60,6 @@ var userSchema = new mongoose.Schema({
     required: true,
   },
   links: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
-  // 	links: [{ type: mongoose.Schema.Types.ObjectId, ref: "Link" }],
 });
 
 var User = mongoose.model<IUser>("User", userSchema);

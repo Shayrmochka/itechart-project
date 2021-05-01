@@ -115,10 +115,6 @@ function AddressForm({ updateFinalForm }) {
     try {
       const fetched = await request("/api/service", "GET", null);
 
-      // const data = fetched.map((e, i) =>
-      //   i === 0 ? { ...e, checked: true } : { ...e, checked: false }
-      // );
-
       setServices(fetched);
       setCleaningService(fetched[0]);
     } catch (e) {}
@@ -128,7 +124,6 @@ function AddressForm({ updateFinalForm }) {
   }, [fetchServices]);
 
   const changeHandler = (event) => {
-    //event.preventDefault();
     setAddressForm({
       ...addressForm,
       ...cleaningService,
@@ -165,12 +160,7 @@ function AddressForm({ updateFinalForm }) {
       <Typography variant="h6" gutterBottom>
         Cleaning details
       </Typography>
-      <form
-        className={classes.form}
-        noValidate
-        // onSubmit={(e) => handleSubmit(signInHandler(e))}
-        //onSubmit={(event) => changeHandler(event)}
-      >
+      <form className={classes.form} noValidate>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
@@ -321,7 +311,6 @@ function AddressForm({ updateFinalForm }) {
             )}
           </Grid>
           <Grid item xs={12}>
-            {/* <Button onClick={handleSubmit(onSubmit)} variant="contained"> */}
             <Button onClick={handleClickOpen} variant="contained">
               Check other offers
             </Button>
@@ -341,7 +330,6 @@ function AddressForm({ updateFinalForm }) {
               <Button
                 variant="contained"
                 color="primary"
-                //onClick={() => history.push("/signin")}
                 disabled
                 className={classes.button}
               >
@@ -360,10 +348,8 @@ function AddressForm({ updateFinalForm }) {
           </div>
         </Grid>
 
-        {/* DIALOG FORM */}
         <Dialog
           fullWidth
-          //maxWidth="md"
           maxWidth={false}
           open={open}
           onClose={handleClose}

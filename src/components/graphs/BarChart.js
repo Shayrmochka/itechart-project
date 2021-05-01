@@ -70,8 +70,6 @@ function BarChart({ companyId, feedbacks }) {
     setMarks(marks);
   };
 
-  //getMarks();
-
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
@@ -191,42 +189,11 @@ function BarChart({ companyId, feedbacks }) {
                     ],
                   },
                 }}
-                //   options={{
-                //     maintainAspectRatio: false,
-                //     scales: {
-                //       xAxes: [
-                //         {
-                //           gridLines: {
-                //             drawOnChartArea: false,
-                //           },
-                //           ticks: {
-                //             display: false,
-                //           },
-                //         },
-                //       ],
-                //       yAxes: [
-                //         {
-                //           gridLines: {
-                //             drawOnChartArea: false,
-                //           },
-                //           ticks: {
-                //             display: false,
-                //           },
-                //         },
-                //       ],
-                //       gridLines: {
-                //         drawBorder: false,
-                //         display: false,
-                //       },
-                //     },
-                //   }}
               />
             </Card>
           </Grid>
         </Grid>
       </Container>
-
-      {/* TEST */}
     </div>
   );
 }

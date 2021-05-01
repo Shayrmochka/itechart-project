@@ -76,7 +76,6 @@ export default function EditProfile({ open, handleClose }) {
         _id: currentUser._id,
         operationType: "profile",
       });
-      //message(data.message);
 
       dispatch(getCurrentUser({ ...dataReq }));
     } catch (e) {}
@@ -89,7 +88,6 @@ export default function EditProfile({ open, handleClose }) {
         _id: currentUser._id,
         operationType: "password",
       });
-      //message(data.message);
     } catch (e) {}
   };
 

@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
   links: {
     color: "white",
     textDecoration: "none",
-    // paddingLeft: "10px",
   },
   search: {
     position: "relative",
@@ -79,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
+
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     width: "100%",
@@ -100,7 +99,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   avatar: {
-    // backgroundColor: blue[100],
     backgroundColor: "white",
     color: blue[600],
   },
@@ -212,7 +210,6 @@ function NavBar(props) {
 
   const handleNotificationsMenuClose = () => {
     setNotificationEl(null);
-    //handleMobileMenuClose();
   };
 
   const handleProfileMenuOpen = (event) => {
@@ -487,7 +484,6 @@ function sectionDesctop(
         </Badge>
       </IconButton>
       <IconButton
-        //onClick={handleClickOpen}
         aria-label="notifications"
         aria-controls={notificationsId}
         aria-haspopup="true"

@@ -78,7 +78,6 @@ function SignUp() {
       );
 
       setServices(data);
-      //message(fetched.message);
     } catch (e) {}
   }, [request]);
   useEffect(() => {
@@ -134,24 +133,6 @@ function SignUp() {
             <div className={classes.linksBlock}>I'm User</div>
           </NavLink>
           <Grid container spacing={2}>
-            {/* <Grid item xs={12}>
-              <TextField
-                autoComplete="logo"
-                name="logo"
-                variant="outlined"
-                required
-                fullWidth
-                id="logo"
-                label="Logotype"
-                autoFocus
-                onChange={changeHandler}
-                inputRef={register({ required: true })}
-                error={!!errors.logo}
-              />
-              {errors.logo && (
-                <span className={classes.error}>This field is required</span>
-              )}
-            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -203,23 +184,7 @@ function SignUp() {
                 <span className={classes.error}>This field is required</span>
               )}
             </Grid>
-            {/* <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="typeOfServices"
-                label="Type Of Services"
-                name="typeOfServices"
-                autoComplete="typeOfServices"
-                onChange={changeHandler}
-                inputRef={register({ required: true })}
-                error={!!errors.typeOfServices}
-              />
-              {errors.typeOfServices && (
-                <span className={classes.error}>This field is required</span>
-              )}
-            </Grid> */}
+
             <Grid item xs={12}>
               <ServicesBlock
                 handleChangeServices={handleChangeServices}

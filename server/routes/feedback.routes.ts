@@ -1,9 +1,8 @@
 const { Router } = require("express");
 const Feedback = require("../models/Feedback");
 const CleaningCompany = require("../models/CleaningCompany");
-//const { auth, checkToken } = require("../middleware/auth.middleware");
 import { Request, Response } from "express";
-import { auth, checkToken } from "../middleware/auth.middleware";
+import { auth } from "../middleware/auth.middleware";
 const router = Router();
 
 router.post(
@@ -21,8 +20,6 @@ router.post(
         firstName,
         lastName,
       } = req.body;
-
-      console.log("qwe");
 
       const oldFeedback = await Feedback.find({
         owner: _id,
@@ -86,7 +83,6 @@ router.post(
 
       res.status(201);
     } catch (e) {
-      console.log(e);
       res.status(500).json({ message: "Something went wrong, try again" });
     }
   }

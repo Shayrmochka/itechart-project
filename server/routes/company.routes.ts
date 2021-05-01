@@ -4,14 +4,13 @@ const CleaningCompany = require("../models/CleaningCompany");
 const CleaningService = require("../models/CleaningService");
 const Order = require("../models/Order");
 const Feedback = require("../models/Feedback");
-// const auth = require("../middleware/auth.middleware");
+
 const {
   auth,
-  signToken,
+
   hashPassword,
   verifyPassword,
   checkIsInRole,
-  getRedirectUrl,
 } = require("../middleware/auth.middleware");
 const { check, validationResult } = require("express-validator");
 
@@ -24,8 +23,7 @@ interface CompanyRequest extends Request {
 
 router.get(
   "/",
-  // auth,
-  // checkIsInRole(ROLES.Admin),
+
   async (req: CompanyRequest, res: Response) => {
     try {
       const companies = await CleaningCompany.find({});
@@ -38,13 +36,10 @@ router.get(
 
 router.get(
   "/:id",
-  // auth,
+
   async (req: Request, res: Response) => {
     try {
       const company = await CleaningCompany.findById(req.params.id);
-      // const services = await company.typeOfServices.map((e: String) => {
-      //   return CleaningService.findById(e);
-      // });
 
       const services: any = [];
 
@@ -55,7 +50,6 @@ router.get(
       }
 
       company.typeOfServices = services;
-      //console.log(services);
 
       res.json(company);
     } catch (e) {
@@ -113,7 +107,7 @@ router.post(
 
         if (company.isActive) {
           const errors = validationResult(req);
-          console.log(errors);
+
           if (
             !errors.isEmpty() ||
             req.body.password !== req.body.confirmPassword
@@ -128,7 +122,6 @@ router.post(
             company.password
           );
 
-          console.log(verifiedPass);
           if (!verifiedPass) {
             return res
               .status(400)
@@ -177,7 +170,6 @@ router.post(
 
       res.status(201).json({ message: "Company deleted" });
     } catch (e) {
-      console.log(e);
       res.status(500).json({ message: "Something went wrong, try again" });
     }
   }

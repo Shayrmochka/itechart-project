@@ -11,7 +11,6 @@ export default function TypeOfServices({ handleChangeServices, services }) {
           key={service._id}
           control={
             <Checkbox
-              //color="primary"
               checked={service.checked}
               onChange={() => handleChangeServices(service)}
               name={service.typeOfService}

@@ -57,7 +57,6 @@ const checkIsInRole = (...roles: any) => async (
   res: any,
   next: any
 ): Promise<any> => {
-  console.log("UT:", req.user);
   if (!req.user) {
     return res.redirect("/login");
   }

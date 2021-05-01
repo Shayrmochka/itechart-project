@@ -198,7 +198,7 @@ const useStyles = makeStyles((theme) => ({
   },
   logoImg: {
     width: "40px",
-    // borderRadius: "100px",
+    borderRadius: "100px",
   },
 }));
 

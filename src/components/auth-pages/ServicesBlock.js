@@ -31,7 +31,6 @@ export default function ServicesBlock({ handleChangeServices, services }) {
           <Typography className={classes.heading}>Type of Services</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {/* <Typography>Choose type ofServices for your company</Typography> */}
           <TypeOfServices
             handleChangeServices={handleChangeServices}
             services={services}

@@ -77,7 +77,6 @@ function Checkout() {
         "POST",
         finalForm
       );
-      //message(data.message);
     } catch (e) {}
     handleNext();
   };
@@ -139,15 +138,6 @@ function Checkout() {
                       Back
                     </Button>
                   )}
-                  {/* <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    type="submit"
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                  </Button> */}
                 </div>
               </React.Fragment>
             )}

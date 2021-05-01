@@ -77,7 +77,7 @@ function AuthPage() {
       const dataReq = await request("/api/auth/login-company", "POST", {
         ...form,
       });
-      //message(dataReq.message);
+
       console.log(dataReq);
       login(dataReq.token);
       dispatch(getCurrentUser({ ...dataReq.company, token: dataReq.token }));
@@ -106,11 +106,7 @@ function AuthPage() {
         <Typography component="h1" variant="h5">
           Sign in for Companies
         </Typography>
-        <form
-          className={classes.form}
-          noValidate
-          // onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className={classes.form} noValidate>
           <NavLink className={classes.links} to="/signin">
             <div className={classes.linksBlock}>I'm User</div>
           </NavLink>
