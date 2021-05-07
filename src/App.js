@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
-import React, { useCallback, useEffect, useState } from "react";
-import { BrowserRouter, useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Loader from "./components/Loader";
 import NavBar from "./components/NavBar";
@@ -10,14 +10,7 @@ import { useAuth } from "./hooks/auth.hooh";
 import { useRoutes } from "./routes";
 
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getAcceptedOrders,
-  getCurrentUser,
-  getOrders,
-  getSortedOrders,
-  getUserAuthentication,
-} from "./redux/actions";
-import { useHttp } from "./hooks/http.hook";
+import { fetchOrders, getUserAuthentication } from "./redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,53 +28,18 @@ function App() {
   const isAuthenticated = user.hasOwnProperty("_id");
   dispatch(getUserAuthentication(isAuthenticated));
   const { logout } = useAuth();
-  const { request } = useHttp();
+
   const routes = useRoutes(isAuthenticated, logout);
 
   const [currentUser, setCurrentUser] = useState({});
 
-  const [orders, setOrders] = useState([]);
-
-  const [sortedOrders, setSortedOrders] = useState([]);
-
-  const [ordersSortedByAccepted, setOrdersSortedByAccepted] = useState([]);
-
-  const fetchOrders = useCallback(async (token) => {
-    try {
-      const fetched = await request("/api/order", "GET", null, {
-        Authorization: `Bearer: ${token}`,
-      });
-      setOrders(fetched);
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+  const orders = useSelector((state) => state.orders);
 
   useEffect(() => {
     if (user.token && isAuthenticated) {
-      console.log("RENDER");
-
-      fetchOrders(user.token);
+      dispatch(fetchOrders(user));
     }
-  }, [fetchOrders, user.token, isAuthenticated]);
-
-  useEffect(() => {
-    if (user.type === "user") {
-      setSortedOrders(orders.filter((order) => order.status !== "waiting"));
-    } else if (user.type === "company") {
-      setSortedOrders(orders.filter((order) => !order.checked));
-    }
-  }, [orders]);
-
-  useEffect(() => {
-    setOrdersSortedByAccepted(
-      orders.filter((order) => order.status === "accepted")
-    );
-
-    dispatch(getOrders(orders));
-    dispatch(getSortedOrders(sortedOrders));
-    dispatch(getAcceptedOrders(ordersSortedByAccepted));
-  }, [orders, sortedOrders]);
+  }, [user.token, isAuthenticated]);
 
   useEffect(() => {
     setCurrentUser(user);
@@ -99,10 +57,9 @@ function App() {
             currentUser={currentUser}
             isAuthenticated={isAuthenticated}
             logout={logout}
-            fetchOrders={fetchOrders}
-            orders={orders}
-            sortedOrders={sortedOrders}
-            ordersSortedByAccepted={ordersSortedByAccepted}
+            orders={orders.allOrders}
+            sortedOrders={orders.sortedOrders}
+            ordersSortedByAccepted={orders.acceptedOrders}
           />
         }
 

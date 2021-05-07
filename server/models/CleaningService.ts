@@ -9,7 +9,7 @@ interface ICleaningService extends mongoose.Document {
   servicePrice: number;
 }
 
-var cleaningServiceSchema = new mongoose.Schema({
+const cleaningServiceSchema = new mongoose.Schema({
   serviceName: {
     type: String,
     required: true,
@@ -37,7 +37,7 @@ var cleaningServiceSchema = new mongoose.Schema({
   },
 });
 
-var CleaningService = mongoose.model<ICleaningService>(
+const CleaningService = mongoose.model<ICleaningService>(
   "CleaningService",
   cleaningServiceSchema
 );

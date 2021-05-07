@@ -69,7 +69,7 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
   typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningService" }],
 });
 
-var cleaningCompany = mongoose.model<ICleaningCompany>(
+const cleaningCompany = mongoose.model<ICleaningCompany>(
   "CleaningCompany",
   cleaningCompanySchema
 );

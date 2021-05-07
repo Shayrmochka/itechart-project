@@ -1,10 +1,13 @@
+import { Response, NextFunction } from "express";
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 const bcrypt = require("bcryptjs");
-const ROLES = require("../roles/roles");
-const User = require("../models/User");
+import { User, IUser } from "../models/User";
+import RequestWithUser from "../interfaces/requestWithUser.interface";
+import DataStoredInToken from "../interfaces/dataStoredInToken";
+import RequestWithHeader from "../interfaces/requestWithHeader.interface";
 
-const auth = (req: any, res: any, next: any) => {
+const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
   if (req.method === "OPTIONS") {
     return next();
   }
@@ -31,12 +34,16 @@ const checkToken = (token: string) => {
 };
 
 const signToken = (user: string, accountOwner: string): void => {
-  return jwt.sign({ dataId: user, accountOwner }, config.jwtSecret, {
+  const dataStoredInToken: DataStoredInToken = {
+    dataId: user,
+  };
+
+  return jwt.sign({ ...dataStoredInToken, accountOwner }, config.jwtSecret, {
     expiresIn: 604800,
   });
 };
 
-const hashPassword = async (password: string): Promise<any> => {
+const hashPassword = async (password: string) => {
   if (!password) {
     throw new Error("Password was not provided");
   }
@@ -45,23 +52,24 @@ const hashPassword = async (password: string): Promise<any> => {
   return await bcrypt.hash(password, salt);
 };
 
-const verifyPassword = async (
-  candidate: string,
-  actual: string
-): Promise<any> => {
+const verifyPassword = async (candidate: string, actual: string) => {
   return await bcrypt.compare(candidate, actual);
 };
 
-const checkIsInRole = (...roles: any) => async (
-  req: any,
-  res: any,
-  next: any
-): Promise<any> => {
+const checkIsInRole = (...roles: Array<string>) => async (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
   if (!req.user) {
     return res.redirect("/login");
   }
 
-  const user = await User.findById(req.user.dataId);
+  const user: IUser | null = await User.findById(req.user.dataId);
+
+  if (!user) {
+    return res.status(400).json({ message: "User not found" });
+  }
 
   const hasRole = roles.find((role: string) => user.role === role);
   if (!hasRole) {
@@ -71,23 +79,11 @@ const checkIsInRole = (...roles: any) => async (
   return next();
 };
 
-const getRedirectUrl = (role: string): string => {
-  switch (role) {
-    case ROLES.Admin:
-      return "/test";
-    case ROLES.User:
-      return "/test";
-    default:
-      return "/";
-  }
-};
-
 export {
   auth,
   signToken,
   hashPassword,
   verifyPassword,
   checkIsInRole,
-  getRedirectUrl,
   checkToken,
 };

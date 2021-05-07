@@ -8,6 +8,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
+import { fetchOrders } from "../../redux/actions";
+import { useDispatch } from "react-redux";
 
 function OrderInfo({
   open,
@@ -15,8 +17,9 @@ function OrderInfo({
   orderDialogInfo,
   request,
   currentUser,
-  fetchOrders,
+  //fetchOrders,
 }) {
+  const dispatch = useDispatch();
   const setAnswer = async (order, answer) => {
     try {
       await request(
@@ -29,7 +32,8 @@ function OrderInfo({
         { Authorization: `Bearer: ${currentUser.token}` }
       );
 
-      fetchOrders(currentUser.token);
+      //fetchOrders(currentUser.token);
+      dispatch(fetchOrders(currentUser));
     } catch (e) {}
     onClose();
   };

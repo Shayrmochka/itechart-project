@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 const { Router } = require("express");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
-const User = require("../models/User");
+import { User, IUser } from "../models/User";
 const CleaningCompany = require("../models/CleaningCompany");
 const router = Router();
 const ROLES = require("../roles/roles");
@@ -141,7 +141,7 @@ router.post(
 
       const { email, password } = req.body;
 
-      const user = await User.findOne({ email });
+      const user: IUser | null = await User.findOne({ email });
 
       if (!user) {
         return res.status(400).json({ message: "User not found" });

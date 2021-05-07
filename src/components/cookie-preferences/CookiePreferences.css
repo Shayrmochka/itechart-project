@@ -1,0 +1,157 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.cookie-modal {
+  width: 720px;
+  height: 500px;
+  background: #fff;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.cookie-modal__header {
+  padding: 18px 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #d8d8d8;
+}
+
+.logo__image {
+  width: 120px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header__logo {
+  width: 30%;
+
+  padding: 20px 0;
+}
+
+.header__modal-title {
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  color: #333333;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.header__button {
+  padding-right: 20px;
+}
+
+.button__close {
+  padding: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.button__icon-close {
+  vertical-align: middle;
+  width: 22px;
+  height: 22px;
+}
+
+.button-close:hover {
+  fill: #444444;
+}
+
+.cookie-modal__main-section {
+  display: flex;
+}
+
+.main-section__left {
+  width: 30%;
+}
+
+.main-section__right {
+  width: 70%;
+  height: 300px;
+  overflow-y: scroll;
+}
+
+.left__button {
+  width: 100%;
+  padding: 16px 5px 16px 20px;
+  text-align: left;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #d8d8d8;
+  color: #333333;
+  font-size: 1.1em;
+  font-weight: 500;
+
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+
+.left__button--active {
+  padding-left: 10px;
+  border: none;
+  border-left: 10px solid #4058b5;
+  color: #333333;
+  font-size: 1.1em;
+  background-color: #ffffff;
+}
+
+.right__title-text {
+  padding-left: 20px;
+  color: #333333;
+  font-size: 1.4em;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.right__main-text {
+  color: #333333;
+  padding: 20px 20px 0;
+  word-break: break-word;
+  text-align: left;
+  font-size: 0.9em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.cookie-modal__footer {
+  display: flex;
+  align-items: center;
+  padding: 30px;
+  justify-content: space-between;
+  border-top: 1px solid #d8d8d8;
+}
+
+.link__text {
+  font-size: 0.82em;
+  color: #333333;
+}
+
+.link__text--green {
+  font-size: 1rem;
+  color: #6fbe4a;
+}
+
+.button__save {
+  padding: 10px 30px;
+  background-color: #4058b5;
+  color: #ffffff;
+  outline: none;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}

@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const Order = require("../models/Order");
-const User = require("../models/User");
+// const User = require("../models/User");
+import { User, IUser } from "../models/User";
 const CleaningCompany = require("../models/CleaningCompany");
 import { Request, Response } from "express";
 import { auth, checkToken } from "../middleware/auth.middleware";

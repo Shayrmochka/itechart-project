@@ -388,11 +388,15 @@ function NavBar(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+          {/* <Typography className={classes.title} variant="h6" noWrap>
             <NavLink className={classes.links} to="/home">
-              iTechArt
+              :iTechArt
             </NavLink>
-          </Typography>
+          </Typography> */}
+
+          <NavLink className={classes.links} to="/home">
+            <img style={{ height: "18px" }} src="images/itechart.svg" />
+          </NavLink>
 
           {Object.keys(props.currentUser).length ? createOrder() : <></>}
           <Typography className={`${classes.title} ${classes.linkTyp}`} noWrap>
@@ -447,7 +451,7 @@ function NavBar(props) {
         orderDialogInfo={orderDialogInfo}
         request={request}
         currentUser={props.currentUser}
-        fetchOrders={fetchOrders}
+        //fetchOrders={fetchOrders}
       />
       <MailBox
         open={openMail}

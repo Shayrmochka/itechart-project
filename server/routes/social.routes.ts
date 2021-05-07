@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Router } from "express";
-import User from "../models/User";
+//import User from "../models/User";
+import { User, IUser } from "../models/User";
 
 import { signToken, hashPassword } from "../middleware/auth.middleware";
 import { validationResult } from "express-validator";

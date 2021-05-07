@@ -1,7 +1,8 @@
 import { useBot } from "./../telegramBot/telegramBot";
 import { Request, Response } from "express";
 const { Router } = require("express");
-const User = require("../models/User");
+import { User, IUser } from "../models/User";
+import RequestWithUser from "../interfaces/requestWithUser.interface";
 const Order = require("../models/Order");
 const Feedback = require("../models/Feedback");
 const {
@@ -23,7 +24,7 @@ router.get(
   "/",
   auth,
   checkIsInRole(ROLES.Admin),
-  async (req: UserRequest, res: Response): Promise<void> => {
+  async (req: Request, res: Response): Promise<void> => {
     try {
       const users = await User.find({});
       res.json(users);
@@ -51,9 +52,13 @@ router.post(
   "/update",
   auth,
   checkIsInRole(ROLES.Admin),
-  async (req: UserRequest, res: Response): Promise<void> => {
+  async (req: RequestWithUser, res: Response) => {
     try {
-      const user = await User.findById(req.body._id);
+      const user: IUser | null = await User.findById(req.body._id);
+
+      if (!user) {
+        return res.status(400).json({ message: "User not found" });
+      }
 
       if (req.body.banReason) {
         user.banReason = req.body.banReason;
@@ -83,9 +88,12 @@ router.post(
       min: 6,
     }),
   ],
-  async (req: UserRequest, res: Response) => {
+  async (req: RequestWithUser, res: Response) => {
     try {
-      const user = await User.findById(req.body._id);
+      const user: IUser | null = await User.findById(req.body._id);
+      if (!user) {
+        return res.status(400).json({ message: "User not found" });
+      }
       const operationType = req.body.operationType;
       if (operationType === "profile") {
         const { firstName, lastName, email, phone, _id } = req.body;
@@ -137,7 +145,7 @@ router.post(
 router.post(
   "/delete-profile",
   auth,
-  async (req: UserRequest, res: Response): Promise<void> => {
+  async (req: RequestWithUser, res: Response): Promise<void> => {
     try {
       const id = req.body._id;
       const feedbacks = await Feedback.find({ owner: id });

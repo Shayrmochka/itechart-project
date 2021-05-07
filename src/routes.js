@@ -12,6 +12,7 @@ import CreateOrderPage from "./pages/orders/CreateOrderPage";
 import HomePage from "./pages/main-page/HomePage";
 import UserProfile from "./pages/profile/UserProfile";
 import CalendarPage from "./pages/calendar/CalendarPage";
+import ContactUs from "./pages/contact-us/ContactUs";
 
 export const useRoutes = (isAuthenticated, logout) => {
   if (isAuthenticated) {
@@ -38,7 +39,9 @@ export const useRoutes = (isAuthenticated, logout) => {
         <Route path="/calendar">
           <CalendarPage />
         </Route>
-
+        <Route path="/contactus" exact>
+          <ContactUs />
+        </Route>
         <Redirect to="/home" />
       </Switch>
     );
@@ -69,6 +72,9 @@ export const useRoutes = (isAuthenticated, logout) => {
       </Route>
       <Route path="/company-detail/:id">
         <DetailCompanyPage />
+      </Route>
+      <Route path="/contactus" exact>
+        <ContactUs />
       </Route>
       <Redirect to="/home" />
     </Switch>

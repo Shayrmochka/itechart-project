@@ -1,3 +1,4 @@
+import { fetchData } from "../api/api";
 import {
   GET_CURRENT_USER,
   REMOVE_CURRENT_USER,
@@ -49,10 +50,32 @@ export function hideLoader() {
 }
 
 // ORDERS
-export function getOrders(orders) {
-  return {
-    type: GET_ORDERS,
-    payload: orders,
+export function fetchOrders(user) {
+  const getSortedOrders = (orders) => {
+    if (user.type === "user") {
+      return orders.filter((order) => order.status !== "waiting");
+    } else if (user.type === "company") {
+      return orders.filter((order) => !order.checked);
+    }
+  };
+
+  const getAcceptedOrders = (orders) => {
+    return orders.filter((order) => order.status === "accepted");
+  };
+  return async (dispatch) => {
+    const orders = await fetchData.get("/api/order", user.token);
+
+    dispatch({ type: GET_ORDERS, payload: orders });
+
+    dispatch({
+      type: GET_SORTED_ORDERS,
+      payload: getSortedOrders(orders),
+    });
+
+    dispatch({
+      type: GET_ACCEPTED_ORDERS,
+      payload: getAcceptedOrders(orders),
+    });
   };
 }
 
@@ -62,23 +85,9 @@ export function removeOrders() {
   };
 }
 
-export function getSortedOrders(orders) {
-  return {
-    type: GET_SORTED_ORDERS,
-    payload: orders,
-  };
-}
-
 export function removeSortedOrders() {
   return {
     type: REMOVE_SORTED_ORDERS,
-  };
-}
-
-export function getAcceptedOrders(acceptedOrders) {
-  return {
-    type: GET_ACCEPTED_ORDERS,
-    payload: acceptedOrders,
   };
 }
 

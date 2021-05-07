@@ -1,6 +1,6 @@
 import mongoose = require("mongoose");
 
-interface IUser extends mongoose.Document {
+export interface IUser extends mongoose.Document {
   email: string;
   password: string;
   firstName: string;
@@ -14,7 +14,7 @@ interface IUser extends mongoose.Document {
   links: any;
 }
 
-var userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -62,6 +62,6 @@ var userSchema = new mongoose.Schema({
   links: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
 });
 
-var User = mongoose.model<IUser>("User", userSchema);
+export const User = mongoose.model<IUser>("User", userSchema);
 
-export = User;
+//export User;
