@@ -1,19 +1,18 @@
 import { Request, Response } from "express";
-const { Router } = require("express");
-const bcrypt = require("bcryptjs");
-const { check, validationResult } = require("express-validator");
+import { Router } from "express";
+import bcrypt from "bcryptjs";
+import { check, validationResult } from "express-validator";
 import { User, IUser } from "../models/User";
-const CleaningCompany = require("../models/CleaningCompany");
+import { CleaningCompany, ICleaningCompany } from "../models/CleaningCompany";
+import { useBot } from "../telegramBot/telegramBot";
+import ROLES from "../roles/roles";
 const router = Router();
-const ROLES = require("../roles/roles");
 const {
   signToken,
   hashPassword,
   verifyPassword,
-
   checkToken,
 } = require("../middleware/auth.middleware");
-import { useBot } from "../telegramBot/telegramBot";
 
 // /api/auth/check
 router.post(
@@ -33,7 +32,7 @@ router.post(
       const decoded = checkToken(req.body.data);
 
       if (decoded.accountOwner === "user") {
-        const user = await User.findById(decoded.dataId);
+        const user: IUser = await User.findById(decoded.dataId);
 
         if (!user) {
           return res.status(400).json({ message: "User not found" });
@@ -45,7 +44,9 @@ router.post(
 
         res.json(user);
       } else if (decoded.accountOwner === "company") {
-        const company = await CleaningCompany.findById(decoded.dataId);
+        const company: ICleaningCompany = await CleaningCompany.findById(
+          decoded.dataId
+        );
 
         if (!company) {
           return res.status(400).json({ message: "Company not found" });
@@ -94,7 +95,7 @@ router.post(
 
       const { email, password, firstName, lastName, phone } = req.body;
 
-      const candidate = await User.findOne({ email });
+      const candidate: IUser = await User.findOne({ email });
 
       if (candidate) {
         return res.status(400).json({ message: "This user already exists" });
@@ -141,7 +142,7 @@ router.post(
 
       const { email, password } = req.body;
 
-      const user: IUser | null = await User.findOne({ email });
+      const user: IUser = await User.findOne({ email });
 
       if (!user) {
         return res.status(400).json({ message: "User not found" });
@@ -203,7 +204,9 @@ router.post(
         priceList,
       } = req.body;
 
-      const candidate = await CleaningCompany.findOne({ email });
+      const candidate: ICleaningCompany = await CleaningCompany.findOne({
+        email,
+      });
 
       if (candidate) {
         return res.status(400).json({ message: "This Company already exist" });
@@ -214,7 +217,7 @@ router.post(
         .map((e: any) => e._id);
 
       const hashedPassword = await bcrypt.hash(password, 12);
-      const company = new CleaningCompany({
+      const company: ICleaningCompany = new CleaningCompany({
         email,
         password: hashedPassword,
         name,
@@ -256,7 +259,9 @@ router.post(
 
       const { email, password } = req.body;
 
-      const company = await CleaningCompany.findOne({ email });
+      const company: ICleaningCompany = await CleaningCompany.findOne({
+        email,
+      });
 
       if (!company) {
         return res.status(400).json({ message: "Company not found" });

@@ -1,20 +1,16 @@
-const { Router } = require("express");
-const Order = require("../models/Order");
-// const User = require("../models/User");
-import { User, IUser } from "../models/User";
-const CleaningCompany = require("../models/CleaningCompany");
+import { Router } from "express";
+import { User } from "../models/User";
+import { CleaningCompany } from "../models/CleaningCompany";
 import { Request, Response } from "express";
 import { auth, checkToken } from "../middleware/auth.middleware";
+import RequestWithUser from "../interfaces/requestWithUser.interface";
 const router = Router();
-
-interface UserRequest extends Request {
-  user: any;
-}
+const Order = require("../models/Order");
 
 router.post(
   "/create-new-order",
   auth,
-  async (req: UserRequest, res: Response) => {
+  async (req: RequestWithUser, res: Response) => {
     try {
       const {
         address,

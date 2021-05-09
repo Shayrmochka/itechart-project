@@ -1,7 +1,7 @@
 import mongoose = require("mongoose");
 
-interface IFeedback extends mongoose.Document {
-  date: string;
+export interface IFeedback extends mongoose.Document {
+  date: Date;
   owner: string;
   ownerLogo: string;
   ownerEmail: string;
@@ -28,6 +28,4 @@ const feedbackSchema = new mongoose.Schema({
   text: { type: String, default: "" },
 });
 
-const Feedback = mongoose.model<IFeedback>("Feedback", feedbackSchema);
-
-export = Feedback;
+export const Feedback = mongoose.model<IFeedback>("Feedback", feedbackSchema);

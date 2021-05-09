@@ -1,6 +1,6 @@
 import mongoose = require("mongoose");
 
-interface ICleaningCompany extends mongoose.Document {
+export interface ICleaningCompany extends mongoose.Document {
   email: string;
   password: string;
   logo: string;
@@ -69,9 +69,7 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
   typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningService" }],
 });
 
-const cleaningCompany = mongoose.model<ICleaningCompany>(
+export const CleaningCompany = mongoose.model<ICleaningCompany>(
   "CleaningCompany",
   cleaningCompanySchema
 );
-
-export = cleaningCompany;

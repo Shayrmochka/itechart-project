@@ -1,24 +1,21 @@
 import { useBot } from "./../telegramBot/telegramBot";
 import { Request, Response } from "express";
-const { Router } = require("express");
+import { Router } from "express";
 import { User, IUser } from "../models/User";
 import RequestWithUser from "../interfaces/requestWithUser.interface";
-const Order = require("../models/Order");
-const Feedback = require("../models/Feedback");
-const {
+import { Order, IOrder } from "../models/Order";
+import { Feedback, IFeedback } from "../models/Feedback";
+import {
   auth,
-
   hashPassword,
   verifyPassword,
   checkIsInRole,
-} = require("../middleware/auth.middleware");
-const { check, validationResult } = require("express-validator");
-const ROLES = require("../roles/roles");
+} from "../middleware/auth.middleware";
+import { check, validationResult } from "express-validator";
+import ROLES from "../roles/roles";
+import SomethingWentWrong from "../exceptions/SomethingWentWrong";
+import UserNotFoundException from "../exceptions/UserNotFoundException";
 const router = Router();
-
-interface UserRequest extends Request {
-  user: any;
-}
 
 router.get(
   "/",
@@ -26,10 +23,11 @@ router.get(
   checkIsInRole(ROLES.Admin),
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const users = await User.find({});
+      const users: Array<IUser> = await User.find({});
       res.json(users);
     } catch (e) {
-      res.status(500).json({ message: "Something went wrong, try again" });
+      const wrongError = new SomethingWentWrong();
+      res.status(wrongError.status).json({ message: wrongError.message });
     }
   }
 );
@@ -39,11 +37,12 @@ router.get(
   auth,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const user = await User.findById(req.params.id);
+      const user: IUser = await User.findById(req.params.id);
 
       res.json(user);
     } catch (e) {
-      res.status(500).json({ message: "Something went wrong, try again" });
+      const wrongError = new SomethingWentWrong();
+      res.status(wrongError.status).json({ message: wrongError.message });
     }
   }
 );
@@ -75,7 +74,8 @@ router.post(
 
       res.status(201).json(user);
     } catch (e) {
-      res.status(500).json({ message: "Something went wrong, try again" });
+      const wrongError = new SomethingWentWrong();
+      res.status(wrongError.status).json({ message: wrongError.message });
     }
   }
 );
@@ -92,7 +92,10 @@ router.post(
     try {
       const user: IUser | null = await User.findById(req.body._id);
       if (!user) {
-        return res.status(400).json({ message: "User not found" });
+        const userError = new UserNotFoundException();
+        return res
+          .status(userError.status)
+          .json({ message: userError.message });
       }
       const operationType = req.body.operationType;
       if (operationType === "profile") {
@@ -137,7 +140,8 @@ router.post(
 
       res.status(201).json(user);
     } catch (e) {
-      res.status(500).json({ message: "Something went wrong, try again" });
+      const wrongError = new SomethingWentWrong();
+      res.status(wrongError.status).json({ message: wrongError.message });
     }
   }
 );
@@ -148,8 +152,8 @@ router.post(
   async (req: RequestWithUser, res: Response): Promise<void> => {
     try {
       const id = req.body._id;
-      const feedbacks = await Feedback.find({ owner: id });
-      const orders = await Order.find({ owner: id });
+      const feedbacks: Array<IFeedback> = await Feedback.find({ owner: id });
+      const orders: Array<IOrder> = await Order.find({ owner: id });
 
       if (feedbacks.length) {
         feedbacks.forEach(async (feedback: any) => {
@@ -166,7 +170,8 @@ router.post(
 
       res.status(201).json({ message: "User deleted" });
     } catch (e) {
-      res.status(500).json({ message: "Something went wrong, try again" });
+      const wrongError = new SomethingWentWrong();
+      res.status(wrongError.status).json({ message: wrongError.message });
     }
   }
 );

@@ -1,6 +1,6 @@
 import mongoose = require("mongoose");
 
-interface ICleaningService extends mongoose.Document {
+export interface ICleaningService extends mongoose.Document {
   serviceName: string;
   typeOfService: string;
   numberOfService: number;
@@ -37,9 +37,7 @@ const cleaningServiceSchema = new mongoose.Schema({
   },
 });
 
-const CleaningService = mongoose.model<ICleaningService>(
+export const CleaningService = mongoose.model<ICleaningService>(
   "CleaningService",
   cleaningServiceSchema
 );
-
-export = CleaningService;

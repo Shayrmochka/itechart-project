@@ -6,6 +6,8 @@ import { User, IUser } from "../models/User";
 import RequestWithUser from "../interfaces/requestWithUser.interface";
 import DataStoredInToken from "../interfaces/dataStoredInToken";
 import RequestWithHeader from "../interfaces/requestWithHeader.interface";
+import NotAuthorizedException from "../exceptions/NotAuthorizedException";
+import UserNotFoundException from "../exceptions/UserNotFoundException";
 
 const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
   if (req.method === "OPTIONS") {
@@ -16,7 +18,8 @@ const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
     const token: string = req.headers.authorization.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ message: "You are not logged in" });
+      const authError = new NotAuthorizedException();
+      return res.status(authError.status).json({ message: authError.message });
     }
 
     const decoded: object = jwt.verify(token, config.jwtSecret);
@@ -24,7 +27,8 @@ const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
     req.user = decoded;
     next();
   } catch (e) {
-    res.status(401).json({ message: "You are not logged in" });
+    const authError = new NotAuthorizedException();
+    res.status(authError.status).json({ message: authError.message });
   }
 };
 
@@ -68,7 +72,8 @@ const checkIsInRole = (...roles: Array<string>) => async (
   const user: IUser | null = await User.findById(req.user.dataId);
 
   if (!user) {
-    return res.status(400).json({ message: "User not found" });
+    const userError = new UserNotFoundException();
+    return res.status(userError.status).json({ message: userError.message });
   }
 
   const hasRole = roles.find((role: string) => user.role === role);

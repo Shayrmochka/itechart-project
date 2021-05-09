@@ -1,32 +1,27 @@
 import { Request, Response } from "express";
-const { Router } = require("express");
-const CleaningCompany = require("../models/CleaningCompany");
-const CleaningService = require("../models/CleaningService");
-const Order = require("../models/Order");
-const Feedback = require("../models/Feedback");
-
-const {
+import { Router } from "express";
+import { CleaningCompany, ICleaningCompany } from "../models/CleaningCompany";
+import { CleaningService, ICleaningService } from "../models/CleaningService";
+import { Order, IOrder } from "../models/Order";
+import { Feedback, IFeedback } from "../models/Feedback";
+import CompanyRequest from "../interfaces/companyRequest.interface";
+import { check, validationResult } from "express-validator";
+import ROLES from "../roles/roles";
+import {
   auth,
-
   hashPassword,
   verifyPassword,
   checkIsInRole,
-} = require("../middleware/auth.middleware");
-const { check, validationResult } = require("express-validator");
+} from "../middleware/auth.middleware";
 
-const ROLES = require("../roles/roles");
 const router = Router();
-
-interface CompanyRequest extends Request {
-  company: any;
-}
 
 router.get(
   "/",
 
   async (req: CompanyRequest, res: Response) => {
     try {
-      const companies = await CleaningCompany.find({});
+      const companies: Array<ICleaningCompany> = await CleaningCompany.find({});
       res.json(companies);
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });
@@ -39,9 +34,11 @@ router.get(
 
   async (req: Request, res: Response) => {
     try {
-      const company = await CleaningCompany.findById(req.params.id);
+      const company: ICleaningCompany = await CleaningCompany.findById(
+        req.params.id
+      );
 
-      const services: any = [];
+      const services: Array<ICleaningService> = [];
 
       for (let i = 0; i < company.typeOfServices.length; i++) {
         services.push(
@@ -64,7 +61,9 @@ router.post(
   checkIsInRole(ROLES.Admin),
   async (req: CompanyRequest, res: Response): Promise<void> => {
     try {
-      const company = await CleaningCompany.findById(req.body._id);
+      const company: ICleaningCompany = await CleaningCompany.findById(
+        req.body._id
+      );
 
       if (req.body.banReason) {
         company.banReason = req.body.banReason;
@@ -90,7 +89,9 @@ router.post(
   ],
   async (req: CompanyRequest, res: Response) => {
     try {
-      const company = await CleaningCompany.findById(req.body._id);
+      const company: ICleaningCompany = await CleaningCompany.findById(
+        req.body._id
+      );
       const operationType = req.body.operationType;
       if (operationType === "profile") {
         const { name, priceList, email, address, description, _id } = req.body;
@@ -149,10 +150,8 @@ router.post(
   async (req: CompanyRequest, res: Response): Promise<void> => {
     try {
       const id = req.body._id;
-      const company = await CleaningCompany.findById(id);
-
-      const orders = await Order.find({ company: id });
-      const feedbacks = await Feedback.find({ company: id });
+      const orders: Array<IOrder> = await Order.find({ company: id });
+      const feedbacks: Array<IFeedback> = await Feedback.find({ company: id });
 
       if (feedbacks.length) {
         feedbacks.forEach(async (feedback: any) => {

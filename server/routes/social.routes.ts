@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import { Router } from "express";
-//import User from "../models/User";
 import { User, IUser } from "../models/User";
-
 import { signToken, hashPassword } from "../middleware/auth.middleware";
 import { validationResult } from "express-validator";
-
+import ROLES from "../roles/roles";
 const router = Router();
 
 router.post(
@@ -24,7 +22,7 @@ router.post(
 
       const { id, email, firstName, lastName, profilePicURL } = req.body;
 
-      const candidate = await User.findOne({ email });
+      const candidate: IUser = await User.findOne({ email });
 
       if (candidate) {
         if (!candidate.isActive) {
@@ -38,7 +36,7 @@ router.post(
 
       const hashedPassword = await hashPassword(id);
 
-      const user = new User({
+      const user: IUser = new User({
         email,
         password: hashedPassword,
         firstName,

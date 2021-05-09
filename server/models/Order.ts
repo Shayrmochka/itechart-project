@@ -1,6 +1,6 @@
 import mongoose = require("mongoose");
 
-interface IOrder extends mongoose.Document {
+export interface IOrder extends mongoose.Document {
   date: string;
   dateCleaning: string;
   owner: string;
@@ -38,6 +38,4 @@ const orderSchema = new mongoose.Schema({
   time: { type: Number, required: true, default: 1 },
 });
 
-const Order = mongoose.model<IOrder>("Order", orderSchema);
-
-export = Order;
+export const Order = mongoose.model<IOrder>("Order", orderSchema);

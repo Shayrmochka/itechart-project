@@ -1,6 +1,8 @@
-const ROLES = {
+import { IRoles } from "../interfaces/roles.interface";
+
+const ROLES: IRoles = {
   Admin: "Admin",
   User: "User",
 };
 
-module.exports = ROLES;
+export default ROLES;
