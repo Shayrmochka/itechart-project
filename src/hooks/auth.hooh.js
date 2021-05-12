@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   getCurrentUser,
   hideLoader,

@@ -3,6 +3,7 @@ import { Router } from "express";
 import { User, IUser } from "../models/User";
 import { signToken, hashPassword } from "../middleware/auth.middleware";
 import { validationResult } from "express-validator";
+import { useBot } from "../telegramBot/telegramBot";
 import ROLES from "../roles/roles";
 const router = Router();
 
@@ -30,7 +31,7 @@ router.post(
         }
 
         const token = await signToken(candidate.id, "user");
-
+        useBot(`${candidate.firstName} ${candidate.lastName}`, "Authenticated");
         return res.json({ token, user: candidate });
       }
 
@@ -50,7 +51,7 @@ router.post(
       await user.save();
 
       const token = await signToken(user.id, "user");
-
+      useBot(`${user.firstName} ${user.lastName}`, "Authenticated");
       res.json({ token, user });
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });

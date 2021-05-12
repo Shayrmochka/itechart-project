@@ -1,6 +1,6 @@
 const { Router } = require("express");
-const Feedback = require("../models/Feedback");
-const CleaningCompany = require("../models/CleaningCompany");
+const { Feedback } = require("../models/Feedback");
+import { CleaningCompany } from "../models/CleaningCompany";
 import { Request, Response } from "express";
 import { auth } from "../middleware/auth.middleware";
 const router = Router();

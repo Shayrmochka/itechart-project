@@ -103,7 +103,7 @@ function SignUp() {
           noValidate
           onSubmit={handleSubmit(onSubmit)}
         >
-          <NavLink className={classes.links} to="/signin-company">
+          <NavLink className={classes.links} to="/signup-company">
             <div className={classes.linksBlock}>For Cleaning Companies</div>
           </NavLink>
           <Grid container spacing={2}>
@@ -252,7 +252,7 @@ function SignUp() {
           </Button>
         </form>
         <Grid>
-          <NavLink to="/">Already have an account? SignIn!</NavLink>
+          <NavLink to="/signin">Already have an account? SignIn!</NavLink>
         </Grid>
       </div>
     </Container>

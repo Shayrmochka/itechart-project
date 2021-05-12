@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { auth, checkToken } from "../middleware/auth.middleware";
 import RequestWithUser from "../interfaces/requestWithUser.interface";
 const router = Router();
-const Order = require("../models/Order");
+const { Order } = require("../models/Order");
 
 router.post(
   "/create-new-order",

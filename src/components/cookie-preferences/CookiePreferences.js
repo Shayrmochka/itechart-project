@@ -71,7 +71,7 @@ function CookiePreferences(props) {
         <div className="cookie-modal__header header">
           <div className="header__logo logo">
             <div className="logo__image">
-              <img src="images/itechart-black.svg" />
+              <img src="https://raw.githubusercontent.com/Shayrmochka/itechart-project/c7f9aea867a06641fb59270e75e61bbf61a2621f/public/images/itechart-black.svg" />
             </div>
           </div>
           <div className="header__modal-title modal-title">

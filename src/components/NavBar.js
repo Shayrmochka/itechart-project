@@ -395,7 +395,10 @@ function NavBar(props) {
           </Typography> */}
 
           <NavLink className={classes.links} to="/home">
-            <img style={{ height: "18px" }} src="images/itechart.svg" />
+            <img
+              style={{ height: "18px" }}
+              src="https://itechart-by.s3.amazonaws.com/storage/static/svg/itechart.svg"
+            />
           </NavLink>
 
           {Object.keys(props.currentUser).length ? createOrder() : <></>}
