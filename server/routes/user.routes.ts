@@ -1,83 +1,20 @@
-import { useBot } from "./../telegramBot/telegramBot";
-import { Request, Response } from "express";
 import { Router } from "express";
-import { User, IUser } from "../models/User";
-import RequestWithUser from "../interfaces/requestWithUser.interface";
-import { Order, IOrder } from "../models/Order";
-import { Feedback, IFeedback } from "../models/Feedback";
-import {
-  auth,
-  hashPassword,
-  verifyPassword,
-  checkIsInRole,
-} from "../middleware/auth.middleware";
-import { check, validationResult } from "express-validator";
+import { auth, checkIsInRole } from "../middleware/auth.middleware";
+import { check } from "express-validator";
 import ROLES from "../roles/roles";
-import SomethingWentWrong from "../exceptions/SomethingWentWrong";
-import UserNotFoundException from "../exceptions/UserNotFoundException";
+import UserController from "../controllers/user.controller";
+
 const router = Router();
 
-router.get(
-  "/",
-  auth,
-  checkIsInRole(ROLES.Admin),
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const users: Array<IUser> = await User.find({});
-      res.json(users);
-    } catch (e) {
-      const wrongError = new SomethingWentWrong();
-      res.status(wrongError.status).json({ message: wrongError.message });
-    }
-  }
-);
+router.get("/", auth, checkIsInRole(ROLES.Admin), UserController.getUsers);
 
-router.get(
-  "/:id",
-  auth,
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const user: IUser = await User.findById(req.params.id);
-
-      res.json(user);
-    } catch (e) {
-      const wrongError = new SomethingWentWrong();
-      res.status(wrongError.status).json({ message: wrongError.message });
-    }
-  }
-);
+router.get("/:id", auth, UserController.getUserById);
 
 router.post(
   "/update",
   auth,
   checkIsInRole(ROLES.Admin),
-  async (req: RequestWithUser, res: Response) => {
-    try {
-      const user: IUser | null = await User.findById(req.body._id);
-
-      if (!user) {
-        return res.status(400).json({ message: "User not found" });
-      }
-
-      if (req.body.banReason) {
-        user.banReason = req.body.banReason;
-      }
-      user.isActive = !user.isActive;
-
-      await user.save();
-
-      if (user.isActive) {
-        useBot(`${user.firstName} ${user.lastName}`, "Unblocked");
-      } else {
-        useBot(`${user.firstName} ${user.lastName}`, "Blocked");
-      }
-
-      res.status(201).json(user);
-    } catch (e) {
-      const wrongError = new SomethingWentWrong();
-      res.status(wrongError.status).json({ message: wrongError.message });
-    }
-  }
+  UserController.updateUser
 );
 
 router.post(
@@ -88,92 +25,9 @@ router.post(
       min: 6,
     }),
   ],
-  async (req: RequestWithUser, res: Response) => {
-    try {
-      const user: IUser | null = await User.findById(req.body._id);
-      if (!user) {
-        const userError = new UserNotFoundException();
-        return res
-          .status(userError.status)
-          .json({ message: userError.message });
-      }
-      const operationType = req.body.operationType;
-      if (operationType === "profile") {
-        const { firstName, lastName, email, phone, _id } = req.body;
-
-        if (user.isActive) {
-          user.firstName = firstName;
-          user.lastName = lastName;
-          user.email = email;
-          user.phone = phone;
-        }
-      } else if (operationType === "password") {
-        const { oldPassword, password, confirmPassword } = req.body;
-
-        if (user.isActive) {
-          const errors = validationResult(req);
-
-          if (
-            !errors.isEmpty() ||
-            req.body.password !== req.body.confirmPassword
-          ) {
-            return res.status(400).json({
-              errors: errors.array(),
-              message: "The registration data is incorrect",
-            });
-          }
-          const verifiedPass = await verifyPassword(oldPassword, user.password);
-
-          if (!verifiedPass) {
-            return res
-              .status(400)
-              .json({ message: "Invalid password, please try again" });
-          }
-
-          const newPassword = await hashPassword(password);
-
-          user.password = newPassword;
-        }
-      }
-
-      await user.save();
-
-      res.status(201).json(user);
-    } catch (e) {
-      const wrongError = new SomethingWentWrong();
-      res.status(wrongError.status).json({ message: wrongError.message });
-    }
-  }
+  UserController.editProfile
 );
 
-router.post(
-  "/delete-profile",
-  auth,
-  async (req: RequestWithUser, res: Response): Promise<void> => {
-    try {
-      const id = req.body._id;
-      const feedbacks: Array<IFeedback> = await Feedback.find({ owner: id });
-      const orders: Array<IOrder> = await Order.find({ owner: id });
-
-      if (feedbacks.length) {
-        feedbacks.forEach(async (feedback: any) => {
-          await Feedback.deleteOne({ _id: feedback._id });
-        });
-      }
-      if (orders.length) {
-        orders.forEach(async (feedback: any) => {
-          await Order.deleteOne({ _id: feedback._id });
-        });
-      }
-
-      await User.deleteOne({ _id: id });
-
-      res.status(201).json({ message: "User deleted" });
-    } catch (e) {
-      const wrongError = new SomethingWentWrong();
-      res.status(wrongError.status).json({ message: wrongError.message });
-    }
-  }
-);
+router.post("/delete-profile", auth, UserController.deleteProfile);
 
 module.exports = router;
