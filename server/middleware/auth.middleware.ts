@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 const jwt = require("jsonwebtoken");
-const config = require("../config/config");
+import { config } from "../config/config";
 const bcrypt = require("bcryptjs");
 import { User, IUser } from "../models/User";
 import RequestWithUser from "../interfaces/requestWithUser.interface";
@@ -33,7 +33,7 @@ const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
 };
 
 const checkToken = (token: string) => {
-  const decoded: object = jwt.verify(token, config.jwtSecret);
+  const decoded = jwt.verify(token, config.jwtSecret);
   return decoded;
 };
 
@@ -60,29 +60,27 @@ const verifyPassword = async (candidate: string, actual: string) => {
   return await bcrypt.compare(candidate, actual);
 };
 
-const checkIsInRole = (...roles: Array<string>) => async (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-) => {
-  if (!req.user) {
-    return res.redirect("/login");
-  }
+const checkIsInRole =
+  (...roles: Array<string>) =>
+  async (req: RequestWithUser, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.redirect("/login");
+    }
 
-  const user: IUser | null = await User.findById(req.user.dataId);
+    const user: IUser | null = await User.findById(req.user.dataId);
 
-  if (!user) {
-    const userError = new UserNotFoundException();
-    return res.status(userError.status).json({ message: userError.message });
-  }
+    if (!user) {
+      const userError = new UserNotFoundException();
+      return res.status(userError.status).json({ message: userError.message });
+    }
 
-  const hasRole = roles.find((role: string) => user.role === role);
-  if (!hasRole) {
-    return res.json({ message: "No right to access" });
-  }
+    const hasRole = roles.find((role: string) => user.role === role);
+    if (!hasRole) {
+      return res.json({ message: "No right to access" });
+    }
 
-  return next();
-};
+    return next();
+  };
 
 export {
   auth,

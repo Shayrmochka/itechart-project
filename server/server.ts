@@ -1,6 +1,6 @@
 import express = require("express");
 const mongoose = require("mongoose");
-const config = require("./config/config");
+import { config } from "./config/config";
 const cors = require("cors");
 const app: express.Application = express();
 
