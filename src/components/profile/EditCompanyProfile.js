@@ -71,7 +71,7 @@ export default function EditCompanyProfile({ open, handleClose }) {
 
   const onSubmit = async (data) => {
     try {
-      const dataReq = await request("/api/company/edit-profile", "POST", {
+      const dataReq = await request("/api/company/edit-profile", "PUT", {
         ...data,
         _id: currentUser._id,
         operationType: "profile",
@@ -154,7 +154,8 @@ export default function EditCompanyProfile({ open, handleClose }) {
                   inputRef={register({
                     required: "You must provide the email address!",
                     pattern: {
-                      value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      value:
+                        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                       message: "You must provide a valid email address!",
                     },
                   })}

@@ -24,7 +24,7 @@ function OrderInfo({
     try {
       await request(
         "/api/order/update-set-answer",
-        "POST",
+        "PUT",
         {
           ...order,
           answer,
@@ -42,7 +42,7 @@ function OrderInfo({
     try {
       await request(
         "/api/order/delete-order",
-        "POST",
+        "DELETE",
         {
           _id: order._id,
         },

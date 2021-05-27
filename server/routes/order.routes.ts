@@ -9,8 +9,8 @@ router.get("/", auth, OrderController.getOrders);
 
 router.get("/orders-chart", OrderController.getOrdersChart);
 
-router.post("/update-set-answer", auth, OrderController.setAnswer);
+router.put("/update-set-answer", auth, OrderController.setAnswer);
 
-router.post("/delete-order", auth, OrderController.deleteOrder);
+router.delete("/delete-order", auth, OrderController.deleteOrder);
 
 module.exports = router;

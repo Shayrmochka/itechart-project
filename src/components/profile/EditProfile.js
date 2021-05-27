@@ -71,7 +71,7 @@ export default function EditProfile({ open, handleClose }) {
 
   const onSubmit = async (data) => {
     try {
-      const dataReq = await request("/api/user/edit-profile", "POST", {
+      const dataReq = await request("/api/user/edit-profile", "PUT", {
         ...data,
         _id: currentUser._id,
         operationType: "profile",
@@ -154,7 +154,8 @@ export default function EditProfile({ open, handleClose }) {
                   inputRef={register({
                     required: "You must provide the email address!",
                     pattern: {
-                      value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      value:
+                        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                       message: "You must provide a valid email address!",
                     },
                   })}
@@ -177,7 +178,8 @@ export default function EditProfile({ open, handleClose }) {
                   inputRef={register({
                     required: "You must provide the phone number!",
                     pattern: {
-                      value: /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})/,
+                      value:
+                        /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})/,
                       message: "You must provide a valid phone number!",
                     },
                   })}

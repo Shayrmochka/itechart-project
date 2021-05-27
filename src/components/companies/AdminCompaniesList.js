@@ -66,7 +66,7 @@ function AdminCompaniesList({ companies, open, handleClickOpen, handleClose }) {
   const { request } = useHttp();
   const blockHandler = async (company, reason) => {
     try {
-      const response = await request("/api/company/update", "POST", {
+      const response = await request("/api/company/update", "PUT", {
         ...company,
         banReason: reason,
       });

@@ -1,7 +1,7 @@
 import express = require("express");
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 import { config } from "./config/config";
-const cors = require("cors");
+import cors from "cors";
 const app: express.Application = express();
 
 app.use(cors());

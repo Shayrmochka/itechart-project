@@ -19,7 +19,7 @@ export default function AlertDialog({ open, handleClose, logout }) {
     try {
       if (currentUser.type === "user") {
         dispatch(showLoader());
-        await request("/api/user/delete-profile", "POST", {
+        await request("/api/user/delete-profile", "DELETE", {
           _id: currentUser._id,
         });
         handleClose();
@@ -27,7 +27,7 @@ export default function AlertDialog({ open, handleClose, logout }) {
         dispatch(hideLoader());
       } else if (currentUser.type === "company") {
         dispatch(showLoader());
-        await request("/api/company/delete-profile", "POST", {
+        await request("/api/company/delete-profile", "DELETE", {
           _id: currentUser._id,
         });
         handleClose();

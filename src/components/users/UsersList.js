@@ -68,7 +68,7 @@ function UsersList({ users, open, handleClickOpen, handleClose }) {
   const blockHandler = async (user, reason) => {
     if (currentUser._id !== user._id) {
       try {
-        const response = await request("/api/user/update", "POST", {
+        const response = await request("/api/user/update", "PUT", {
           ...user,
           banReason: reason,
         });

@@ -11,14 +11,14 @@ router.get("/", CompanyController.getCompanies);
 
 router.get("/:id", CompanyController.getCompanyById);
 
-router.post(
+router.put(
   "/update",
   auth,
   checkIsInRole(ROLES.Admin),
   CompanyController.updateStatus
 );
 
-router.post(
+router.put(
   "/edit-profile",
   auth,
   [
@@ -29,6 +29,6 @@ router.post(
   CompanyController.editProfile
 );
 
-router.post("/delete-profile", auth, CompanyController.deleteProfile);
+router.delete("/delete-profile", auth, CompanyController.deleteProfile);
 
 module.exports = router;

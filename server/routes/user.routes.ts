@@ -10,14 +10,14 @@ router.get("/", auth, checkIsInRole(ROLES.Admin), UserController.getUsers);
 
 router.get("/:id", auth, UserController.getUserById);
 
-router.post(
+router.put(
   "/update",
   auth,
   checkIsInRole(ROLES.Admin),
   UserController.updateUser
 );
 
-router.post(
+router.put(
   "/edit-profile",
   auth,
   [
@@ -28,6 +28,6 @@ router.post(
   UserController.editProfile
 );
 
-router.post("/delete-profile", auth, UserController.deleteProfile);
+router.delete("/delete-profile", auth, UserController.deleteProfile);
 
 module.exports = router;
