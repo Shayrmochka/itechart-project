@@ -31,4 +31,4 @@ router.put(
 
 router.delete("/delete-profile", auth, CompanyController.deleteProfile);
 
-module.exports = router;
+export default router;

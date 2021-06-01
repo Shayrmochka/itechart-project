@@ -12,6 +12,9 @@
 # production
 /build
 /server/dist
+/server/config
+/server/telegramBot/botConfig.js
+
 
 # misc
 .DS_Store

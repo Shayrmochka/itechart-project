@@ -1,4 +1,4 @@
-import { fetchData } from "../api/api";
+import fetchData from '../api/api';
 import {
   GET_CURRENT_USER,
   REMOVE_CURRENT_USER,
@@ -13,7 +13,7 @@ import {
   REMOVE_CHOSEN_COMPANY,
   GET_SORTED_ORDERS,
   REMOVE_SORTED_ORDERS,
-} from "./types";
+} from './types';
 
 // USER
 export function getCurrentUser(currentUser) {
@@ -50,32 +50,41 @@ export function hideLoader() {
 }
 
 // ORDERS
-export function fetchOrders(user) {
+export function fetchOrders(user, message) {
   const getSortedOrders = (orders) => {
-    if (user.type === "user") {
-      return orders.filter((order) => order.status !== "waiting");
-    } else if (user.type === "company") {
+    if (user.type === 'user') {
+      return orders.filter((order) => order.status !== 'waiting');
+    }
+    if (user.type === 'company') {
       return orders.filter((order) => !order.checked);
     }
+
+    return orders;
   };
 
-  const getAcceptedOrders = (orders) => {
-    return orders.filter((order) => order.status === "accepted");
-  };
+  const getAcceptedOrders = (orders) => orders.filter((order) => order.status === 'accepted');
+
   return async (dispatch) => {
-    const orders = await fetchData.get("/api/order", user.token);
+    try {
+      const orders = await fetchData.get('/api/order', user.token);
+      if (typeof orders !== 'object') {
+        throw new Error('Bad response');
+      }
 
-    dispatch({ type: GET_ORDERS, payload: orders });
+      dispatch({ type: GET_ORDERS, payload: orders });
 
-    dispatch({
-      type: GET_SORTED_ORDERS,
-      payload: getSortedOrders(orders),
-    });
+      dispatch({
+        type: GET_SORTED_ORDERS,
+        payload: getSortedOrders(orders),
+      });
 
-    dispatch({
-      type: GET_ACCEPTED_ORDERS,
-      payload: getAcceptedOrders(orders),
-    });
+      dispatch({
+        type: GET_ACCEPTED_ORDERS,
+        payload: getAcceptedOrders(orders),
+      });
+    } catch (e) {
+      message(e);
+    }
   };
 }
 

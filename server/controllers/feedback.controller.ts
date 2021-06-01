@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-const { Feedback } = require("../models/Feedback");
+import { Feedback } from "../models/Feedback";
 import { CleaningCompany } from "../models/CleaningCompany";
 
 export default class FeedbackController {
@@ -85,7 +85,6 @@ export default class FeedbackController {
   public static async getFeebbacks(req: Request, res: Response) {
     try {
       const feedbacks = await Feedback.find({ company: req.headers.company });
-
       res.json(feedbacks);
     } catch (e) {
       res.status(500).json({ message: "Something went wrong, try again" });

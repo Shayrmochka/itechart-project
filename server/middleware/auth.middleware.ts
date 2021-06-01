@@ -1,13 +1,14 @@
 import { Response, NextFunction } from "express";
-const jwt = require("jsonwebtoken");
-import { config } from "../config/config";
-const bcrypt = require("bcryptjs");
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import { User, IUser } from "../models/User";
 import RequestWithUser from "../interfaces/requestWithUser.interface";
 import DataStoredInToken from "../interfaces/dataStoredInToken";
 import RequestWithHeader from "../interfaces/requestWithHeader.interface";
 import NotAuthorizedException from "../exceptions/NotAuthorizedException";
 import UserNotFoundException from "../exceptions/UserNotFoundException";
+import dotenv from 'dotenv'
+dotenv.config()
 
 const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
   if (req.method === "OPTIONS") {
@@ -22,7 +23,7 @@ const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
       return res.status(authError.status).json({ message: authError.message });
     }
 
-    const decoded: object = jwt.verify(token, config.jwtSecret);
+    const decoded: object = jwt.verify(token, process.env.jwtSecret);
 
     req.user = decoded;
     next();
@@ -33,7 +34,7 @@ const auth = (req: RequestWithHeader, res: Response, next: NextFunction) => {
 };
 
 const checkToken = (token: string) => {
-  const decoded = jwt.verify(token, config.jwtSecret);
+  const decoded = jwt.verify(token, process.env.jwtSecret);
   return decoded;
 };
 
@@ -42,7 +43,7 @@ const signToken = (user: string, accountOwner: string): void => {
     dataId: user,
   };
 
-  return jwt.sign({ ...dataStoredInToken, accountOwner }, config.jwtSecret, {
+  return jwt.sign({ ...dataStoredInToken, accountOwner }, process.env.jwtSecret, {
     expiresIn: 604800,
   });
 };

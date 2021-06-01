@@ -3,8 +3,7 @@ import { User } from "../models/User";
 import { CleaningCompany } from "../models/CleaningCompany";
 import { checkToken } from "../middleware/auth.middleware";
 import RequestWithUser from "../interfaces/requestWithUser.interface";
-
-const { Order } = require("../models/Order");
+import { Order } from "../models/Order";
 
 export default class OrderController {
   public static async createOrder(req: RequestWithUser, res: Response) {

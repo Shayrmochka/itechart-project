@@ -1,10 +1,10 @@
-import { GET_CHOSEN_COMPANY, REMOVE_CHOSEN_COMPANY } from "./types";
+import { GET_CHOSEN_COMPANY, REMOVE_CHOSEN_COMPANY } from './types';
 
 const initialState = {
   chosenCompany: {},
 };
 
-export const companyReducer = (state = initialState, action) => {
+const companyReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_CHOSEN_COMPANY:
       return {
@@ -18,3 +18,5 @@ export const companyReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export default companyReducer;

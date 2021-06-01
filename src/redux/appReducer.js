@@ -1,10 +1,10 @@
-import { HIDE_LOADER, SHOW_LOADER } from "./types";
+import { HIDE_LOADER, SHOW_LOADER } from './types';
 
 const initialState = {
   isLoading: false,
 };
 
-export const appReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case SHOW_LOADER:
       return { ...state, isLoading: true };
@@ -15,3 +15,5 @@ export const appReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export default appReducer;

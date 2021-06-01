@@ -1,5 +1,6 @@
-const http = require("request");
-import { botConfig } from "./botConfig";
+import http from "request";
+import dotenv from 'dotenv'
+dotenv.config()
 
 const logs: any = [];
 
@@ -15,7 +16,7 @@ const getLogs = (status: any, error: any, response: any, body: any) => {
 export const useBot = (name: string, action: string) => {
   const text = `<b>Name:</b> ${name} \n<b>Action:</b> ${action}`;
   http.post(
-    `https://api.telegram.org/bot${botConfig.token}/sendMessage?chat_id=${botConfig.chatId}&parse_mode=html&text=${text}`,
+    `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${process.env.chatId}&parse_mode=html&text=${text}`,
     (error: any, response: any, body: any) => {
       if (response.statusCode === 200) {
         getLogs("ok", error, response, body);

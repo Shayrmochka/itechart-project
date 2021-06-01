@@ -30,4 +30,4 @@ router.put(
 
 router.delete("/delete-profile", auth, UserController.deleteProfile);
 
-module.exports = router;
+export default router;

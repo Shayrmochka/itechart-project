@@ -7,4 +7,4 @@ router.post("/create-new-feedback", auth, FeedbackController.createFeedback);
 
 router.get("/", FeedbackController.getFeebbacks);
 
-module.exports = router;
+export default router;

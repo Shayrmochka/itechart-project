@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-export const useMessage = () => {
-  return useCallback((text) => {
-    if (text) {
-      alert(text);
-    }
-  }, []);
-};
+const useMessage = () => useCallback((text) => {
+  if (text) {
+    alert(text);
+  }
+}, []);
+
+export default useMessage;

@@ -1,4 +1,4 @@
-import mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 export interface ICleaningService extends mongoose.Document {
   serviceName: string;
@@ -38,6 +38,6 @@ const cleaningServiceSchema = new mongoose.Schema({
 });
 
 export const CleaningService = mongoose.model<ICleaningService>(
-  "CleaningService",
-  cleaningServiceSchema
+  'CleaningService',
+  cleaningServiceSchema,
 );

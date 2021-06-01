@@ -5,4 +5,4 @@ const router = Router();
 
 router.get("/", ServicesController.getServices);
 
-module.exports = router;
+export default router;

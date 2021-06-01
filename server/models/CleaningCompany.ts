@@ -1,4 +1,4 @@
-import mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 export interface ICleaningCompany extends mongoose.Document {
   email: string;
@@ -28,7 +28,7 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
   logo: {
     type: String,
     required: true,
-    default: "../images/default-company.png",
+    default: '../images/default-company.png',
   },
   name: {
     type: String,
@@ -58,18 +58,18 @@ const cleaningCompanySchema: mongoose.Schema = new mongoose.Schema({
   },
   banReason: {
     type: String,
-    default: "Without reason",
+    default: 'Without reason',
   },
   type: {
     type: String,
     required: true,
-    default: "company",
+    default: 'company',
   },
 
-  typeOfServices: [{ type: mongoose.Types.ObjectId, ref: "CleaningService" }],
+  typeOfServices: [{ type: mongoose.Types.ObjectId, ref: 'CleaningService' }],
 });
 
 export const CleaningCompany = mongoose.model<ICleaningCompany>(
-  "CleaningCompany",
-  cleaningCompanySchema
+  'CleaningCompany',
+  cleaningCompanySchema,
 );

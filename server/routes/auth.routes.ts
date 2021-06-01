@@ -64,4 +64,4 @@ router.post(
   AuthController.loginCompany
 );
 
-module.exports = router;
+export default router;

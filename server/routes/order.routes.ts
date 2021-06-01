@@ -13,4 +13,4 @@ router.put("/update-set-answer", auth, OrderController.setAnswer);
 
 router.delete("/delete-order", auth, OrderController.deleteOrder);
 
-module.exports = router;
+export default router;

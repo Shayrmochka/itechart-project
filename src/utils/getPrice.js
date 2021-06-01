@@ -1,4 +1,6 @@
-export const getPrice = (order) => {
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-plusplus */
+const getPrice = (order) => {
   let resultPrice = 0;
   let resultTime = 0;
   const bigRoom = 5;
@@ -8,10 +10,9 @@ export const getPrice = (order) => {
   let bigRoomCounter = 0;
   let smallRoomCounter = 0;
   let bathRoomCounter = 0;
-  console.log(order);
   const rooms = [];
-  for (let key in order) {
-    if (key.startsWith("room")) {
+  for (const key in order) {
+    if (key.startsWith('room')) {
       rooms.push(order[key]);
       if (+order[key] <= 20) {
         smallRoomCounter++;
@@ -43,3 +44,5 @@ export const getPrice = (order) => {
     bigRoomCounter,
   };
 };
+
+export default getPrice;

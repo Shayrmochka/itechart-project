@@ -1,4 +1,4 @@
-import mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 export interface IUser extends mongoose.Document {
   email: string;
@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
     default:
-      "https://static-cdn.jtvnw.net/jtv_user_pictures/54a8a787-4619-4b1f-a0ca-03ffac31b0a6-profile_image-300x300.png",
+      'https://static-cdn.jtvnw.net/jtv_user_pictures/54a8a787-4619-4b1f-a0ca-03ffac31b0a6-profile_image-300x300.png',
   },
   phone: {
     type: String,
@@ -49,17 +49,17 @@ const userSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    default: "user",
+    default: 'user',
   },
   banReason: {
     type: String,
-    default: "Without reason",
+    default: 'Without reason',
   },
   role: {
     type: String,
     required: true,
   },
-  links: [{ type: mongoose.Types.ObjectId, ref: "Link" }],
+  links: [{ type: mongoose.Types.ObjectId, ref: 'Link' }],
 });
 
-export const User = mongoose.model<IUser>("User", userSchema);
+export const User = mongoose.model<IUser>('User', userSchema);

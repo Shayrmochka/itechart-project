@@ -5,7 +5,7 @@ import {
   REMOVE_ACCEPTED_ORDERS,
   REMOVE_ORDERS,
   REMOVE_SORTED_ORDERS,
-} from "./types";
+} from './types';
 
 const initialState = {
   allOrders: [],
@@ -13,7 +13,7 @@ const initialState = {
   acceptedOrders: [],
 };
 
-export const ordersReducer = (state = initialState, action) => {
+const ordersReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ORDERS:
       return {
@@ -41,3 +41,5 @@ export const ordersReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export default ordersReducer;

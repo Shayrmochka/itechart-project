@@ -5,7 +5,9 @@ import { Order } from "../models/Order";
 import { Feedback } from "../models/Feedback";
 import { User } from "../models/User";
 import mongoose from "mongoose";
-import { config } from "../config/config";
+import dotenv from 'dotenv'
+dotenv.config()
+
 
 const addData = async (data, scheme) => {
   for (let i = 0; i < data.length; i++) {
@@ -16,7 +18,7 @@ const addData = async (data, scheme) => {
 
 async function start() {
   try {
-    await mongoose.connect(config.mongoUri, {
+    await mongoose.connect(process.env.mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,

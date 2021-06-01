@@ -1,13 +1,15 @@
-import { combineReducers } from "redux";
-import { appReducer } from "./appReducer";
+import { combineReducers } from 'redux';
+import appReducer from './appReducer';
 
-import { userReducer } from "./userReducer";
-import { ordersReducer } from "./ordersReducer";
-import { companyReducer } from "./companyReducer";
+import userReducer from './userReducer';
+import ordersReducer from './ordersReducer';
+import companyReducer from './companyReducer';
 
-export const rootReducer = combineReducers({
+const rootReducer = combineReducers({
   user: userReducer,
   orders: ordersReducer,
   app: appReducer,
   company: companyReducer,
 });
+
+export default rootReducer;

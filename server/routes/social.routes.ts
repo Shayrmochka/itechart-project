@@ -5,4 +5,4 @@ const router = Router();
 
 router.post("/google", SocialController.googleAuth);
 
-module.exports = router;
+export default router;
