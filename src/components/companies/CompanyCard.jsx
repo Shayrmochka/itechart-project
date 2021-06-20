@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
@@ -204,8 +203,8 @@ function CompanyCard({ company }) {
   );
 }
 
-CompanyCard.propTypes = {
-  company: PropTypes.shape().isRequired,
-};
+// CompanyCard.propTypes = {
+//   company: PropTypes.shape().isRequired,
+// };
 
 export default CompanyCard;

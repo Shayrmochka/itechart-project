@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import {
@@ -136,8 +135,8 @@ function CompanyFeedbacks({ feedbacks }) {
   );
 }
 
-CompanyFeedbacks.propTypes = {
-  feedbacks: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+// CompanyFeedbacks.propTypes = {
+//   feedbacks: PropTypes.arrayOf(PropTypes.object).isRequired,
+// };
 
 export default CompanyFeedbacks;

@@ -1,67 +1,68 @@
-import { Router } from "express";
-import { check } from "express-validator";
-import AuthController from "../controllers/auth.controller";
+import { Router } from 'express';
+import { check } from 'express-validator';
+import AuthController from '../controllers/auth.controller';
+
 const router = Router();
 
 // /api/auth/check
-router.post("/check", AuthController.checkStatus);
+router.post('/check', AuthController.checkStatus);
 
 // /api/auth/register
 router.post(
-  "/register",
+  '/register',
   [
-    check("email", "Email is incorrect").isEmail(),
-    check("password", "Password min length must be 6 symbols").isLength({
+    check('email', 'Email is incorrect').isEmail(),
+    check('password', 'Password min length must be 6 symbols').isLength({
       min: 6,
     }),
-    check("firstName", "First Name is too short").isLength({
+    check('firstName', 'First Name is too short').isLength({
       min: 1,
     }),
-    check("lastName", "Last Name is too short").isLength({
+    check('lastName', 'Last Name is too short').isLength({
       min: 1,
     }),
-    check("phone", "Last Name is too short").isLength({
+    check('phone', 'Last Name is too short').isLength({
       min: 6,
     }),
   ],
-  AuthController.registerUser
+  AuthController.registerUser,
 );
 
 // /api/auth/login
 router.post(
-  "/login",
+  '/login',
   [
-    check("email", "Email is incorrect").normalizeEmail().isEmail(),
-    check("password", "Enter the password").exists(),
+    check('email', 'Email is incorrect').normalizeEmail().isEmail(),
+    check('password', 'Enter the password').exists(),
   ],
-  AuthController.loginUser
+  AuthController.loginUser,
 );
 
 router.post(
-  "/register-company",
+  '/register-company',
   [
-    check("email", "Email is incorrect").isEmail(),
-    check("password", "Password min length must be 6 symbols").isLength({
+    check('email', 'Email is incorrect').isEmail(),
+    check('password', 'Password min length must be 6 symbols').isLength({
       min: 6,
     }),
-    check("name", "Name is too short").isLength({
+    check('name', 'Name is too short').isLength({
       min: 1,
     }),
-    check("address", "Address is too short").isLength({
+    check('address', 'Address is too short').isLength({
       min: 1,
     }),
   ],
-  AuthController.registerCompany
+  AuthController.registerCompany,
 );
 
 // /api/auth/login
 router.post(
-  "/login-company",
+  '/login-company',
   [
-    check("email", "Email is incorrect").normalizeEmail().isEmail(),
-    check("password", "Password min length must be 6 symbols").exists(),
+    check('email', 'Email is incorrect').normalizeEmail().isEmail(),
+    check('password', 'Password min length must be 6 symbols').exists(),
   ],
-  AuthController.loginCompany
+  AuthController.loginCompany,
 );
 
 export default router;

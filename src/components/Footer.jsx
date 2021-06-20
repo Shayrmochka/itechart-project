@@ -100,10 +100,6 @@ export default function Footer() {
 
   useEffect(() => {
     setModalStatus({ closed: true });
-    // effect;
-    // return () => {
-    //   cleanup;
-    // };
   }, []);
 
   const openCookiePreferences = () => {

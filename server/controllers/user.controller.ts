@@ -1,13 +1,16 @@
-import { useBot } from "./../telegramBot/telegramBot";
-import { Request, Response } from "express";
-import { User, IUser } from "../models/User";
-import RequestWithUser from "../interfaces/requestWithUser.interface";
-import { Order, IOrder } from "../models/Order";
-import { Feedback, IFeedback } from "../models/Feedback";
-import { hashPassword, verifyPassword } from "../middleware/auth.middleware";
-import { validationResult } from "express-validator";
-import SomethingWentWrong from "../exceptions/SomethingWentWrong";
-import UserNotFoundException from "../exceptions/UserNotFoundException";
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable consistent-return */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import { useBot } from '../telegramBot/telegramBot';
+import { User, IUser } from '../models/User';
+import RequestWithUser from '../interfaces/requestWithUser.interface';
+import { Order, IOrder } from '../models/Order';
+import { Feedback, IFeedback } from '../models/Feedback';
+import { hashPassword, verifyPassword } from '../middleware/auth.middleware';
+import SomethingWentWrong from '../exceptions/SomethingWentWrong';
+import UserNotFoundException from '../exceptions/UserNotFoundException';
 
 export default class UserController {
   public static async getUsers(req: Request, res: Response): Promise<void> {
@@ -36,7 +39,7 @@ export default class UserController {
       const user: IUser | null = await User.findById(req.body._id);
 
       if (!user) {
-        return res.status(400).json({ message: "User not found" });
+        return res.status(400).json({ message: 'User not found' });
       }
 
       if (req.body.banReason) {
@@ -47,9 +50,9 @@ export default class UserController {
       await user.save();
 
       if (user.isActive) {
-        useBot(`${user.firstName} ${user.lastName}`, "Unblocked");
+        useBot(`${user.firstName} ${user.lastName}`, 'Unblocked');
       } else {
-        useBot(`${user.firstName} ${user.lastName}`, "Blocked");
+        useBot(`${user.firstName} ${user.lastName}`, 'Blocked');
       }
 
       res.status(201).json(user);
@@ -68,8 +71,8 @@ export default class UserController {
           .status(userError.status)
           .json({ message: userError.message });
       }
-      const operationType = req.body.operationType;
-      if (operationType === "profile") {
+      const { operationType } = req.body;
+      if (operationType === 'profile') {
         const { firstName, lastName, email, phone, _id } = req.body;
 
         if (user.isActive) {
@@ -78,7 +81,7 @@ export default class UserController {
           user.email = email;
           user.phone = phone;
         }
-      } else if (operationType === "password") {
+      } else if (operationType === 'password') {
         const { oldPassword, password, confirmPassword } = req.body;
 
         if (user.isActive) {
@@ -90,7 +93,7 @@ export default class UserController {
           ) {
             return res.status(400).json({
               errors: errors.array(),
-              message: "The registration data is incorrect",
+              message: 'The registration data is incorrect',
             });
           }
           const verifiedPass = await verifyPassword(oldPassword, user.password);
@@ -98,7 +101,7 @@ export default class UserController {
           if (!verifiedPass) {
             return res
               .status(400)
-              .json({ message: "Invalid password, please try again" });
+              .json({ message: 'Invalid password, please try again' });
           }
 
           const newPassword = await hashPassword(password);
@@ -138,7 +141,7 @@ export default class UserController {
 
       await User.deleteOne({ _id: id });
 
-      res.status(201).json({ message: "User deleted" });
+      res.status(201).json({ message: 'User deleted' });
     } catch (e) {
       const wrongError = new SomethingWentWrong();
       res.status(wrongError.status).json({ message: wrongError.message });

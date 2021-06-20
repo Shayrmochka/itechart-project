@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
@@ -156,10 +155,10 @@ function Feedback({ open, handleClose, companyId }) {
   );
 }
 
-Feedback.propTypes = {
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  companyId: PropTypes.string.isRequired,
-};
+// Feedback.propTypes = {
+//   open: PropTypes.bool.isRequired,
+//   handleClose: PropTypes.func.isRequired,
+//   companyId: PropTypes.string.isRequired,
+// };
 
 export default Feedback;

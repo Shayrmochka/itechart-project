@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button,
   Card,
@@ -161,11 +160,11 @@ function AdminCompaniesList({
   );
 }
 
-AdminCompaniesList.propTypes = {
-  open: PropTypes.bool.isRequired,
-  handleClickOpen: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  companies: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+// AdminCompaniesList.propTypes = {
+//   open: PropTypes.bool.isRequired,
+//   handleClickOpen: PropTypes.func.isRequired,
+//   handleClose: PropTypes.func.isRequired,
+//   companies: PropTypes.arrayOf(PropTypes.object).isRequired,
+// };
 
 export default AdminCompaniesList;

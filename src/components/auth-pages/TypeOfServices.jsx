@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -24,14 +23,14 @@ export default function TypeOfServices({ handleChangeServices, services }) {
   );
 }
 
-TypeOfServices.propTypes = {
-  handleChangeServices: PropTypes.func.isRequired,
-  services: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string,
-      checked: PropTypes.bool,
-      typeOfService: PropTypes.string,
-      serviceName: PropTypes.string,
-    }).isRequired,
-  ).isRequired,
-};
+// TypeOfServices.propTypes = {
+//   handleChangeServices: PropTypes.func.isRequired,
+//   services: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       _id: PropTypes.string,
+//       checked: PropTypes.bool,
+//       typeOfService: PropTypes.string,
+//       serviceName: PropTypes.string,
+//     }).isRequired,
+//   ).isRequired,
+// };

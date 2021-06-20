@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -316,14 +315,14 @@ export default function CompaniesList({ companies, getSearchData }) {
                       </TableCell>
                       <TableCell align="right">
                         {user.isAuthenticated
-                        && user.currentUser.type === 'user' ? (
-                          <Button
-                            onClick={(event) => handleCompany(event, row)}
-                            variant="outlined"
-                            color="primary"
-                          >
-                            Choose
-                          </Button>
+                          && user.currentUser.type === 'user' ? (
+                            <Button
+                              onClick={(event) => handleCompany(event, row)}
+                              variant="outlined"
+                              color="primary"
+                            >
+                              Choose
+                            </Button>
                           ) : (
                             <Button
                               onClick={(event) => {
@@ -364,32 +363,18 @@ export default function CompaniesList({ companies, getSearchData }) {
   );
 }
 
-CompaniesList.propTypes = {
-  getSearchData: PropTypes.func.isRequired,
-  companies: PropTypes.arrayOf(PropTypes.object).isRequired,
-  // companies: PropTypes.shape({
-  //   _id: PropTypes.string,
-  //   checked: PropTypes.bool,
-  //   typeOfService: PropTypes.string,
-  //   serviceName: PropTypes.string,
-  // }).isRequired,
-};
-
-// CompaniesList.defaultProps = {
-//   getSearchData: '',
+// CompaniesList.propTypes = {
+//   getSearchData: PropTypes.func.isRequired,
+//   companies: PropTypes.arrayOf(PropTypes.object).isRequired,
 // };
 
-EnhancedTableToolbar.propTypes = {
-  getSearchData: PropTypes.func.isRequired,
-};
-
-// EnhancedTableToolbar.defaultProps = {
-//   getSearchData: '',
+// EnhancedTableToolbar.propTypes = {
+//   getSearchData: PropTypes.func.isRequired,
 // };
 
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.shape().isRequired,
-  order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-};
+// EnhancedTableHead.propTypes = {
+//   classes: PropTypes.shape().isRequired,
+//   order: PropTypes.string.isRequired,
+//   orderBy: PropTypes.string.isRequired,
+//   onRequestSort: PropTypes.func.isRequired,
+// };

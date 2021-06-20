@@ -11,7 +11,6 @@ export interface IUser extends mongoose.Document {
   banReason: string;
   type: string;
   role: string;
-  links: any;
 }
 
 const userSchema = new mongoose.Schema({
@@ -59,7 +58,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  links: [{ type: mongoose.Types.ObjectId, ref: 'Link' }],
 });
 
 export const User = mongoose.model<IUser>('User', userSchema);

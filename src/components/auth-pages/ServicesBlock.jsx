@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -42,7 +41,7 @@ export default function ServicesBlock({ handleChangeServices, services }) {
   );
 }
 
-ServicesBlock.propTypes = {
-  handleChangeServices: PropTypes.func.isRequired,
-  services: PropTypes.shape({}).isRequired,
-};
+// ServicesBlock.propTypes = {
+//   handleChangeServices: PropTypes.func.isRequired,
+//   services: PropTypes.shape({}).isRequired,
+// };
